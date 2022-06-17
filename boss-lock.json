@@ -1,0 +1,14 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2022-06-17T19:00:09.1070866-03:00",
+	"installedModules": {
+		"github.com/leandro-lprsoft/pascli": {
+			"name": "pascli",
+			"version": "1.0.0",
+			"hash": "ba1af43dde8ce4c0663e00854c6192ef",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}
