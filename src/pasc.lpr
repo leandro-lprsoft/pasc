@@ -4,11 +4,13 @@ program pasc;
 
 uses
   {$IFDEF UNIX}
-  cmem, cthreads,
+  cmem,
+  cthreads,
   {$ENDIF}
   Command.Interfaces,
   Command.App,
   Command.Usage,
+  Command.Version,
   Command.Build,
   Command.Clean,
   Command.New,
@@ -24,15 +26,8 @@ begin
   try
     PascApp.Title := 'Object pascal CLI tool for use with vscode.';
 
-    PascApp
-      .CommandBuilder
-        .AddCommand(
-            'help', 
-            'Shows information about how to use this tool or about a specific command.'#13#10 +
-            'Ex: pasc help clean ', 
-            @UsageCommand, 
-            [ccDefault, ccNoArgumentsButCommands]);  
-
+    Command.Usage.Registry(PascApp.CommandBuilder);
+    Command.Version.Registry(PascApp.CommandBuilder);
     Command.Build.Registry(PascApp.CommandBuilder);
     Command.Clean.Registry(PascApp.CommandBuilder);
     Command.New.Registry(PascApp.CommandBuilder);
