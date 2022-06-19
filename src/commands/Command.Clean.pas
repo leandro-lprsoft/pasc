@@ -13,7 +13,6 @@ uses
 implementation
 
 uses
-  Crt,
   SysUtils,
   StrUtils,
   FileUtil;
@@ -23,6 +22,10 @@ const
 
 var
   AnsweredAll: boolean;
+
+procedure WriteGitIgnore(const ACurrentDir: string);
+begin
+end;
 
 procedure CleanDirectory(const ACurrentDir: string);
 var
@@ -46,8 +49,10 @@ begin
               LInvalidKey := True;
               while LInvalidKey do
               begin
-                LKey := ReadKey;
-                Write(LKey);
+                Read(LKey);
+                if (LKey = #13) or (LKey = #10) then
+                  continue;
+
                 case LKey of 
                   'a': 
                     begin
@@ -59,14 +64,17 @@ begin
                       AnsweredAll := False;
                       LInvalidKey := False;
                     end;
-                  'c': 
+                  'c', #3: 
                     begin
                       LInvalidKey := False;
                       WriteLn;
                       raise Exception.Create('Cleaning aborted.');
                     end;
                   else
+                  begin
+                    WriteLn;
                     Write('Invalid input. Are you sure? [a]bort, [y]es, [a]ll: ');
+                  end;
                 end;    
               end;
             end;   
@@ -124,7 +132,7 @@ begin
       'Ex: ' + ABuilder.ExeName + ' clean',
       @CleanCommand,
       [ccNoParameters])
-      .AddOption('f', 'force', 'do not ask confirmation before delete.', []);
+      .AddOption('f', 'force', 'do not ask for confirmation before delete.', []);
 end;
 
 end.
