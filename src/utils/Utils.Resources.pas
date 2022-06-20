@@ -1,0 +1,28 @@
+unit Utils.Resources;
+
+{$MODE DELPHI}{$H+}
+
+interface
+
+uses
+  SysUtils,
+  LResources;
+
+  function GetResource(const AName: string): string;
+
+implementation
+
+function GetResource(const AName: string): string;
+var
+  LResource: TLResource = nil;
+begin
+  LResource := LazarusResources.Find(AName);
+  if not Assigned(LResource) then
+    raise Exception.Create('Resource ' + AName + ' is missing.');
+  Result := LResource.Value;
+end;
+
+initialization
+  {$I pasc.lrs}
+
+end.

@@ -1,0 +1,92 @@
+LazarusResources.Add('gitignore','TXT',[
+  '# Created by https://www.toptal.com/developers/gitignore/api/freepascal'#13
+  +#10'# Edit at https://www.toptal.com/developers/gitignore?templates=freepasc'
+  +'al'#13#10#13#10'### FreePascal ###'#13#10'*.lps'#13#10'*.compiled'#13#10'*.'
+  +'[oa]'#13#10'*.ppu'#13#10'*.rst'#13#10'*.cgi'#13#10'*.exe'#13#10'*.log'#13#10
+  +'*.bak*'#13#10'fp.ini'#13#10'fp.cfg'#13#10'fp.dsk'#13#10#13#10'# End of http'
+  +'s://www.toptal.com/developers/gitignore/api/freepascal'#13#10#13#10'**/lib/'
+  +#13#10'**/backup/'#13#10'**/modules/'
+]);
+LazarusResources.Add('launchjson','TXT',[
+  '{'#13#10'  // Use IntelliSense to learn about possible attributes.'#13#10'  '
+  +'// Hover to view descriptions of existing attributes.'#13#10'  // For more '
+  +'information, visit: https://go.microsoft.com/fwlink/?linkid=830387'#13#10' '
+  +' "version": "0.2.0",'#13#10'  "configurations": ['#13#10'    {'#13#10'     '
+  +' "name": "Debug - Tests",'#13#10'      "type": "by-gdb",'#13#10'      "requ'
+  +'est": "launch",'#13#10'      "program": "{PROJECTNAME}",'#13#10'      "cwd"'
+  +': "${workspaceRoot}"'#13#10'    }'#13#10'  ]'#13#10'}'
+]);
+LazarusResources.Add('tasksjson','TXT',[
+  '{'#13#10'  // See https://go.microsoft.com/fwlink/?LinkId=733558'#13#10'  //'
+  +' for the documentation about the tasks.json format'#13#10'  "version": "2.0'
+  +'.0",'#13#10'  "tasks": ['#13#10'    {'#13#10'      "label": "build",'#13#10
+  +'      "type": "shell",'#13#10'      "command": "lazbuild",'#13#10'      "ar'
+  +'gs": ["{PROJECTNAME}"],'#13#10'      "problemMatcher": {'#13#10'        "ow'
+  +'ner": "external",'#13#10'        "fileLocation": ["absolute"],'#13#10'     '
+  +'   "pattern": {'#13#10'           "regexp": "(([A-Za-z]):\\\\(?:[^\\/:*?\"<'
+  +'>|\\r\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.*(Fatal|'
+  +'Error|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",'#13#10'           "file"'
+  +': 1,'#13#10'           "line": 3,'#13#10'           "column": 4,'#13#10'   '
+  +'        "severity": 5,'#13#10'           "code": 6,'#13#10'           "mess'
+  +'age": 7'#13#10'        },'#13#10'        "severity": "info"'#13#10'      },'
+  +'      '#13#10'      "group": {'#13#10'        "kind": "build",'#13#10'     '
+  +'   "isDefault": true'#13#10'      }'#13#10'    }'#13#10'  ]'#13#10'}'
+]);
+LazarusResources.Add('projectlpi','TXT',[
+  '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
+  +'ons>'#13#10'    <Version Value="12"/>'#13#10'    <PathDelim Value="\"/>'#13
+  +#10'    <General>'#13#10'      <Flags>'#13#10'        <MainUnitHasCreateForm'
+  +'Statements Value="False"/>'#13#10'        <MainUnitHasTitleStatement Value='
+  +'"False"/>'#13#10'        <MainUnitHasScaledStatement Value="False"/>'#13#10
+  +'      </Flags>'#13#10'      <SessionStorage Value="InProjectDir"/>'#13#10' '
+  +'     <Title Value="{PROJECTNAME}"/>'#13#10'      <ResourceType Value="res"/'
+  +'>'#13#10'      <UseXPManifest Value="True"/>'#13#10'      <XPManifest>'#13
+  +#10'        <DpiAware Value="True"/>'#13#10'      </XPManifest>'#13#10'    <'
+  +'/General>'#13#10'    <VersionInfo>'#13#10'      <UseVersionInfo Value="True'
+  +'"/>'#13#10'      <MajorVersionNr Value="1"/>'#13#10'    </VersionInfo>'#13
+  +#10'    <BuildModes>'#13#10'      <Item Name="Debug" Default="True"/>'#13#10
+  +'      <Item Name="Release">'#13#10'        <CompilerOptions>'#13#10'       '
+  +'   <Version Value="11"/>'#13#10'          <PathDelim Value="\"/>'#13#10'   '
+  +'       <Target>'#13#10'            <Filename Value="{PROJECTNAME}"/>'#13#10
+  +'          </Target>'#13#10'          <SearchPaths>'#13#10'            <Incl'
+  +'udeFiles Value="$(ProjOutDir)"/>'#13#10'            <Libraries Value=""/>'
+  +#13#10'            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"'
+  +'/>'#13#10'          </SearchPaths>'#13#10'          <CodeGeneration>'#13#10
+  +'            <SmartLinkUnit Value="True"/>'#13#10'            <Optimizations'
+  +'>'#13#10'              <OptimizationLevel Value="3"/>'#13#10'            </'
+  +'Optimizations>'#13#10'          </CodeGeneration>'#13#10'          <Linking'
+  +'>'#13#10'            <Debugging>'#13#10'              <GenerateDebugInfo Va'
+  +'lue="False"/>'#13#10'            </Debugging>'#13#10'            <LinkSmart'
+  +' Value="True"/>'#13#10'          </Linking>'#13#10'        </CompilerOption'
+  +'s>'#13#10'      </Item>'#13#10'    </BuildModes>'#13#10'    <PublishOptions'
+  +'>'#13#10'      <Version Value="2"/>'#13#10'      <UseFileFilters Value="Tru'
+  +'e"/>'#13#10'    </PublishOptions>'#13#10'    <RunParams>'#13#10'      <Form'
+  +'atVersion Value="2"/>'#13#10'    </RunParams>'#13#10'    <Units>'#13#10'   '
+  +'   <Unit>'#13#10'        <Filename Value="{PROJECTNAME}.lpr"/>'#13#10'     '
+  +'   <IsPartOfProject Value="True"/>'#13#10'      </Unit>'#13#10'    </Units>'
+  +#13#10'  </ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Va'
+  +'lue="11"/>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'   '
+  +'   <Filename Value="{PROJECTNAME}"/>'#13#10'    </Target>'#13#10'    <Searc'
+  +'hPaths>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <Li'
+  +'braries Value=""/>'#13#10'      <UnitOutputDirectory Value="lib\$(TargetCPU'
+  +')-$(TargetOS)"/>'#13#10'    </SearchPaths>'#13#10'    <Parsing>'#13#10'    '
+  +'  <SyntaxOptions>'#13#10'        <IncludeAssertionCode Value="True"/>'#13#10
+  +'      </SyntaxOptions>'#13#10'    </Parsing>'#13#10'    <CodeGeneration>'#13
+  +#10'      <Checks>'#13#10'        <IOChecks Value="True"/>'#13#10'        <R'
+  +'angeChecks Value="True"/>'#13#10'        <OverflowChecks Value="True"/>'#13
+  +#10'        <StackChecks Value="True"/>'#13#10'      </Checks>'#13#10'      '
+  +'<VerifyObjMethodCallValidity Value="True"/>'#13#10'    </CodeGeneration>'#13
+  +#10'    <Linking>'#13#10'      <Debugging>'#13#10'        <DebugInfoType Val'
+  +'ue="dsDwarf3"/>'#13#10'        <UseHeaptrc Value="True"/>'#13#10'        <T'
+  +'rashVariables Value="True"/>'#13#10'        <UseExternalDbgSyms Value="True'
+  +'"/>'#13#10'      </Debugging>'#13#10'    </Linking>'#13#10'  </CompilerOpti'
+  +'ons>'#13#10'  <Debugging>'#13#10'    <Exceptions>'#13#10'      <Item>'#13#10
+  +'        <Name Value="EAbort"/>'#13#10'      </Item>'#13#10'      <Item>'#13
+  +#10'        <Name Value="ECodetoolError"/>'#13#10'      </Item>'#13#10'     '
+  +' <Item>'#13#10'        <Name Value="EFOpenError"/>'#13#10'      </Item>'#13
+  +#10'    </Exceptions>'#13#10'  </Debugging>'#13#10'</CONFIG>'
+]);
+LazarusResources.Add('projectlpr','TXT',[
+  'program {PROJECTNAME};'#13#10#13#10'{$MODE DELPHI}{$H+}'#13#10#13#10'begin'
+  +#13#10'end.'
+]);

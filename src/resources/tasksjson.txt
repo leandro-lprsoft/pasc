@@ -7,7 +7,7 @@
       "label": "build",
       "type": "shell",
       "command": "lazbuild",
-      "args": ["./src/pasc.lpi"],
+      "args": ["{PROJECTNAME}"],
       "problemMatcher": {
         "owner": "external",
         "fileLocation": ["absolute"],
