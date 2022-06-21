@@ -99,16 +99,8 @@ begin
 end;
 
 procedure CleanCommand(ABuilder: ICommandBuilder);
-var
-  LOption: IOption;
 begin
-  AnsweredAll := False;
-  for LOption in ABuilder.GetParsedOptions do
-    if LOption.Flag = 'f' then
-    begin
-      AnsweredAll := True;    
-      Break;
-    end;
+  AnsweredAll := ABuilder.CheckOption('f');
   
   WriteLn('Cleanning current path: ', GetCurrentDir);
   try

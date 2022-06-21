@@ -22,9 +22,19 @@
         },
         "severity": "info"
       },      
+      "dependsOn": "build resources",
       "group": {
         "kind": "build",
         "isDefault": true
+      }
+    },
+    {
+      "label": "build resources",
+      "type": "shell",
+      "command": "./src/resources/compile.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": false
       }
     }
   ]

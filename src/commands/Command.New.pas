@@ -80,6 +80,12 @@ begin
   end;
 end;
 
+procedure InitializeBoss(const AProjectDir: string);
+begin
+  SetCurrentDir(AProjectDir);
+  WriteLn(ShellCommand('boss', ['init', '--quiet']));
+end;
+
 procedure CreateProjectFiles(const AProjectName, AProjectDir: string);
 var
   LFile: TStringList = nil;
@@ -112,6 +118,38 @@ begin
   end;  
 end;
 
+procedure CreateSupportFilesForVSCode(const AProjectName, AProjectDir: string);
+var
+  LFile: TStringList = nil;
+  LContent: string;
+begin
+  try
+    WriteLn('Creating vs code taks and launch files'); 
+    SetCurrentDir(AProjectDir);
+   
+    LFile := TStringList.Create;
+
+    LContent := GetResource('launchjson');
+    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+    LFile.AddText(LContent);
+    LFile.SaveToFile(ConcatPaths([AProjectDir, '.vscode', 'launch.json']));
+
+    LContent := GetResource('tasksjson');
+    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+    LFile.Clear;
+    LFile.AddText(LContent);
+    LFile.SaveToFile(ConcatPaths([AProjectDir, '.vscode', 'tasks.json']));
+
+    LFile.Free;
+  except
+    on E: Exception do
+    begin
+      FreeAndNil(LFile);
+      raise;
+    end;
+  end;  
+end;
+
 procedure NewCommand(ABuilder: ICommandBuilder);
 var
   LProjectDir: string = '';
@@ -124,10 +162,9 @@ begin
   try
     CreateProjectFolders(ABuilder.Arguments[0].Value, LProjectDir);
     CreateProjectFiles(ABuilder.Arguments[0].Value, LProjectDir);
-    //CreateSupportFilesForVSCode
+    CreateSupportFilesForVSCode(ABuilder.Arguments[0].Value, LProjectDir);
     InitializeGit(LProjectDir);
-    //InitializeBoss
-        
+    InitializeBoss(LProjectDir);
   except
     on E: Exception do
     begin

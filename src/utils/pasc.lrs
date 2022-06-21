@@ -13,24 +13,25 @@ LazarusResources.Add('launchjson','TXT',[
   +'information, visit: https://go.microsoft.com/fwlink/?linkid=830387'#13#10' '
   +' "version": "0.2.0",'#13#10'  "configurations": ['#13#10'    {'#13#10'     '
   +' "name": "Debug - Tests",'#13#10'      "type": "by-gdb",'#13#10'      "requ'
-  +'est": "launch",'#13#10'      "program": "{PROJECTNAME}",'#13#10'      "cwd"'
-  +': "${workspaceRoot}"'#13#10'    }'#13#10'  ]'#13#10'}'
+  +'est": "launch",'#13#10'      "program": "./src/{PROJECTNAME}",'#13#10'     '
+  +' "preLaunchTask": "build",'#13#10'      "cwd": "${workspaceRoot}"'#13#10'  '
+  +'  }'#13#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('tasksjson','TXT',[
   '{'#13#10'  // See https://go.microsoft.com/fwlink/?LinkId=733558'#13#10'  //'
   +' for the documentation about the tasks.json format'#13#10'  "version": "2.0'
   +'.0",'#13#10'  "tasks": ['#13#10'    {'#13#10'      "label": "build",'#13#10
   +'      "type": "shell",'#13#10'      "command": "lazbuild",'#13#10'      "ar'
-  +'gs": ["{PROJECTNAME}"],'#13#10'      "problemMatcher": {'#13#10'        "ow'
-  +'ner": "external",'#13#10'        "fileLocation": ["absolute"],'#13#10'     '
-  +'   "pattern": {'#13#10'           "regexp": "(([A-Za-z]):\\\\(?:[^\\/:*?\"<'
-  +'>|\\r\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.*(Fatal|'
-  +'Error|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",'#13#10'           "file"'
-  +': 1,'#13#10'           "line": 3,'#13#10'           "column": 4,'#13#10'   '
-  +'        "severity": 5,'#13#10'           "code": 6,'#13#10'           "mess'
-  +'age": 7'#13#10'        },'#13#10'        "severity": "info"'#13#10'      },'
-  +'      '#13#10'      "group": {'#13#10'        "kind": "build",'#13#10'     '
-  +'   "isDefault": true'#13#10'      }'#13#10'    }'#13#10'  ]'#13#10'}'
+  +'gs": ["./src/{PROJECTNAME}.lpi"],'#13#10'      "problemMatcher": {'#13#10' '
+  +'       "owner": "external",'#13#10'        "fileLocation": ["absolute"],'#13
+  +#10'        "pattern": {'#13#10'           "regexp": "(([A-Za-z]):\\\\(?:[^\'
+  +'\/:*?\"<>|\\r\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.'
+  +'*(Fatal|Error|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",'#13#10'         '
+  +'  "file": 1,'#13#10'           "line": 3,'#13#10'           "column": 4,'#13
+  +#10'           "severity": 5,'#13#10'           "code": 6,'#13#10'          '
+  +' "message": 7'#13#10'        },'#13#10'        "severity": "info"'#13#10'  '
+  +'    },      '#13#10'      "group": {'#13#10'        "kind": "build",'#13#10
+  +'        "isDefault": true'#13#10'      }'#13#10'    }'#13#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('projectlpi','TXT',[
   '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
@@ -89,4 +90,11 @@ LazarusResources.Add('projectlpi','TXT',[
 LazarusResources.Add('projectlpr','TXT',[
   'program {PROJECTNAME};'#13#10#13#10'{$MODE DELPHI}{$H+}'#13#10#13#10'begin'
   +#13#10'end.'
+]);
+LazarusResources.Add('update-path-ps1','TXT',[
+  '$EnvPathCheck = [System.Environment]::GetEnvironmentVariable("Path","User")'
+  +#13#10#13#10'$PascPath = Join-Path -Path $HOME -ChildPath ".pasc"'#13#10'if '
+  +'(-Not $EnvPathCheck.Contains($PascPath)) {'#13#10'  $EnvPathCheck = $EnvPat'
+  +'hCheck + ";" + $PascPath'#13#10'  [System.Environment]::SetEnvironmentVaria'
+  +'ble("Path", $EnvPathCheck, "User")'#13#10'}'
 ]);

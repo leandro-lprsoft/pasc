@@ -1,0 +1,7 @@
+$EnvPathCheck = [System.Environment]::GetEnvironmentVariable("Path","User")
+
+$PascPath = Join-Path -Path $HOME -ChildPath ".pasc"
+if (-Not $EnvPathCheck.Contains($PascPath)) {
+  $EnvPathCheck = $EnvPathCheck + ";" + $PascPath
+  [System.Environment]::SetEnvironmentVariable("Path", $EnvPathCheck, "User")
+}

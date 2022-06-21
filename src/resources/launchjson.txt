@@ -8,7 +8,8 @@
       "name": "Debug - Tests",
       "type": "by-gdb",
       "request": "launch",
-      "program": "{PROJECTNAME}",
+      "program": "./src/{PROJECTNAME}",
+      "preLaunchTask": "build",
       "cwd": "${workspaceRoot}"
     }
   ]

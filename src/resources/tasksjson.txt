@@ -7,7 +7,7 @@
       "label": "build",
       "type": "shell",
       "command": "lazbuild",
-      "args": ["{PROJECTNAME}"],
+      "args": ["./src/{PROJECTNAME}.lpi"],
       "problemMatcher": {
         "owner": "external",
         "fileLocation": ["absolute"],
