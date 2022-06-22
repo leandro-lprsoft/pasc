@@ -31,7 +31,8 @@
     {
       "label": "build resources",
       "type": "shell",
-      "command": "./src/resources/compile.ps1",
+      "windows": {"command": "./src/resources/compile.ps1"},
+      "linux": {"command": "./src/resources/compile.sh"},
       "group": {
         "kind": "build",
         "isDefault": false

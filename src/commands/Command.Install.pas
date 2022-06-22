@@ -12,6 +12,7 @@ implementation
 
 uses
   Classes,
+  StrUtils,
   SysUtils,
   FileUtil,
   Utils.Resources,
@@ -35,20 +36,56 @@ begin
     CopyFile(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))]), [cffOverwriteFile]);  
 end;
 
-procedure UpdateEnvironmentPath(const AFolder: string);
+procedure UpdateEnvironmentPathLinux(const AFolder: string);
+var
+  LFile: TStringList = nil;
+  LProfile: string;
+  I: Integer;
+  LFound: Boolean = false;
+begin
+  WriteLn('updating environment path, this may require administration privileges ', ApplicationName);
+
+  LFile := TStringList.Create;
+  try
+    LProfile := ConcatPaths([GetUserDir, '.profile']);
+    LFile.LoadFromFile(LProfile);
+    
+    WriteLn('changing file ~/.profile ', ApplicationName);
+
+    for I := 0 to LFile.Count -1 do 
+      if ContainsText(LFile.Strings[I], '.pasc:$PATH') then 
+      begin
+        LFound := True;
+        break;
+      end;
+
+    if not LFound then
+    begin
+      LFile.Add('PATH="$HOME/.pasc:$PATH"');
+      LFile.SaveToFile(LProfile);
+    end;
+    
+    WriteLn('running source ~/.profile to make path changes to take effect ', ApplicationName);
+
+    LFile.Clear;
+    LFile.AddText(GetResource('update-path-sh'));
+    LFile.SaveToFile(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']));
+
+    WriteLn(ShellCommand('bash', [ConcatPaths([GetUserDir, '.pasc', 'update-path.sh'])]));
+  finally
+    LFile.Free;
+  end; 
+end;
+
+procedure UpdateEnvironmentPathWindows(const AFolder: string);
 var
   LScript, LName: string;
   LFile: TStringList = nil;
 begin
   WriteLn('updating environment path, this may require administration privileges ', ApplicationName);
 
-  {$IF DEFINED(WINDOWS)}
-    LScript := GetResource('update-path-ps1');
-    LName := 'update-path.ps1';
-  {$ELSE}
-    LScript := GetResource('update-path-sh');
-    LName := 'update-path.sh';
-  {$ENDIF}
+  LScript := GetResource('update-path-ps1');
+  LName := 'update-path.ps1';
 
   WriteLn('creating shell script file: ', LName);
   LFile := TStringList.Create;
@@ -62,11 +99,7 @@ begin
   WriteLn('running shell script file: ', LName);
   SetCurrentDir(AFolder);
 
-  {$IF DEFINED(WINDOWS)}
   ShellCommand('powershell', [ConcatPaths([AFolder, LName])]);
-  {$ELSE}
-  ShellCommand('bash', [ConcatPaths([AFolder, LName])]);
-  {$ENDIF}
 
   WriteLn('please restart your terminal app', LName);
 end;
@@ -77,7 +110,11 @@ var
 begin
   CreateFolder(LAppFolder);
   CopyApp(LAppFolder);
-  UpdateEnvironmentPath(LAppFolder);
+  {$IF DEFINED(WINDOWS)}
+  UpdateEnvironmentPathWindows(LAppFolder);
+  {$ELSE}
+  UpdateEnvironmentPathLinux(LAppFolder);
+  {$ENDIF}
   WriteLn('done.');
 end;
 

@@ -6,5 +6,5 @@ $CurrentDir = Join-Path -Path $CurrentDir -ChildPath "resources"
 Write-Host $StartDir
 Write-Host $CurrentDir
 Set-Location $CurrentDir
-lazres ..\utils\pasc.lrs .\gitignore.txt .\launchjson.txt .\tasksjson.txt .\projectlpi.txt .\projectlpr.txt .\update-path-ps1.txt
+lazres ..\utils\pasc.lrs .\gitignore.txt .\launchjson.txt .\tasksjson.txt .\projectlpi.txt .\projectlpr.txt .\update-path-ps1.txt .\update-path-sh.txt
 Set-Location $StartDir
