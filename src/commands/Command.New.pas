@@ -16,7 +16,8 @@ uses
   Classes,
   SysUtils,
   Utils.Shell,
-  Utils.Resources;
+  Utils.Resources,
+  Utils.IO;
 
 const
   GITIGNORE: array [0..16] of string = (
@@ -80,10 +81,23 @@ begin
   end;
 end;
 
+procedure ChangeBossFileSourcePath(const AProjectDir: string);
+var
+  LFile, LContent: string;
+begin
+  LFile := ConcatPaths([AProjectDir, 'boss.json']);
+  LContent := GetFileContent(LFile);
+  LContent := StringReplace(LContent, '"mainsrc": "./"', '"mainsrc": "src/"', [rfReplaceAll]);
+  SaveFileContent(LFile, LContent);
+end;
+
 procedure InitializeBoss(const AProjectDir: string);
 begin
   SetCurrentDir(AProjectDir);
-  WriteLn(ShellCommand('boss', ['init', '--quiet']));
+  WriteLn('boss init --quiet');
+  ShellCommand('boss', ['init', '--quiet']);
+  WriteLn('adjusting "mainsrc" boss file attribute');
+  ChangeBossFileSourcePath(AProjectDir);
 end;
 
 procedure CreateProjectFiles(const AProjectName, AProjectDir: string);
@@ -100,13 +114,13 @@ begin
     LContent := GetResource('projectlpr');
     LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, 'src', AProjectName + '.lpr']));
+    LFile.SaveToFile(ConcatPaths([AProjectDir, AProjectName + '.lpr']));
 
     LContent := GetResource('projectlpi');
     LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
     LFile.Clear;
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, 'src', AProjectName + '.lpi']));
+    LFile.SaveToFile(ConcatPaths([AProjectDir, AProjectName + '.lpi']));
 
     LFile.Free;
   except
@@ -171,12 +185,6 @@ begin
       WriteLn(E.Message);
     end;
   end;
-  
-  // create a .lpr file
-  // create a .lpi file
-  // init vscode tasks.json, launch.json
-  // init boss?
-
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

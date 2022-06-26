@@ -23,7 +23,7 @@ begin
   ABuilder
     .AddCommand(
       'watch',
-      'watch for changes in directory project and runs build, tests, or just runs the application.'#13#10 +
+      'watch for project folder changes to build, tests, or just runs the app.'#13#10 +
       'Ex: ' + ABuilder.ExeName + ' watch'#13#10 +
       'Ex: ' + ABuilder.ExeName + ' watch sample1.lpr',
       @WatchCommand,

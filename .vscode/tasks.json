@@ -7,7 +7,7 @@
       "label": "build",
       "type": "shell",
       "command": "lazbuild",
-      "args": ["./src/pasc.lpi"],
+      "args": ["./pasc.lpi"],
       "problemMatcher": {
         "owner": "external",
         "fileLocation": ["absolute"],
@@ -37,6 +37,23 @@
         "kind": "build",
         "isDefault": false
       }
+    },
+    {
+      "label": "build tests",
+      "type": "shell",
+      "command": "lazbuild",
+      "args": ["./tests/TestPasc.lpi"]
+    },
+    {
+      "label": "tests",
+      "type": "shell",
+      "command": "./pasc",
+      "args": ["test"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "dependsOn": "build tests"
     }
   ]
 }
