@@ -6,9 +6,9 @@
   "configurations": [
     {
       "name": "Debug - Tests",
-      "type": "by-gdb",
+      "type": "gdb",
       "request": "launch",
-      "program": "./{PROJECTNAME}",
+      "target": "./{PROJECTNAME}",
       "preLaunchTask": "build",
       "cwd": "${workspaceRoot}"
     }

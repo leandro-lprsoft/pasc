@@ -12,10 +12,10 @@ LazarusResources.Add('launchjson','TXT',[
   +'// Hover to view descriptions of existing attributes.'#13#10'  // For more '
   +'information, visit: https://go.microsoft.com/fwlink/?linkid=830387'#13#10' '
   +' "version": "0.2.0",'#13#10'  "configurations": ['#13#10'    {'#13#10'     '
-  +' "name": "Debug - Tests",'#13#10'      "type": "by-gdb",'#13#10'      "requ'
-  +'est": "launch",'#13#10'      "program": "./{PROJECTNAME}",'#13#10'      "pr'
-  +'eLaunchTask": "build",'#13#10'      "cwd": "${workspaceRoot}"'#13#10'    }'
-  +#13#10'  ]'#13#10'}'
+  +' "name": "Debug - Tests",'#13#10'      "type": "gdb",'#13#10'      "request'
+  +'": "launch",'#13#10'      "target": "./{PROJECTNAME}",'#13#10'      "preLau'
+  +'nchTask": "build",'#13#10'      "cwd": "${workspaceRoot}"'#13#10'    }'#13
+  +#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('tasksjson','TXT',[
   '{'#13#10'  // See https://go.microsoft.com/fwlink/?LinkId=733558'#13#10'  //'

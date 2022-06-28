@@ -6,10 +6,17 @@ interface
 
 uses
   Classes,
-  SysUtils;
+  SysUtils,
+  StrUtils;
 
+  /// get the contents of AFileName in string
   function GetFileContent(const AFileName: string): string;
+
+  /// save AContent string in a file
   procedure SaveFileContent(const AFileName, AContent: string);
+
+  /// returns first ocurrence of text in format line:column
+  function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
 
 implementation
 
@@ -48,6 +55,16 @@ begin
       raise;
     end;
   end;
+end;
+
+function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 0 to ACodeFile.Count - 1 do
+    if ContainsText(ACodeFile.Strings[I], AText) then
+      Exit(IntToStr(I + 1) + ':1');
 end;
 
 end.

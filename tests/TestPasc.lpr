@@ -3,7 +3,11 @@ program TestPasc;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, consoletestrunner, TestCommandTest;
+  Classes, 
+  consoletestrunner, 
+  Resources,
+  TestCommandTest,
+  TestUtilsLeak;
 
 type
 

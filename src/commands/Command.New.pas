@@ -19,27 +19,6 @@ uses
   Utils.Resources,
   Utils.IO;
 
-const
-  GITIGNORE: array [0..16] of string = (
-    '# files',
-    '*.lps',
-    '*.compiled',
-    '*.[oa]',
-    '*.ppu',
-    '*.rst',
-    '*.cgi',
-    '*.exe',
-    '*.log',
-    '*.bak*',
-    'fp.ini',
-    'fp.cfg',
-    'fp.dsk',
-    '# folders',
-    '**/lib/',
-    '**/backup/',
-    '**/modules/'
-  );
-
 procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
 begin
   AProjectDir := ConcatPaths([GetCurrentDir, AProjectName]);
@@ -69,7 +48,7 @@ begin
     WriteLn(ShellCommand('git', ['init']));
 
     LFile := TStringList.Create;
-    LFile.AddText(string.Join(#13#10, GITIGNORE));
+    LFile.AddText(GetResource('gitignore'));
     LFile.SaveToFile(ConcatPaths([AProjectDir, '.gitignore']));
     LFile.Free;
   except

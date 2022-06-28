@@ -39,10 +39,21 @@
       }
     },
     {
+      "label": "build tests resources",
+      "type": "shell",
+      "windows": {"command": "./tests/resources/compile.ps1"},
+      "linux": {"command": "./tests/resources/compile.sh"},
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
       "label": "build tests",
       "type": "shell",
       "command": "lazbuild",
-      "args": ["./tests/TestPasc.lpi"]
+      "args": ["./tests/TestPasc.lpi"],
+      "dependsOn": "build tests resources"
     },
     {
       "label": "tests",
