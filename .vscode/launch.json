@@ -6,11 +6,12 @@
   "configurations": [
     {
       "name": "Debug - Tests",
-      "type": "by-gdb",
+      "type": "gdb",
       "request": "launch",
-      "program": "./pasc",
-      "programArgs": "clean",
-      "cwd": "${workspaceRoot}"
+      "target": "./tests/TestPasc",
+      "arguments": "--suite=TestFindFile",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "build tests"
     }
   ]
 }

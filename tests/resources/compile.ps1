@@ -6,5 +6,5 @@ $CurrentDir = Join-Path -Path $CurrentDir -ChildPath "resources"
 Write-Host $StartDir
 Write-Host $CurrentDir
 Set-Location $CurrentDir
-lazres ..\testdata.lrs .\leak_simple.trc
+lazres ..\testdata.lrs .\leak_simple.txt .\leak_none.txt
 Set-Location $StartDir

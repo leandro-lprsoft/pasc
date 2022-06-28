@@ -5,5 +5,5 @@ CurrentDir=$StartDir"/tests/resources"
 echo $StartDir
 echo $CurrentDir
 cd $CurrentDir
-lazres ../testdata.lrs ./leak_simple.txt
+lazres ../testdata.lrs ./leak_simple.txt ./leak_none.txt
 cd $StartDir

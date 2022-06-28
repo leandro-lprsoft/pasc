@@ -114,7 +114,7 @@ begin
   LLeak := TLeakReport.New(ABuilder, ExtractFilePath(LExeFile));
   try
     LLeak.Executable := LExeOnly;
-    LLeak.ParseHeapTrace(LOutput);
+    LLeak.ParseHeapTrace('');
     LLeak.Output;
   except
     LLeak.Free;

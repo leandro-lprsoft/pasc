@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-  <!-- Generated using FPCUnit on 2022-06-28 13:38:57-->
+  <!-- Generated using FPCUnit on 2022-06-28 17:31:14-->
   <TestListing>
-    <TestSuite Name="" ElapsedTime="00:00:00.001" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
+    <TestSuite Name="" ElapsedTime="00:00:00.012" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="8" NumberOfIgnoredTests="0">
       <TestSuite Name="TTestCommandTest" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
         <Test Name="TestHookUp" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestAnother" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
-      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.001" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsIO" ElapsedTime="00:00:00.001" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="1" NumberOfIgnoredTests="0">
+        <Test Name="TestFindFile" Result="OK" ElapsedTime="00:00:00.001"/>
+      </TestSuite>
+      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.011" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="5" NumberOfIgnoredTests="0">
+        <Test Name="TestAddRelativePath" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestGetNextStringOf" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentSimpleLeak" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.011"/>
+        <Test Name="TestParseContentLeakNone" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestLeak" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
     </TestSuite>
   </TestListing>
   <Title>pasc console test runner</Title>
-  <NumberOfRunTests>4</NumberOfRunTests>
+  <NumberOfRunTests>8</NumberOfRunTests>
   <NumberOfErrors>0</NumberOfErrors>
   <NumberOfFailures>0</NumberOfFailures>
   <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
-  <TotalElapsedTime>00:00:00.001</TotalElapsedTime>
-  <DateTimeRan>2022-06-28 13:38:57</DateTimeRan>
+  <TotalElapsedTime>00:00:00.012</TotalElapsedTime>
+  <DateTimeRan>2022-06-28 17:31:14</DateTimeRan>
 </TestResults>

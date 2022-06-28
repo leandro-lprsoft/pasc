@@ -23,8 +23,11 @@ type
     procedure SetUp; override;
     procedure TearDown; override;
   published
+    procedure TestAddRelativePath;
     procedure TestGetNextStringOf;
-    procedure TestParseContentSimpleLeak;
+    procedure TestParseContentLeakSimple;
+    procedure TestParseContentLeakNone;
+    procedure TestLeak;
   end;
 
 implementation
@@ -43,6 +46,14 @@ begin
   FLeakReport.Free;
 end;
 
+procedure TTestUtilsLeak.TestAddRelativePath;
+begin
+  AssertEquals(
+    ConcatPaths(['.', 'tests', 'resources', 'leak_none.txt']),
+    FLeakReport.AddRelativePath('leak_none.txt')    
+  );
+end;
+
 procedure TTestUtilsLeak.TestGetNextStringOf;
 begin
   AssertEquals(
@@ -54,15 +65,32 @@ begin
     '$0000000001518E30');    
 end;
 
-procedure TTestUtilsLeak.TestParseContentSimpleLeak;
+procedure TTestUtilsLeak.TestParseContentLeakSimple;
 begin
   FLeakReport.ParseHeapTrace(GetResource('leak_simple'));
-
   AssertEquals('Should report one leak', 1, Length(FLeakReport.LeakData));
 end;
 
-initialization
+procedure TTestUtilsLeak.TestParseContentLeakNone;
+begin
+  FLeakReport.ParseHeapTrace(GetResource('leak_none'));
+  AssertEquals('Should report one leak', 0, Length(FLeakReport.LeakData));
+end;
 
+procedure SecondLevelLeak;
+var
+  LObject: TObject;
+begin
+  LObject := TObject.Create;
+end;
+
+procedure TTestUtilsLeak.TestLeak;
+begin
+  SecondLevelLeak;
+end;
+
+initialization
   RegisterTest(TTestUtilsLeak);
+
 end.
 

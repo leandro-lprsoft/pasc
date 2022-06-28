@@ -4,9 +4,11 @@ program TestPasc;
 
 uses
   Classes, 
+  SysUtils,
   consoletestrunner, 
   Resources,
   TestCommandTest,
+  TestUtilsIO,
   TestUtilsLeak;
 
 type
@@ -24,6 +26,11 @@ var
   Application: TTestPascRunner;
 
 begin
+  {$IF DECLARED(UseHeapTrace)}
+  if FileExists('tests/heap.trc') then
+    DeleteFile('tests/heap.trc');
+  SetHeapTraceOutput('tests/heap.trc');
+  {$ENDIF}
   Application := TTestPascRunner.Create(nil);
   Application.Initialize;
   Application.Title := 'pasc console test runner';

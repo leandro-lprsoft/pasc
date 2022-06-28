@@ -11,6 +11,7 @@
 *.exe
 *.log
 *.bak*
+*.trc
 fp.ini
 fp.cfg
 fp.dsk

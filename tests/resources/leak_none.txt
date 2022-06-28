@@ -1,0 +1,6 @@
+Heap dump by heaptrc unit of C:\Users\leand\projects\pasc\tests\TestPasc.exe
+847 memory blocks allocated : 64929/67432
+847 memory blocks freed     : 64929/67432
+0 unfreed memory blocks : 0
+True heap size : 262144 (256 used in System startup)
+True free heap : 261888
