@@ -30,6 +30,11 @@ type
     procedure TestGetNextStringOfEmpty;
     procedure TestParseContentLeakSimple;
     procedure TestParseContentLeakNone;
+    procedure TestParseContentLeakIncompleteInfo;
+    procedure TestOutputNoLeak;
+    procedure TestOutputMissingLeak;
+    procedure TestOutputLeakSimple;
+    procedure TestOutputLeakIncomplete;
     procedure TestLeak;
   end;
 
@@ -126,6 +131,11 @@ begin
   AssertEquals('Should report one leak', 0, Length(FLeakReport.LeakData));
 end;
 
+procedure TTestUtilsLeak.TestParseContentLeakIncompleteInfo;
+begin
+  
+end;
+
 procedure SecondLevelLeak;
 var
   LObject: TObject;
@@ -136,6 +146,26 @@ end;
 procedure TTestUtilsLeak.TestLeak;
 begin
   SecondLevelLeak;
+end;
+
+procedure TTestUtilsLeak.TestOutputNoLeak;
+begin
+  
+end;
+
+procedure TTestUtilsLeak.TestOutputMissingLeak;
+begin
+  
+end;
+
+procedure TTestUtilsLeak.TestOutputLeakSimple;
+begin
+  
+end;
+
+procedure TTestUtilsLeak.TestOutputLeakIncomplete;
+begin
+  
 end;
 
 initialization
