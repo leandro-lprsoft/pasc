@@ -9,7 +9,7 @@
       "type": "gdb",
       "request": "launch",
       "target": "./tests/TestPasc",
-      "arguments": "--suite=TestFindFile",
+      "arguments": "--suite=TestCreateLeakItem",
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build tests"
     }

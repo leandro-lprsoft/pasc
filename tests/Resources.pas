@@ -8,11 +8,11 @@ uses
   SysUtils,
   LResources;
 
-  function GetResource(const AName: string): string;
+  function GetTestResource(const AName: string): string;
 
 implementation
 
-function GetResource(const AName: string): string;
+function GetTestResource(const AName: string): string;
 var
   LResource: TLResource = nil;
 begin

@@ -1,3 +1,6 @@
+/// <summary> Unit which has a set of functions for manipulating files and their contents. 
+/// It has some functions for content search as well.
+/// </summary>
 unit Utils.IO;
 
 {$MODE DELPHI}{$H+}
@@ -9,17 +12,26 @@ uses
   SysUtils,
   StrUtils;
 
-  /// get the contents of AFileName in string
+  /// <summary> Get the contents of AFileName in string. </summary>
+  /// <param AName="AFileName"> File name that will have its content returned </param>
   function GetFileContent(const AFileName: string): string;
 
-  /// save AContent string in a file
+  /// <summary> Save AContent string in the provided file name. </summary>
+  /// <param name="AFileName">Target file name, the file name will be replaced </param>
+  /// <param name="AContent">Content string that will be saved on the file </param>
   procedure SaveFileContent(const AFileName, AContent: string);
 
-  /// returns first ocurrence of text in format line:column
+  /// <summary> Returns first ocurrence of text in format line:1 (column is always 1).
+  /// It is case insensitive search. 
+  /// If not text is found the function returns an empty string.</summary>
+  /// <param name="ACodeFile"> Should have have the file contents already loaded. </param>
+  /// <param name="AText"> The text to be found </param>
   function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
 
-  /// Recursively search for the file from the specified path. 
-  /// Returns the filename with the full path if it was found.
+  /// <summary>Recursively search for the first file from the specified path. 
+  /// Returns the filename with the full path if it was found. </summary>
+  /// <param name="ACurrentDir">Folder from which to search including subfolders</param>
+  /// <param name="AFileName">Name of the file to be searched</param>
   function FindFile(const ACurrentDir, AFileName: string): string;
   
 implementation
