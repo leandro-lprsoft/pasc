@@ -45,9 +45,25 @@ uses
   StrUtils,
   Resources;
 
+var
+  CapturedOutput: string;
+
+procedure MockOutput(const AMessage: string);
+begin
+  CapturedOutput := CapturedOutput + AMessage + #13#10;
+end;
+
+procedure MockOutputColor(const AMessage: string; const AColor: Byte);
+begin
+  CapturedOutput := CapturedOutput + AMessage;
+end;
+
 procedure TTestUtilsLeak.SetUp;
 begin
   FBuilder := TCommandBuilder.Create(ParamStr(0));
+  FBuilder.Output := MockOutput;
+  FBuilder.OutputColor := MockOutputColor;
+  CapturedOutput := '';  
   FLeakReport := TLeakReport.New(FBuilder, ExtractFilePath(ParamStr(0)));
 end;
 
@@ -140,6 +156,50 @@ begin
     ContainsText(FLeakReport.LeakData[0].Source, 'no details found in heap trace file'))
 end;
 
+procedure TTestUtilsLeak.TestOutputNoLeak;
+begin
+  FLeakReport.ParseHeapTrace(GetTestResource('leak_none'));
+  FLeakReport.Output;
+
+  AssertTrue(
+    'Must contain text indicating that no memory leak occurred: 0 unfreed memory...',
+    ContainsText(CapturedOutput, '0 unfreed memory'));
+end;
+
+procedure TTestUtilsLeak.TestOutputMissingLeak;
+begin
+  FLeakReport.ParseHeapTrace('no file');
+  FLeakReport.Output;
+
+  AssertTrue(
+    'Must contain text indicating that memory leak info is missing',
+    ContainsText(CapturedOutput, 'missing data with leak information'));  
+end;
+
+procedure TTestUtilsLeak.TestOutputLeakSimple;
+begin
+  FLeakReport.ParseHeapTrace(GetTestResource('leak_simple'));
+  FLeakReport.Output;
+
+  AssertTrue(
+    'Must contain text pointing to a memory leak',
+    ContainsText(CapturedOutput, 'Leak ['));    
+
+  AssertTrue(
+    'Must contain text indicating the method that caused the leak: CalcTest',
+    ContainsText(CapturedOutput, 'CalcTest'));    
+end;
+
+procedure TTestUtilsLeak.TestOutputLeakIncomplete;
+begin
+  FLeakReport.ParseHeapTrace(GetTestResource('leak_incomplete'));
+  FLeakReport.Output;
+
+  AssertTrue(
+    'Must contain text pointing to incomplete data' + CapturedOutput,
+    ContainsText(CapturedOutput, 'no details found in heap trace file'));     
+end;
+
 procedure SecondLevelLeak;
 var
   LObject: TObject;
@@ -151,26 +211,6 @@ end;
 procedure TTestUtilsLeak.TestLeak;
 begin
   SecondLevelLeak;
-end;
-
-procedure TTestUtilsLeak.TestOutputNoLeak;
-begin
-  
-end;
-
-procedure TTestUtilsLeak.TestOutputMissingLeak;
-begin
-  
-end;
-
-procedure TTestUtilsLeak.TestOutputLeakSimple;
-begin
-  
-end;
-
-procedure TTestUtilsLeak.TestOutputLeakIncomplete;
-begin
-  
 end;
 
 procedure TTestUtilsLeak.TestLeakTwo;

@@ -9,7 +9,8 @@ uses
   Resources,
   TestCommandTest,
   TestUtilsIO,
-  TestUtilsLeak;
+  TestUtilsLeak,
+  TestUtilsShell;
 
 type
 

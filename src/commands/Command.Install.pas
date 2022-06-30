@@ -16,12 +16,14 @@ uses
   SysUtils,
   FileUtil,
   Utils.Resources,
-  Utils.Shell;
+  Utils.Shell,
+  Utils.IO;
 
-procedure CreateFolder(var AFolder: string);
+procedure CreateFolder(ABuilder: ICommandBuilder; var AFolder: string);
 begin
   AFolder := ConcatPaths([GetUserDir, '.pasc']);
-  WriteLn('creating destination folder ', AFolder);
+  ABuilder.OutputColor('creating destination folder ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor(AFolder + #13#10, ABuilder.ColorTheme.Title);
   if not DirectoryExists(AFolder) then
   begin
     SetCurrentDir(GetUserDir);
@@ -29,9 +31,11 @@ begin
   end;
 end;
 
-procedure CopyApp(const AFolder: string);
+procedure CopyApp(ABuilder: ICommandBuilder; const AFolder: string);
 begin
-  WriteLn('copying ', ApplicationName);
+  ABuilder.OutputColor('copying ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor(ApplicationName, ABuilder.ColorTheme.Value);
+  ABuilder.OutputColor(' to destination folder' + #13#10, ABuilder.ColorTheme.Other);
   if not SameText(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))])) then
     CopyFile(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))]), [cffOverwriteFile]);  
 end;
@@ -119,48 +123,43 @@ begin
   end; 
 end;
 
-procedure UpdateEnvironmentPathWindows(const AFolder: string);
+procedure UpdateEnvironmentPathWindows(ABuilder: ICommandBuilder; const AFolder: string);
 var
-  LScript, LName: string;
-  LFile: TStringList = nil;
+  LName: string = 'update-path.ps1';
 begin
-  WriteLn('updating environment path, this may require administration privileges ', ApplicationName);
+  ABuilder.OutputColor(
+    'updating environment path, this may require administration privileges'#13#10, 
+    ABuilder.ColorTheme.Other);
 
-  LScript := GetResource('update-path-ps1');
-  LName := 'update-path.ps1';
+  SaveFileContent(ConcatPaths([AFolder, LName]), GetResource('update-path-ps1'));
 
-  WriteLn('creating shell script file: ', LName);
-  LFile := TStringList.Create;
-  try
-    LFile.AddText(LScript);
-    LFile.SaveToFile(ConcatPaths([AFolder, LName]));
-  finally
-    LFile.Free;
-  end;
-
-  WriteLn('running shell script file: ', LName);
-  SetCurrentDir(AFolder);
+  ABuilder.OutputColor('running shell script file: ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor(LName + #13#10, ABuilder.ColorTheme.Title);
 
   ShellCommand('powershell', [ConcatPaths([AFolder, LName])]);
 
-  WriteLn('please restart your terminal app', LName);
+  ABuilder.OutputColor(
+    'please restart your terminal app to path variable take effect'#13#10, 
+    ABuilder.ColorTheme.Other);
 end;
 
 procedure InstallCommand(ABuilder: ICommandBuilder);
 var
   LAppFolder: string = '';
 begin
-  CreateFolder(LAppFolder);
-  CopyApp(LAppFolder);
+  CreateFolder(ABuilder, LAppFolder);
+  CopyApp(ABuilder, LAppFolder);
+  SetCurrentDir(LAppFolder);
   {$IF DEFINED(WINDOWS)}
-  UpdateEnvironmentPathWindows(LAppFolder);
+  UpdateEnvironmentPathWindows(ABuilder, LAppFolder);
   {$ENDIF}
-  {$IF DEFINED(LINUX)}
+  {$IF DEFINED(UNIX)}
   UpdateEnvironmentPathLinux(LAppFolder);
-  {$ELSE}
+  {$ENDIF}
+  {$IF DEFINED(MACOS)}
   UpdateEnvironmentPathMacos(LAppFolder);
   {$ENDIF}
-  WriteLn('done.');
+  ABuilder.OutputColor('install complete.'#13#10, ABuilder.ColorTheme.Title);
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

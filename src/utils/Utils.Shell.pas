@@ -48,6 +48,7 @@ begin
     LStream.Position := 0; 
     LString := TStringList.Create;
     LString.LoadFromStream(LStream);
+    LString.TrailingLineBreak := False;
 
     Result := LString.Text;
 
