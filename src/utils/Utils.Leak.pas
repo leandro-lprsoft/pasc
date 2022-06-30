@@ -190,7 +190,7 @@ begin
       GetNextStringOf(LText, 'line') + ':1' + #13#10;
 
   end;
-  LItem.FSource := LDetail;
+  LItem.FSource := IfThen(LDetail = '', 'no details found in heap trace file.'#13#10, LDetail);
   AddItem(LItem);
 end;
 

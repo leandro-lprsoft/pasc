@@ -20,3 +20,5 @@ fp.dsk
 **/lib/
 **/backup/
 **/modules/
+
+*.app

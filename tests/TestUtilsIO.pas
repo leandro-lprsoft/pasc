@@ -98,7 +98,7 @@ begin
 
   // assert
   AssertTrue('File was not created', LExists);
-  AssertEquals(LContent + #13#10, LActualContent);
+  AssertTrue('Text should be on read content.', ContainsText(LActualContent, LContent));
 end;
 
 initialization

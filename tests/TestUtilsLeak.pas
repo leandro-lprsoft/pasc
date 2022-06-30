@@ -36,6 +36,7 @@ type
     procedure TestOutputLeakSimple;
     procedure TestOutputLeakIncomplete;
     procedure TestLeak;
+    procedure TestLeakTwo;
   end;
 
 implementation
@@ -133,7 +134,10 @@ end;
 
 procedure TTestUtilsLeak.TestParseContentLeakIncompleteInfo;
 begin
-  
+  FLeakReport.ParseHeapTrace(GetTestResource('leak_incomplete'));
+  AssertEquals('Should report two leaks', 2, Length(FLeakReport.LeakData));
+  AssertTrue('Should contain text that indicates incomplete info', 
+    ContainsText(FLeakReport.LeakData[0].Source, 'no details found in heap trace file'))
 end;
 
 procedure SecondLevelLeak;
@@ -166,6 +170,11 @@ end;
 procedure TTestUtilsLeak.TestOutputLeakIncomplete;
 begin
   
+end;
+
+procedure TTestUtilsLeak.TestLeakTwo;
+begin
+  SecondLevelLeak;
 end;
 
 initialization

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-  <!-- Generated using FPCUnit on 2022-06-29 20:32:09-->
+  <!-- Generated using FPCUnit on 2022-06-29 22:13:04-->
   <TestListing>
-    <TestSuite Name="" ElapsedTime="00:00:00.027" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="19" NumberOfIgnoredTests="0">
+    <TestSuite Name="" ElapsedTime="00:00:00.022" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="20" NumberOfIgnoredTests="0">
       <TestSuite Name="TTestCommandTest" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
         <Test Name="TestHookUp" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestAnother" Result="OK" ElapsedTime="00:00:00.000"/>
@@ -13,28 +13,29 @@
         <Test Name="TestFindInCodeFile" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestFindFile" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
-      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.027" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="13" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.022" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="14" NumberOfIgnoredTests="0">
         <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestAddRelativePath" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.006"/>
+        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.011"/>
         <Test Name="TestGetNextStringOf" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestGetNextStringOfEmpty" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.021"/>
+        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.010"/>
         <Test Name="TestParseContentLeakNone" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.001"/>
         <Test Name="TestOutputNoLeak" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputMissingLeak" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputLeakSimple" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputLeakIncomplete" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestLeak" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestLeakTwo" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
     </TestSuite>
   </TestListing>
   <Title>pasc console test runner</Title>
-  <NumberOfRunTests>19</NumberOfRunTests>
+  <NumberOfRunTests>20</NumberOfRunTests>
   <NumberOfErrors>0</NumberOfErrors>
   <NumberOfFailures>0</NumberOfFailures>
   <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
-  <TotalElapsedTime>00:00:00.027</TotalElapsedTime>
-  <DateTimeRan>2022-06-29 20:32:09</DateTimeRan>
+  <TotalElapsedTime>00:00:00.023</TotalElapsedTime>
+  <DateTimeRan>2022-06-29 22:13:05</DateTimeRan>
 </TestResults>

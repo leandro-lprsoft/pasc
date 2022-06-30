@@ -4,8 +4,8 @@
 	"installedModules": {
 		"github.com/leandro-lprsoft/pascli": {
 			"name": "pascli",
-			"version": "1.2.0",
-			"hash": "be99575564cf9382d1ccd59d67d752cd",
+			"version": "1.2.2",
+			"hash": "fde5094fe7dd3dee1ea02f6fc263ea24",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
