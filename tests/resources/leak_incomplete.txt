@@ -1,0 +1,12 @@
+/Users/lprado/Projects/pasc/tests/TestPasc -a --file=/Users/lprado/Projects/pasc/tests/TestPasc.xml 
+Heap dump by heaptrc unit of /Users/lprado/Projects/pasc/tests/TestPasc
+16468 memory blocks allocated : 832884/894280
+16466 memory blocks freed     : 832868/894264
+2 unfreed memory blocks : 16
+True heap size : 458752 (128 used in System startup)
+True free heap : 458176
+Should be : 458224
+Call trace for block $000000010E093640 size 8
+  $0000000104EFF9E2
+Call trace for block $000000010E093560 size 8
+  $0000000104EFF982

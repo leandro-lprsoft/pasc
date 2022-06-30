@@ -293,10 +293,10 @@ begin
 
     if LItem.Status <> 'OK' then
     begin
-      WriteLn;
+      FBuilder.Output('');
       FBuilder.OutputColor(LItem.Error, FBuilder.ColorTheme.Other);
-      WriteLn;
-      WriteLn;
+      FBuilder.Output('');
+      FBuilder.Output('');
     end;
   end;
 
@@ -310,6 +310,16 @@ begin
   FBuilder.Output('');
 
   // checar for leaks
+  {
+   Inspecting test app output or project.trc file for possible leaks
+      missing data for leaks --no summary
+      summary [       -] try to config the test project to use HeapTrace Debug option
+         leak [     144] main$, file.pas:100:1
+         leak [     132] main$, file.pas:20:1
+      summary [     276] 2 unfreed memory blocks : 152 leaks.trc:10:1         
+           ok [       0] no memory leaks found.
+      summary [       0] 0 unfreed memory blocks
+  }
 end;
 
 class function TTestCaseItem.New(const ATestSuite: string; const ATestCase: string): TTestCaseItem;

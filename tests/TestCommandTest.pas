@@ -5,7 +5,7 @@ unit TestCommandTest;
 interface
 
 uses
-  Classes, SysUtils, fpcunit, testutils, testregistry;
+  Classes, SysUtils, fpcunit, testregistry;
 
 type
 

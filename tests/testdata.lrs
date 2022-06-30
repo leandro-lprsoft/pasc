@@ -1,0 +1,30 @@
+LazarusResources.Add('leak_simple','TXT',[
+  '0 memory blocks freed     : 0/0'#13#10'1 unfreed memory blocks : 8'#13#10'Tr'
+  +'ue heap size : 98304 (160 used in System startup)'#13#10'True free heap : 9'
+  +'7920'#13#10'Should be : 97944'#13#10'Call trace for block $0000000001518E30'
+  +' size 8'#13#10'  $0000000100005AA2'#13#10'  $000000010000455A'#13#10'  $000'
+  +'00001000043F5'#13#10'  $000000010000161D  CalcTest,  line 11 of leaktest.lp'
+  +'r'#13#10'  $000000010000163E  CallCalcTest,  line 16 of leaktest.lpr'#13#10
+  +'  $0000000100001663  $main,  line 20 of leaktest.lpr'#13#10'  $000000010000'
+  +'1676'#13#10'  $000000010000A920'#13#10'  $00000001000015F0'#13#10'  $00007F'
+  +'FEC37B54E0'#13#10'  $00007FFEC47E485B'#13#10'  $72505C3A433D7365'#13#10'  $'
+  +'6946206D6172676F'#13#10'  $6D6D6F435C73656C'#13#10'  $73656C6946206E6F'#13
+  +#10'  $506E6F6D6D6F4300'
+]);
+LazarusResources.Add('leak_none','TXT',[
+  'Heap dump by heaptrc unit of C:\Users\leand\projects\pasc\tests\TestPasc.exe'
+  +#13#10'847 memory blocks allocated : 64929/67432'#13#10'847 memory blocks fr'
+  +'eed     : 64929/67432'#13#10'0 unfreed memory blocks : 0'#13#10'True heap s'
+  +'ize : 262144 (256 used in System startup)'#13#10'True free heap : 261888'
+]);
+LazarusResources.Add('leak_incomplete','TXT',[
+  '/Users/lprado/Projects/pasc/tests/TestPasc -a --file=/Users/lprado/Projects/'
+  +'pasc/tests/TestPasc.xml '#13#10'Heap dump by heaptrc unit of /Users/lprado/'
+  +'Projects/pasc/tests/TestPasc'#13#10'16468 memory blocks allocated : 832884/'
+  +'894280'#13#10'16466 memory blocks freed     : 832868/894264'#13#10'2 unfree'
+  +'d memory blocks : 16'#13#10'True heap size : 458752 (128 used in System sta'
+  +'rtup)'#13#10'True free heap : 458176'#13#10'Should be : 458224'#13#10'Call '
+  +'trace for block $000000010E093640 size 8'#13#10'  $0000000104EFF9E2'#13#10
+  +'Call trace for block $000000010E093560 size 8'#13#10'  $0000000104EFF982'#13
+  +#10
+]);

@@ -17,6 +17,7 @@ uses
   SysUtils,
   StrUtils,
   Utils.Tests,
+  Utils.Leak,
   Utils.Shell;
 
 function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
@@ -93,11 +94,13 @@ procedure TestCommand(ABuilder: ICommandBuilder);
 var
   LExeFile, LExeOnly, LXmlFile: string;
   LReport: TTestReport;
+  LLeak: TLeakReport;
+  LOutput: string;
 begin
   LExeFile := GetTestExecutable;
   LExeOnly := ExtractFileName(LExeFile);
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
-  ShellCommand(LExeFile, ['-a', '--file=' + LXmlFile]);
+  LOutput := ShellCommand(LExeFile, ['-a', '--file=' + LXmlFile]);
 
   LReport := TTestReport.New(ABuilder, ExtractFilePath(LExeFile));
   try
@@ -107,6 +110,16 @@ begin
   finally
     LReport.Free;
   end;
+
+  LLeak := TLeakReport.New(ABuilder, ExtractFilePath(LExeFile));
+  try
+    LLeak.Executable := LExeOnly;
+    LLeak.ParseHeapTrace('');
+    LLeak.Output;
+  except
+    LLeak.Free;
+  end;
+
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

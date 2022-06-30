@@ -1,3 +1,6 @@
+/// <summary> Unit which has a set of functions for manipulating files and their contents. 
+/// It has some functions for content search as well.
+/// </summary>
 unit Utils.IO;
 
 {$MODE DELPHI}{$H+}
@@ -6,11 +9,31 @@ interface
 
 uses
   Classes,
-  SysUtils;
+  SysUtils,
+  StrUtils;
 
+  /// <summary> Get the contents of AFileName in string. </summary>
+  /// <param AName="AFileName"> File name that will have its content returned </param>
   function GetFileContent(const AFileName: string): string;
+
+  /// <summary> Save AContent string in the provided file name. </summary>
+  /// <param name="AFileName">Target file name, the file name will be replaced </param>
+  /// <param name="AContent">Content string that will be saved on the file </param>
   procedure SaveFileContent(const AFileName, AContent: string);
 
+  /// <summary> Returns first ocurrence of text in format line:1 (column is always 1).
+  /// It is case insensitive search. 
+  /// If not text is found the function returns an empty string.</summary>
+  /// <param name="ACodeFile"> Should have have the file contents already loaded. </param>
+  /// <param name="AText"> The text to be found </param>
+  function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
+
+  /// <summary>Recursively search for the first file from the specified path. 
+  /// Returns the filename with the full path if it was found. </summary>
+  /// <param name="ACurrentDir">Folder from which to search including subfolders</param>
+  /// <param name="AFileName">Name of the file to be searched</param>
+  function FindFile(const ACurrentDir, AFileName: string): string;
+  
 implementation
 
 function GetFileContent(const AFileName: string): string;
@@ -48,6 +71,43 @@ begin
       raise;
     end;
   end;
+end;
+
+function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 0 to ACodeFile.Count - 1 do
+    if ContainsText(ACodeFile.Strings[I], AText) then
+      Exit(IntToStr(I + 1) + ':1');
+end;
+
+function FindFile(const ACurrentDir, AFileName: string): string;
+var
+  LSearch: TSearchRec;
+  LFileFound: string;
+begin
+  LFileFound := ConcatPaths([ACurrentDir, AFileName]);
+  if FileExists(LFileFound) then
+    exit(LFileFound);
+  LFileFound := '';
+
+  if FindFirst(ConcatPaths([ACurrentDir, AllFilesMask]), faDirectory or faAnyFile, LSearch) = 0 then
+    try
+      repeat
+        if ((LSearch.Attr and faDirectory) <> 0) and 
+            (not AnsiMatchText(LSearch.Name, ['.', '..', '.git'])) then
+        begin
+          LFileFound := FindFile(ConcatPaths([ACurrentDir, LSearch.Name]), AFileName);
+          if LFileFound <> '' then
+            Exit(LFileFound);
+        end;
+      until FindNext(LSearch) <> 0;
+    finally
+      FindClose(LSearch);
+    end;
+  Result := '';
 end;
 
 end.

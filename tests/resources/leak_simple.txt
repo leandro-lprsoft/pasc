@@ -1,0 +1,22 @@
+0 memory blocks freed     : 0/0
+1 unfreed memory blocks : 8
+True heap size : 98304 (160 used in System startup)
+True free heap : 97920
+Should be : 97944
+Call trace for block $0000000001518E30 size 8
+  $0000000100005AA2
+  $000000010000455A
+  $00000001000043F5
+  $000000010000161D  CalcTest,  line 11 of leaktest.lpr
+  $000000010000163E  CallCalcTest,  line 16 of leaktest.lpr
+  $0000000100001663  $main,  line 20 of leaktest.lpr
+  $0000000100001676
+  $000000010000A920
+  $00000001000015F0
+  $00007FFEC37B54E0
+  $00007FFEC47E485B
+  $72505C3A433D7365
+  $6946206D6172676F
+  $6D6D6F435C73656C
+  $73656C6946206E6F
+  $506E6F6D6D6F4300
