@@ -40,45 +40,39 @@ begin
     CopyFile(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))]), [cffOverwriteFile]);  
 end;
 
-procedure UpdateEnvironmentPathLinux(const AFolder: string);
+procedure UpdateEnvironmentPathLinux(ABuilder: ICommandBuilder; const AFolder: string);
 var
   LFile: TStringList = nil;
-  LProfile: string;
+  LProfile, LContent: string;
   I: Integer;
   LFound: Boolean = false;
 begin
-  WriteLn('updating environment path, this may require administration privileges ', ApplicationName);
+  ABuilder.OutputColor(
+    'updating environment path, this may require administration privileges '#13#10, 
+    ABuilder.ColorTheme.Other);
 
-  LFile := TStringList.Create;
-  try
-    LProfile := ConcatPaths([GetUserDir, '.profile']);
-    LFile.LoadFromFile(LProfile);
+  LProfile := ConcatPaths([GetUserDir, '.profile']);
+  LContent := GetFileContent(LProfile);
+
+  ABuilder.OutputColor('changing file ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor('~/.profile '#13#10, ABuilder.ColorTheme.Title);
+  
+  if not ContainsText(LContent, '.pasc:$PATH') then 
+  begin
+    LContent := LContent + #13#10 + 'PATH="$HOME/.pasc:$PATH"';
+    SaveFileContent(LProfile, LContent);
+  end;
+
+  ABuilder.OutputColor('running ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor('source ~/.profile ', ABuilder.ColorTheme.Title);
+  ABuilder.OutputColor('to make path changes to take effect '#13#10, ABuilder.ColorTheme.Other);
     
-    WriteLn('changing file ~/.profile ', ApplicationName);
+  LContent := GetResource('update-path-sh'); 
+  SaveFileContent(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']), LContent);
 
-    for I := 0 to LFile.Count -1 do 
-      if ContainsText(LFile.Strings[I], '.pasc:$PATH') then 
-      begin
-        LFound := True;
-        break;
-      end;
-
-    if not LFound then
-    begin
-      LFile.Add('PATH="$HOME/.pasc:$PATH"');
-      LFile.SaveToFile(LProfile);
-    end;
-    
-    WriteLn('running source ~/.profile to make path changes to take effect ', ApplicationName);
-
-    LFile.Clear;
-    LFile.AddText(GetResource('update-path-sh'));
-    LFile.SaveToFile(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']));
-
-    WriteLn(ShellCommand('bash', [ConcatPaths([GetUserDir, '.pasc', 'update-path.sh'])]));
-  finally
-    LFile.Free;
-  end; 
+  LContent := ShellCommand('bash', [ConcatPaths([GetUserDir, '.pasc', 'update-path.sh'])]);
+  if LContent <> '' then
+    ABuilder.OutputColor(LContent + #13#10, ABuilder.ColorTheme.Other);
 end;
 
 procedure UpdateEnvironmentPathMacos(const AFolder: string);
@@ -154,7 +148,7 @@ begin
   UpdateEnvironmentPathWindows(ABuilder, LAppFolder);
   {$ENDIF}
   {$IF DEFINED(UNIX)}
-  UpdateEnvironmentPathLinux(LAppFolder);
+  UpdateEnvironmentPathLinux(ABuilder, LAppFolder);
   {$ENDIF}
   {$IF DEFINED(MACOS)}
   UpdateEnvironmentPathMacos(LAppFolder);
