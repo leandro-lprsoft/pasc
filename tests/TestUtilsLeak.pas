@@ -145,6 +145,7 @@ var
   LObject: TObject;
 begin
   LObject := TObject.Create;
+  //LObject.Free;
 end;
 
 procedure TTestUtilsLeak.TestLeak;

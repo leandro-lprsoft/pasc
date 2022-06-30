@@ -98,7 +98,7 @@ begin
 
   // assert
   AssertTrue('File was not created', LExists);
-  AssertTrue('Text should be on read content.', ContainsText(LActualContent, LContent));
+  AssertTrue('Text should be returned by GetFileContent function.', ContainsText(LActualContent, LContent));
 end;
 
 initialization

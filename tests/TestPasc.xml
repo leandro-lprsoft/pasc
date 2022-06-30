@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-  <!-- Generated using FPCUnit on 2022-06-29 22:13:04-->
+  <!-- Generated using FPCUnit on 2022-06-30 10:15:09-->
   <TestListing>
     <TestSuite Name="" ElapsedTime="00:00:00.022" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="20" NumberOfIgnoredTests="0">
       <TestSuite Name="TTestCommandTest" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
         <Test Name="TestHookUp" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestAnother" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
-      <TestSuite Name="TTestUtilsIO" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsIO" ElapsedTime="00:00:00.001" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
         <Test Name="TestGetFileContent" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestSaveFileContent" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestSaveFileContent" Result="OK" ElapsedTime="00:00:00.001"/>
         <Test Name="TestFindInCodeFile" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestFindFile" Result="OK" ElapsedTime="00:00:00.000"/>
       </TestSuite>
-      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.022" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="14" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.021" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="14" NumberOfIgnoredTests="0">
         <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestAddRelativePath" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.011"/>
+        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.010"/>
         <Test Name="TestGetNextStringOf" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestGetNextStringOfEmpty" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.010"/>
+        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.011"/>
         <Test Name="TestParseContentLeakNone" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputNoLeak" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputMissingLeak" Result="OK" ElapsedTime="00:00:00.000"/>
         <Test Name="TestOutputLeakSimple" Result="OK" ElapsedTime="00:00:00.000"/>
@@ -36,6 +36,6 @@
   <NumberOfErrors>0</NumberOfErrors>
   <NumberOfFailures>0</NumberOfFailures>
   <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
-  <TotalElapsedTime>00:00:00.023</TotalElapsedTime>
-  <DateTimeRan>2022-06-29 22:13:05</DateTimeRan>
+  <TotalElapsedTime>00:00:00.022</TotalElapsedTime>
+  <DateTimeRan>2022-06-30 10:15:09</DateTimeRan>
 </TestResults>
