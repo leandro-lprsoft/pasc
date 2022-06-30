@@ -307,6 +307,7 @@ begin
     IntToStr(TestsPassed) + ' passed, ' +
     IntToStr(TestsFailed) + ' failed.',
     FBuilder.ColorTheme.Other);
+  FBuilder.Output('');
 
   // checar for leaks
 end;

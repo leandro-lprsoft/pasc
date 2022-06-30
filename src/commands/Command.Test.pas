@@ -79,7 +79,7 @@ begin
     exit;
   end;
     
-  LExeFile := ChangeFileExt(LProjectFile, '.exe');
+  LExeFile := ChangeFileExt(LProjectFile, {$IF DEFINED(WINDOWS)}'.exe'{$ELSE}''{$ENDIF});
   if not FileExists(LExeFile) then
   begin
     WriteLn('Executable test not found. Build it before running pasc test');
