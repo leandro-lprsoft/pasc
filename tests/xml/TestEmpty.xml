@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestResults>
+  <!-- Generated using FPCUnit on 2022-07-04 15:31:01-->
+  <TestListing/>
+  <Title>FPCUnit Console test runner</Title>
+  <NumberOfRunTests>0</NumberOfRunTests>
+  <NumberOfErrors>0</NumberOfErrors>
+  <NumberOfFailures>0</NumberOfFailures>
+  <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
+  <TotalElapsedTime>00:00:00.000</TotalElapsedTime>
+  <DateTimeRan>2022-07-04 15:31:01</DateTimeRan>
+</TestResults>

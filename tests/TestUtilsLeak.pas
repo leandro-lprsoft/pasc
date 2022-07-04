@@ -35,8 +35,6 @@ type
     procedure TestOutputMissingLeak;
     procedure TestOutputLeakSimple;
     procedure TestOutputLeakIncomplete;
-    procedure TestLeak;
-    procedure TestLeakTwo;
   end;
 
 implementation
@@ -198,24 +196,6 @@ begin
   AssertTrue(
     'Must contain text pointing to incomplete data' + CapturedOutput,
     ContainsText(CapturedOutput, 'no details found in heap trace file'));     
-end;
-
-procedure SecondLevelLeak;
-var
-  LObject: TObject;
-begin
-  LObject := TObject.Create;
-  //LObject.Free;
-end;
-
-procedure TTestUtilsLeak.TestLeak;
-begin
-  SecondLevelLeak;
-end;
-
-procedure TTestUtilsLeak.TestLeakTwo;
-begin
-  SecondLevelLeak;
 end;
 
 initialization

@@ -10,7 +10,9 @@ uses
   TestCommandTest,
   TestUtilsIO,
   TestUtilsLeak,
-  TestUtilsShell;
+  TestUtilsResources,
+  TestUtilsShell,
+  TestUtilsTests;
 
 type
 

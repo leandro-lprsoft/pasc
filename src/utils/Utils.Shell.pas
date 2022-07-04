@@ -1,3 +1,5 @@
+/// <summary> Unit which has functions to work with system operational process execution
+/// </summary>
 unit Utils.Shell;
 
 {$MODE DELPHI}{$H+}
