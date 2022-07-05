@@ -76,16 +76,15 @@ LazarusResources.Add('projectlpi','TXT',[
   +'   </Parsing>'#13#10'    <CodeGeneration>'#13#10'      <Checks>'#13#10'    '
   +'    <IOChecks Value="True"/>'#13#10'        <RangeChecks Value="True"/>'#13
   +#10'        <OverflowChecks Value="True"/>'#13#10'        <StackChecks Value'
-  +'="True"/>'#13#10'      </Checks>'#13#10'      <VerifyObjMethodCallValidity '
-  +'Value="True"/>'#13#10'    </CodeGeneration>'#13#10'    <Linking>'#13#10'   '
-  +'   <Debugging>'#13#10'        <DebugInfoType Value="dsDwarf3"/>'#13#10'    '
-  +'    <UseHeaptrc Value="True"/>'#13#10'      </Debugging>'#13#10'    </Linki'
-  +'ng>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10'    <Exceptions'
-  +'>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'#13#10'      </'
-  +'Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodetoolError"/>'#13
-  +#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Value="EFOpenErro'
-  +'r"/>'#13#10'      </Item>'#13#10'    </Exceptions>'#13#10'  </Debugging>'#13
-  +#10'</CONFIG>'
+  +'="True"/>'#13#10'      </Checks>'#13#10'    </CodeGeneration>'#13#10'    <L'
+  +'inking>'#13#10'      <Debugging>'#13#10'        <DebugInfoType Value="dsDwa'
+  +'rf3"/>'#13#10'        <UseHeaptrc Value="True"/>'#13#10'      </Debugging>'
+  +#13#10'    </Linking>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10
+  +'    <Exceptions>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'
+  +#13#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodeto'
+  +'olError"/>'#13#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Va'
+  +'lue="EFOpenError"/>'#13#10'      </Item>'#13#10'    </Exceptions>'#13#10'  '
+  +'</Debugging>'#13#10'</CONFIG>'
 ]);
 LazarusResources.Add('projectlpr','TXT',[
   'program {PROJECTNAME};'#13#10#13#10'{$MODE DELPHI}{$H+}'#13#10#13#10'{$R *.r'
