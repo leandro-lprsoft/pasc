@@ -15,7 +15,8 @@ implementation
 uses
   SysUtils,
   StrUtils,
-  FileUtil;
+  FileUtil,
+  Command.Colors;
 
 const
   TARGETS: array [0..1] of string = ('lib', 'backup');
@@ -23,11 +24,7 @@ const
 var
   AnsweredAll: boolean;
 
-procedure WriteGitIgnore(const ACurrentDir: string);
-begin
-end;
-
-procedure CleanDirectory(const ACurrentDir: string);
+procedure CleanDirectory(ABuilder: ICommandBuilder; const ACurrentDir: string);
 var
   LSearch: TSearchRec;
   LCurrentDir: string;
@@ -42,10 +39,16 @@ begin
           LCurrentDir := ConcatPaths([ACurrentDir, LSearch.Name]);
           if AnsiMatchText(LSearch.Name, TARGETS) then
           begin
-            Write('directory will be removed: ', LCurrentDir);
+            ABuilder.OutputColor(
+              'folder will be removed: ' + IncludeTrailingPathDelimiter(ACurrentDir), 
+              ABuilder.ColorTheme.Other);
+            ABuilder.OutputColor(LSearch.Name, ABuilder.ColorTheme.Value);
             if not AnsweredAll then
             begin
-              Write(' Are you sure? [c]abort, [y]es, [a]ll: ');
+              ABuilder.OutputColor(' Are you sure? ', ABuilder.ColorTheme.Other);
+              ABuilder.OutputColor('[c]ancel ', LightRed);
+              ABuilder.OutputColor('[y]es, [a]ll: ', ABuilder.ColorTheme.Value);
+              ABuilder.OutputColor(': ', ABuilder.ColorTheme.Other);
               LInvalidKey := True;
               while LInvalidKey do
               begin
@@ -53,43 +56,29 @@ begin
                 if (LKey = #13) or (LKey = #10) then
                   continue;
 
-                case LKey of 
-                  'a': 
-                    begin
-                      AnsweredAll := True;
-                      LInvalidKey := False;
-                    end;
-                  'y': 
-                    begin
-                      AnsweredAll := False;
-                      LInvalidKey := False;
-                    end;
-                  'c', #3: 
-                    begin
-                      LInvalidKey := False;
-                      WriteLn;
-                      raise Exception.Create('Cleaning aborted.');
-                    end;
-                  else
-                  begin
-                    WriteLn;
-                    Write('Invalid input. Are you sure? [a]bort, [y]es, [a]ll: ');
-                  end;
-                end;    
-              end;
+                if (LKey = 'c') then
+                  //WriteLn; //for linux/macos?
+                  raise Exception.Create('Cleaning aborted.');
+
+                AnsweredAll := LKey = 'a';
+                LInvalidKey := not AnsiMatchText(LKey, ['a', 'y', 'c']);
+
+                if LInvalidKey then 
+                  Write('Invalid input. Are you sure? [c]ancel, [y]es, [a]ll: ');
+              end;    
             end;   
-            WriteLn;  
+            //WriteLn; //for linux/macos?
 
             if DeleteDirectory(LCurrentDir, True) then 
             begin
               RemoveDir(LCurrentDir);
-              WriteLn('  ...removed.');
+              WriteLn('...removed.');
             end;
           end
           else
             if LeftStr(LSearch.Name, 1) <> '.' then
             begin
-              CleanDirectory(LCurrentDir);
+              CleanDirectory(ABuilder, LCurrentDir);
             end;
         end;
       until FindNext(LSearch) <> 0;
@@ -101,16 +90,18 @@ end;
 procedure CleanCommand(ABuilder: ICommandBuilder);
 begin
   AnsweredAll := ABuilder.CheckOption('f');
+
+  ABuilder.OutputColor('Cleanning current path: ', ABuilder.ColorTheme.Other);
+  ABuilder.OutputColor(GetCurrentDir + #13#10, ABuilder.ColorTheme.Title);
   
-  WriteLn('Cleanning current path: ', GetCurrentDir);
   try
-    CleanDirectory(GetCurrentDir);
+    CleanDirectory(ABuilder, GetCurrentDir);
   except 
     on E: Exception do
     begin
       if not SameText(E.Message, 'Cleaning aborted.') then
         raise;
-      WriteLn(E.Message);
+      ABuilder.OutputColor(E.Message + #13#10, LightRed);
     end;
   end;
 end;

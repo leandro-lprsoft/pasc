@@ -265,7 +265,6 @@ begin
     FBuilder.OutputColor('[' + PadLeft(LItem.Size, 12) + '] ', FBuilder.ColorTheme.Other);
 
     LIndex := 0;
-
     for LSourceItem in SplitString(LItem.Source, #10) do
     begin
       LOutputItem := StringReplace(LSourceItem, #13, '', [rfReplaceAll]);
