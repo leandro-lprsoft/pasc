@@ -8,6 +8,7 @@ uses
   consoletestrunner, 
   Resources,
   TestCommandTest,
+  TestCommandClean,
   TestUtilsIO,
   TestUtilsLeak,
   TestUtilsResources,

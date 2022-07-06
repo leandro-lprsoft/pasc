@@ -40,6 +40,7 @@ var
 
 procedure CheckAnswer(ABuilder: ICommandBuilder);
 var
+  LInput: string;
   LKey: char;
   LInvalidKey: Boolean;
 begin
@@ -53,9 +54,16 @@ begin
   LInvalidKey := True;
   while LInvalidKey do
   begin
-    Read(LKey);
-    if (LKey = #13) or (LKey = #10) then
-      continue;
+    LInput := ABuilder.InputLn;
+
+    if Length(LInput) <> 1 then
+      LKey := #0
+    else
+      LKey := LInput[1];
+
+    // Read(LKey);
+    // if (LKey = #13) or (LKey = #10) then
+    //   continue;
 
     if (LKey = 'c') then
       //WriteLn; //for linux/macos?

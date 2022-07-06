@@ -200,13 +200,15 @@ function TLeakReport.ParseHeapTrace(const AContent: string): TLeakReport;
 var
   I: Integer;
   LContent: TStringList;
-  LText: string;
+  LHeapFile, LText: string;
 begin
   Result := Self;
   LContent := TStringList.Create;
   try
-    if AContent = '' then
-      LContent.LoadFromFile(ConcatPaths([ProjectSource, 'heap.trc']))
+    LHeapFile := ConcatPaths([ProjectSource, 'heap.trc']);
+
+    if (AContent = '') and FileExists(LHeapFile) then
+      LContent.LoadFromFile(LHeapFile)
     else
       LContent.Text := AContent;
 
