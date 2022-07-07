@@ -47,7 +47,7 @@ var
   LTempDir: string;
 begin
   FCurrentDir := GetCurrentDir;
-  FExeName := ExtractFilePath(ParamStr(0));
+  FExeName := ExtractFileName(ParamStr(0));
   FBuilder := TCommandBuilder.Create(FExeName);
   MockSetup(FBuilder);
   Command.Clean.Registry(FBuilder);
@@ -70,6 +70,7 @@ end;
 procedure TTestCommandClean.TearDown;
 begin
   SetCurrentDir(FCurrentDir);
+  //AnsweredAll := False;
 end;
 
 procedure TTestCommandClean.TestCheckAnswer;

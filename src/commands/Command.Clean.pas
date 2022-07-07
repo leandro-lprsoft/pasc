@@ -18,7 +18,7 @@ uses
   procedure CleanCommand(ABuilder: ICommandBuilder);
 
   /// <summary> Registry a clean command using the command builder from pascli, also sets. 
-  /// options and usage help info. /// </summary>
+  /// options and usage help info. </summary>
   /// <param name="ABuilder"> Command builder of the main application that will be used to
   /// registry the command. </param>
   procedure Registry(ABuilder: ICommandBuilder);

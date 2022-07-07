@@ -9,6 +9,7 @@ uses
   Resources,
   TestCommandTest,
   TestCommandClean,
+  TestCommandInstall,
   TestUtilsIO,
   TestUtilsLeak,
   TestUtilsResources,

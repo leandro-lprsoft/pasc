@@ -92,11 +92,16 @@ LazarusResources.Add('projectlpr','TXT',[
 ]);
 LazarusResources.Add('update-path-ps1','TXT',[
   '$EnvPathCheck = [System.Environment]::GetEnvironmentVariable("Path","User")'
-  +#13#10#13#10'$PascPath = Join-Path -Path $HOME -ChildPath ".pasc"'#13#10'if '
-  +'(-Not $EnvPathCheck.Contains($PascPath)) {'#13#10'  $EnvPathCheck = $EnvPat'
-  +'hCheck + ";" + $PascPath'#13#10'  [System.Environment]::SetEnvironmentVaria'
-  +'ble("Path", $EnvPathCheck, "User")'#13#10'}'
+  +#13#10#13#10'$PascPath = $args[0]'#13#10#13#10'if (-Not $PascPath) {'#13#10
+  +'  $PascPath = Join-Path -Path $HOME -ChildPath ".pasc"'#13#10'}'#13#10#13#10
+  +'if (-Not $EnvPathCheck.Contains($PascPath)) {'#13#10'  $EnvPathCheck = $Env'
+  +'PathCheck + ";" + $PascPath'#13#10'  [System.Environment]::SetEnvironmentVa'
+  +'riable("Path", $EnvPathCheck, "User")'#13#10'}'
 ]);
 LazarusResources.Add('update-path-sh','TXT',[
   'source $HOME/.profile'#13#10'chmod +x $HOME/.pasc/pasc'
+]);
+LazarusResources.Add('get-path-ps1','TXT',[
+  '$EnvPathCheck = [System.Environment]::GetEnvironmentVariable("Path","User")'
+  +#13#10'Write-Host $EnvPathCheck'
 ]);

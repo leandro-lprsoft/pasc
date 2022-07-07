@@ -28,3 +28,7 @@ LazarusResources.Add('leak_incomplete','TXT',[
   +'Call trace for block $000000010E093560 size 8'#13#10'  $0000000104EFF982'#13
   +#10
 ]);
+LazarusResources.Add('get-path-ps1','TXT',[
+  '$EnvPathCheck = [System.Environment]::GetEnvironmentVariable("Path","User")'
+  +#13#10'Write-Host $EnvPathCheck'
+]);
