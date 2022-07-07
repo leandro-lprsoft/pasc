@@ -23,6 +23,27 @@ uses
   /// registry the command. </param>
   procedure Registry(ABuilder: ICommandBuilder);
 
+  {$IF DEFINED(TESTAPP)}
+  
+  /// <summary> asks the user for confirmation to proceed with the operation, as well as 
+  /// evaluates whether the option provided is valid or not, repeating the operation until 
+  /// obtaining a valid answer.
+  /// </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used 
+  /// output and caputre input from user. </param>
+  procedure CheckAnswer(ABuilder: ICommandBuilder);
+
+  /// <summary> Deletes a folder an its content. Asks user confirmation before delete 
+  /// the folder. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used 
+  /// output and caputre input from user. </param>
+  procedure DeleteFolder(ABuilder: ICommandBuilder; const ACurrentDir, AFolder: string);
+
+  {$ENDIF}
+
+var
+  AnsweredAll: boolean;  
+
 implementation
 
 uses
@@ -35,8 +56,10 @@ const
   TARGETS: array [0..1] of AnsiString = ('lib', 'backup');
   IGNORE: array [0..3] of AnsiString = ('.', '..', '.git', '.vscode');
 
-var
-  AnsweredAll: boolean;
+//{$IF NOT DEFINED(TESTAPP)}
+//var
+//  AnsweredAll: boolean;
+//{$ENDIF}
 
 procedure CheckAnswer(ABuilder: ICommandBuilder);
 var
@@ -60,10 +83,6 @@ begin
       LKey := #0
     else
       LKey := LInput[1];
-
-    // Read(LKey);
-    // if (LKey = #13) or (LKey = #10) then
-    //   continue;
 
     if (LKey = 'c') then
       //WriteLn; //for linux/macos?

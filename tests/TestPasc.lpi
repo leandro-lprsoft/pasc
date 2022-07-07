@@ -117,6 +117,12 @@
         <UseHeaptrc Value="True"/>
       </Debugging>
     </Linking>
+    <Other>
+      <CustomOptions Value="-dTESTAPP"/>
+      <OtherDefines Count="1">
+        <Define0 Value="TESTAPP"/>
+      </OtherDefines>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions>

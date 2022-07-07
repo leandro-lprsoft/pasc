@@ -1,6 +1,6 @@
 unit TestCommandClean;
 
-{$mode objfpc}{$H+}
+{$MODE DELPHI}{$H+}
 
 interface
 
@@ -20,13 +20,18 @@ type
     FExeName: string;
     FCheckFile: string;
     FCurrentDir: string;
+    procedure AnswerCancel;
   protected
     procedure SetUp; override;
     procedure TearDown; override;
   published
-    procedure TestRegistry;
+    procedure TestCheckAnswer;
+    procedure TestCheckAnswerAll;
+    procedure TestCheckAnswerCancel;
+    procedure TestDeleteFolder;
     procedure TestCleanForce;
     procedure TestCleanMockInput;
+    procedure TestCleanCommandRegistry;
   end;
 
 implementation
@@ -46,6 +51,7 @@ begin
   FBuilder := TCommandBuilder.Create(FExeName);
   MockSetup(FBuilder);
   Command.Clean.Registry(FBuilder);
+  AnsweredAll := False;
 
   SetCurrentDir(GetTempDir);
   LTempDir := ConcatPaths([GetTempDir, 'TestPasc']);
@@ -66,9 +72,31 @@ begin
   SetCurrentDir(FCurrentDir);
 end;
 
-procedure TTestCommandClean.TestRegistry;
+procedure TTestCommandClean.TestCheckAnswer;
 begin
-  AssertEquals('1 equals 1', 1, 1);
+  MockInputLnResult := 'y';
+  CheckAnswer(FBuilder);
+
+  AssertFalse('AnsweredAll should be false', AnsweredAll);
+end;
+
+procedure TTestCommandClean.TestCheckAnswerAll;
+begin
+  MockInputLnResult := 'a';
+  CheckAnswer(FBuilder);
+
+  AssertTrue('AnsweredAll should be true', AnsweredAll);  
+end;
+
+procedure TTestCommandClean.AnswerCancel;
+begin
+  CheckAnswer(FBuilder);  
+end;
+
+procedure TTestCommandClean.TestCheckAnswerCancel;
+begin
+  MockInputLnResult := 'c';
+  AssertException('raise exception to abort', Exception, AnswerCancel);
 end;
 
 procedure TTestCommandClean.TestCleanForce;
@@ -97,6 +125,19 @@ begin
   AssertTrue(
     'File should not exist.', 
     not FileExists(FCheckFile));
+end;
+
+procedure TTestCommandClean.TestDeleteFolder;
+begin
+  MockInputLnResult := 'a';
+  DeleteFolder(FBuilder, GetCurrentDir, 'lib');
+
+  AssertFalse('Folder should not exist', DirectoryExists(ConcatPaths([GetCurrentDir, 'lib'])));
+end;
+
+procedure TTestCommandClean.TestCleanCommandRegistry;
+begin
+  AssertEquals('clean', FBuilder.Commands[0].Name);
 end;
 
 initialization

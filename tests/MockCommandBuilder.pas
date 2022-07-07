@@ -19,11 +19,9 @@ uses
 
 var
   MockCommandCapture, MockInputLnResult, MockOutputCaptured: string;
+  MockStart, MockTimeout: QWord;
 
 implementation
-
-uses
-  StrUtils;
 
 procedure MockSetup(ABuilder: ICommandBuilder);
 begin
@@ -33,16 +31,23 @@ begin
   ABuilder.InputLn := MockInputLn;
   ABuilder.Output := MockOutput;
   ABuilder.OutputColor := MockOutputColor;
+  MockStart := GetTickCount64;
+  MockTimeout := 1000;
 end;
 
 procedure MockCommand(ABuilder: ICommandBuilder);
 begin  
-  MockCommandCapture := 'executed';
+  if not Assigned(ABuilder) then
+    MockCommandCapture := 'ABuilder not assigned'
+  else
+    MockCommandCapture := 'executed';
 end;
 
 function MockInputLn: string;
 begin
   Result := MockInputLnResult;
+  if (GetTickCount64 - MockStart) > MockTimeout then
+    raise Exception.Create('Timeout of ' + IntToStr(MockTimeout) + ' exceeded');
 end;
 
 procedure MockOutput(const AMessage: string);
