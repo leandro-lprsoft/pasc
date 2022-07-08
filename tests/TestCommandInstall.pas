@@ -20,8 +20,9 @@ type
     FExeName: string;
     FAppFolder: string;
     FAppFile: string;
-    FCheckFile: string;
     FCurrentDir: string;
+
+    function GetPathVariable: string;
   protected
     procedure SetUp; override;
     procedure TearDown; override;
@@ -32,7 +33,7 @@ type
     procedure TestUpdateEnvironmentPathLinux;
     procedure TestUpdateEnvironmentPathMacos;
     procedure TestUpdateEnvironmentPathWindows;
-    procedure TestInstallCommand;
+    procedure TestInstallCommandMain;
   end;
 
 implementation
@@ -67,6 +68,14 @@ begin
   SetCurrentDir(FCurrentDir);
 end;
 
+function TTestCommandInstall.GetPathVariable: string;
+begin
+  {$IFDEF WINDOWS}
+  SaveFileContent(ConcatPaths([GetTempDir, 'get-path.ps1']), GetTestResource('get-path-ps1'));
+  Result := ShellCommand('powershell', [ConcatPaths([GetTempDir, 'get-path.ps1'])]);
+  {$ENDIF}
+end;
+
 procedure TTestCommandInstall.TestInstallCommandRegistry;
 begin
   AssertEquals('install', FBuilder.Commands[0].Name);
@@ -74,7 +83,7 @@ end;
 
 procedure TTestCommandInstall.TestCreateFolder;
 var
-  LCreatedFolder: string;
+  LCreatedFolder: string = '';
 begin
   CreateFolder(FBuilder, LCreatedFolder);
   AssertTrue('Folder ' + LCreatedFolder + ' should exist', DirectoryExists(LCreatedFolder));
@@ -82,7 +91,8 @@ end;
 
 procedure TTestCommandInstall.TestCopyApp;
 var
-  LCreatedFolder, LTargetFile: string;
+  LCreatedFolder: string = '';
+  LTargetFile: string;
 begin
   CreateFolder(FBuilder, LCreatedFolder);
   CopyApp(FBuilder, LCreatedFolder);
@@ -106,23 +116,27 @@ end;
 
 procedure TTestCommandInstall.TestUpdateEnvironmentPathWindows;
 var
-  LOutput, LCreatedFolder: string;
+  LOutput: string;
+  LCreatedFolder: string = '';
 begin
   {$IFDEF WINDOWS}
   CreateFolder(FBuilder, LCreatedFolder);
   UpdateEnvironmentPathWindows(FBuilder, FAppFolder);
-
-  //SaveFileContent(ConcatPaths([GetCurrentDir, 'get-path.ps1'], ))
-
-  //LOutput := ShellCommand('powershell', ['']);
-  AssertEquals('output', LOutput);
+  LOutput := GetPathVariable;
   AssertTrue('should contain app folder in path', ContainsText(LOutput, FAppFolder));
   {$ENDIF}
 end;
 
-procedure TTestCommandInstall.TestInstallCommand;
+procedure TTestCommandInstall.TestInstallCommandMain;
 begin
-  AssertTrue('todo!', False);
+  InstallCommand(FBuilder);
+  
+  // assert
+  AssertTrue('AppFolder should exist: ' + FAppFolder, DirectoryExists(FAppFolder));
+  AssertTrue('AppFile should exist: ' + FAppFolder, FileExists(FAppFile));
+  AssertTrue(
+    'Path environment variable should contain FAppFolder', 
+    ContainsText(GetPathVariable, FAppFolder));
 end;
 
 initialization
