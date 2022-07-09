@@ -153,7 +153,7 @@ begin
     WriteLn('changing file /etc/paths ', ApplicationName);
 
     for I := 0 to LFile.Count -1 do 
-      if ContainsText(LFile.Strings[I], '/.pasc') then 
+      if ContainsText(LFile.Strings[I], AFolder) then 
       begin
         LFound := True;
         break;
@@ -161,7 +161,7 @@ begin
 
     if not LFound then
     begin
-      LFile.Add(ConcatPaths([GetUserDir, '.pasc']));
+      LFile.Add(AFolder);
       LFile.SaveToFile(LProfile);
     end;
 
@@ -169,7 +169,7 @@ begin
 
     LFile.Clear;
     LFile.AddText(GetResource('update-path-sh'));
-    LFile.SaveToFile(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']));
+    LFile.SaveToFile(ConcatPaths([AFolder, 'update-path.sh']));
 
     LContent := ShellCommand('bash', [
       ConcatPaths([AFolder, 'update-path.sh']), 
@@ -212,11 +212,11 @@ begin
   {$IF DEFINED(WINDOWS)}
   UpdateEnvironmentPathWindows(ABuilder, LAppFolder);
   {$ENDIF}
-  {$IF DEFINED(UNIX)}
+  {$IF DEFINED(LINUX)}
   UpdateEnvironmentPathLinux(ABuilder, LAppFolder);
   {$ENDIF}
-  {$IF DEFINED(MACOS)}
-  UpdateEnvironmentPathMacos(LAppFolder);
+  {$IF DEFINED(Darwin)}
+  UpdateEnvironmentPathMacos(ABuilder, LAppFolder);
   {$ENDIF}
   ABuilder.OutputColor('install complete.'#13#10, ABuilder.ColorTheme.Title);
 end;

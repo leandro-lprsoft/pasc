@@ -77,6 +77,9 @@ begin
   {$IFDEF LINUX}
   Result := GetFileContent(ConcatPaths([GetUserDir, '.profile']));
   {$ENDIF}
+  {$IFDEF Darwin}
+  Result := GetFileContent(ConcatPaths(['/etc', 'paths']));
+  {$ENDIF}
 end;
 
 procedure TTestCommandInstall.TestInstallCommandRegistry;
@@ -117,9 +120,15 @@ begin
 end;
 
 procedure TTestCommandInstall.TestUpdateEnvironmentPathMacos;
+var
+  LOutput: string;
+  LCreatedFolder: string = '';
 begin
-  {$IFDEF MACOS}
-  AssertTrue('todo!', False);
+  {$IF DEFINED(Darwin)}
+  CreateFolder(FBuilder, LCreatedFolder);
+  UpdateEnvironmentPathMacos(FBuilder, FAppFolder);
+  LOutput := GetPathVariable;
+  AssertTrue('should contain app folder in path', ContainsText(LOutput, FAppFolder));
   {$ENDIF}
 end;
 
