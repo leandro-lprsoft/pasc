@@ -9,8 +9,6 @@ uses
   SysUtils, 
   fpcunit,
   testregistry,
-  Command.Interfaces,
-  Command.Builder,
   Utils.Shell;
 
 type
@@ -18,15 +16,13 @@ type
   TTestUtilsShell = class(TTestCase)
   private
     FExePath: string;
+  public
     procedure Setup; override;
   published
     procedure TestShellCommand;
   end;
 
 implementation
-
-uses
-  StrUtils;
 
 procedure TTestUtilsShell.Setup;
 begin

@@ -183,7 +183,7 @@ end;
 
 function TTestReport.GetCodeFileForTestSuite(const ACurrentDir, ATestSuite: string; out AFoundOutput: string): TStringList;
 var
-  LResult: TStringList;
+  LResult: TStringList = nil;
   LSearch: TSearchRec;
   LCurrentDir, LExt, LCodeFile: string;
 begin
@@ -198,7 +198,8 @@ begin
         if ((LSearch.Attr and faDirectory) <> 0) and (not AnsiMatchText(LSearch.Name, ['.', '..'])) then
         begin
           LCurrentDir := ConcatPaths([ACurrentDir, LSearch.Name]);
-          GetCodeFileForTestSuite(LCurrentDir, ATestSuite, AFoundOutput);
+          FreeAndNil(LResult);
+          LResult := GetCodeFileForTestSuite(LCurrentDir, ATestSuite, AFoundOutput);
           if AFoundOutput <> '' then
             Exit(LResult);
         end 

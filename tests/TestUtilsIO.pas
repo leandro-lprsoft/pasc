@@ -9,8 +9,6 @@ uses
   SysUtils, 
   fpcunit,
   testregistry,
-  Command.Interfaces,
-  Command.Builder,
   Utils.IO;
 
 type
@@ -18,6 +16,7 @@ type
   TTestUtilsIO = class(TTestCase)
   private
     FExePath: string;
+  public
     procedure Setup; override;
   published
     procedure TestGetFileContent;

@@ -15,6 +15,8 @@ uses
 
 type
 
+  { TTestUtilsTests }
+
   TTestUtilsTests = class(TTestCase)
   private
     FBuilder: ICommandBuilder;

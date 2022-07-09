@@ -107,9 +107,11 @@ begin
 end;
 
 procedure TTestCommandInstall.TestUpdateEnvironmentPathLinux;
+{$IFDEF LINUX}
 var
   LOutput: string;
   LCreatedFolder: string = '';
+{$ENDIF}
 begin
   {$IFDEF LINUX}
   CreateFolder(FBuilder, LCreatedFolder);
@@ -120,9 +122,11 @@ begin
 end;
 
 procedure TTestCommandInstall.TestUpdateEnvironmentPathMacos;
+{$IF DEFINED(Darwin)}
 var
   LOutput: string;
   LCreatedFolder: string = '';
+{$ENDIF}
 begin
   {$IF DEFINED(Darwin)}
   CreateFolder(FBuilder, LCreatedFolder);
@@ -158,7 +162,7 @@ begin
 end;
 
 initialization
-
   RegisterTest(TTestCommandInstall);
+  
 end.
 
