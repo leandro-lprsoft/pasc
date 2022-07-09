@@ -74,6 +74,9 @@ begin
   SaveFileContent(ConcatPaths([GetTempDir, 'get-path.ps1']), GetTestResource('get-path-ps1'));
   Result := ShellCommand('powershell', [ConcatPaths([GetTempDir, 'get-path.ps1'])]);
   {$ENDIF}
+  {$IFDEF LINUX}
+  Result := GetFileContent(ConcatPaths([GetUserDir, '.profile']));
+  {$ENDIF}
 end;
 
 procedure TTestCommandInstall.TestInstallCommandRegistry;
@@ -101,9 +104,15 @@ begin
 end;
 
 procedure TTestCommandInstall.TestUpdateEnvironmentPathLinux;
+var
+  LOutput: string;
+  LCreatedFolder: string = '';
 begin
   {$IFDEF LINUX}
-  AssertTrue('todo!', False);
+  CreateFolder(FBuilder, LCreatedFolder);
+  UpdateEnvironmentPathLinux(FBuilder, FAppFolder);
+  LOutput := GetPathVariable;
+  AssertTrue('should contain app folder in path', ContainsText(LOutput, FAppFolder));
   {$ENDIF}
 end;
 

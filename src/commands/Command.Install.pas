@@ -115,9 +115,9 @@ begin
   ABuilder.OutputColor('changing file ', ABuilder.ColorTheme.Other);
   ABuilder.OutputColor('~/.profile '#13#10, ABuilder.ColorTheme.Title);
   
-  if not ContainsText(LContent, '.pasc:$PATH') then 
+  if not ContainsText(LContent, AFolder + ':$PATH') then 
   begin
-    LContent := LContent + #13#10 + 'PATH="$HOME/.pasc:$PATH"';
+    LContent := LContent + #13#10 + 'PATH="' + AFolder + ':$PATH"';
     SaveFileContent(LProfile, LContent);
   end;
 
@@ -126,9 +126,12 @@ begin
   ABuilder.OutputColor('to make path changes to take effect '#13#10, ABuilder.ColorTheme.Other);
     
   LContent := GetResource('update-path-sh'); 
-  SaveFileContent(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']), LContent);
+  SaveFileContent(ConcatPaths([AFolder, 'update-path.sh']), LContent);
 
-  LContent := ShellCommand('bash', [ConcatPaths([GetUserDir, '.pasc', 'update-path.sh'])]);
+  LContent := ShellCommand('bash', [
+      ConcatPaths([AFolder, 'update-path.sh']), 
+      ConcatPaths([AFolder, ABuilder.ExeName])
+    ]);
   if LContent <> '' then
     ABuilder.OutputColor(LContent + #13#10, ABuilder.ColorTheme.Other);
 end;
@@ -136,7 +139,7 @@ end;
 procedure UpdateEnvironmentPathMacos(ABuilder: ICommandBuilder; const AFolder: string);
 var
   LFile: TStringList = nil;
-  LProfile: string;
+  LProfile, LContent: string;
   I: Integer;
   LFound: Boolean = false;
 begin
@@ -168,7 +171,11 @@ begin
     LFile.AddText(GetResource('update-path-sh'));
     LFile.SaveToFile(ConcatPaths([GetUserDir, '.pasc', 'update-path.sh']));
 
-    WriteLn(ShellCommand('bash', [ConcatPaths([GetUserDir, '.pasc', 'update-path.sh'])]));
+    LContent := ShellCommand('bash', [
+      ConcatPaths([AFolder, 'update-path.sh']), 
+      ConcatPaths([AFolder, ABuilder.ExeName])
+    ]);
+    WriteLn(LContent);
 
   finally
     LFile.Free;

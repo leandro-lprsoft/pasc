@@ -1,2 +1,2 @@
 source $HOME/.profile
-chmod +x $HOME/.pasc/pasc
+chmod +x $1
