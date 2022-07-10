@@ -71,14 +71,13 @@ type
 
     /// <summary> Considering the name of the test suite, recursively, starting from 
     /// the given path, it looks for a source code file that contains a class with 
-    /// the name of the suite. Returns the found file loaded into a TStringList object 
-    /// that should be released from memory when it is no longer used. </summary>
+    /// the name of the suite. </summary>
     /// <param name="ACurrentDir"> Path to start the search </param>
     /// <param name="ATestSuite"> Test suite name to be searched </param>
     /// <param name="AFoundOutput"> Returns the filename with relative path from ACurrentDir. 
     /// It is concatenated to the filename ":Line:Column" which indicates the location of 
     /// the code found. </param>
-    function GetCodeFileForTestSuite(const ACurrentDir, ATestSuite: string; out AFoundOutput: string): TStringList;
+    procedure GetCodeFileForTestSuite(const ACurrentDir, ATestSuite: string; out AFoundOutput: string);
 
     /// <summary> Returns a string representing the value of a node or attribute from 
     /// an xml document. </summary>
@@ -181,50 +180,53 @@ begin
   Result.FBuilder := ABuider;
 end;
 
-function TTestReport.GetCodeFileForTestSuite(const ACurrentDir, ATestSuite: string; out AFoundOutput: string): TStringList;
+procedure TTestReport.GetCodeFileForTestSuite(const ACurrentDir, ATestSuite: string; out AFoundOutput: string);
 var
-  LResult: TStringList = nil;
+  LContent: TStringList = nil;
   LSearch: TSearchRec;
   LCurrentDir, LExt, LCodeFile: string;
 begin
-  Result := nil;
   if not DirectoryExists(ACurrentDir) then
     Exit;
-
-  LResult := TStringList.Create;
+  
   if FindFirst(ConcatPaths([ACurrentDir, AllFilesMask]), faAnyFile or faDirectory, LSearch) = 0 then
     try
       repeat
         if ((LSearch.Attr and faDirectory) <> 0) and (not AnsiMatchText(LSearch.Name, ['.', '..'])) then
         begin
           LCurrentDir := ConcatPaths([ACurrentDir, LSearch.Name]);
-          FreeAndNil(LResult);
-          LResult := GetCodeFileForTestSuite(LCurrentDir, ATestSuite, AFoundOutput);
+          GetCodeFileForTestSuite(LCurrentDir, ATestSuite, AFoundOutput);
           if AFoundOutput <> '' then
-            Exit(LResult);
+            Exit;
         end 
         else
         begin
           LExt := ExtractFileExt(LSearch.Name);
           if ((LSearch.Attr and faAnyFile) <> 0) and AnsiMatchText(LExt, ['.pp', '.pas', '.lpr']) then
           begin
+            AFoundOutput := '';
             LCodeFile := ConcatPaths([ACurrentDir, LSearch.Name]);
-            LResult.LoadFromFile(LCodeFile);
-            AFoundOutput := FindInCodeFile(LResult, ATestSuite);
+
+            LContent := TStringList.Create;
+            try
+              LContent.LoadFromFile(LCodeFile);
+              AFoundOutput := FindInCodeFile(LContent, ATestSuite);
+            finally
+              LContent.Free;
+            end;
+
             if AFoundOutput <> '' then
             begin
               AFoundOutput := LCodeFile + ':' + AFoundOutput;
               FindClose(LSearch);
-              Exit(LResult);
+              Exit;
             end;
-            LResult.Clear;
           end;
         end; 
       until FindNext(LSearch) <> 0;
     finally
       FindClose(LSearch);
     end;  
-  FreeAndNil(LResult);
 end;
 
 function TTestReport.FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
@@ -245,7 +247,6 @@ var
   I, J, K: Integer;
   LItem: TTestCaseItem;
   LSourceInfo: string;
-  LSourceUnit: TStringList = nil;
 begin
   Result := Self;
   try
@@ -299,10 +300,9 @@ begin
             
             LItem.Error := '';
             
-            LSourceUnit := GetCodeFileForTestSuite(ProjectSource, LItem.TestSuite + '.' + LItem.TestCase, LSourceInfo);
+            GetCodeFileForTestSuite(ProjectSource, LItem.TestSuite + '.' + LItem.TestCase, LSourceInfo);
             LItem.Error := LSourceInfo;
-            FreeAndNil(LSourceUnit);                
-
+            
             for K := 0 to LTestCase.ChildNodes.Count - 1 do
               LItem.Error := LItem.Error + 
                 IfThen(LItem.Error = '', '', #13#10) + 
@@ -313,7 +313,6 @@ begin
     end;
   finally
     LXml.Free;
-    FreeAndNil(LSourceUnit);
   end;
 end;
 

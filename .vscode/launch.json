@@ -8,8 +8,10 @@
       "name": "Debug - Tests",
       "type": "gdb",
       "request": "launch",
-      "target": "./tests/TestPasc",
-      "arguments": "--suite=TestCreateLeakItem",
+      "windows": { "target": "./tests/TestPasc.exe" },
+      "linux": { "target": "./tests/TestPasc" },
+      "osx": { "target": "./tests/TestPasc" },
+      "arguments": "--suite=TestParseXmlError",
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build tests"
     }

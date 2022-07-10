@@ -7,14 +7,15 @@ uses
   SysUtils,
   consoletestrunner, 
   Resources,
-  TestCommandTest,
-  TestCommandClean,
-  TestCommandInstall,
   TestUtilsIO,
   TestUtilsLeak,
   TestUtilsResources,
   TestUtilsShell,
-  TestUtilsTests;
+  TestUtilsTests,
+  TestCommandClean,
+  TestCommandInstall,
+  TestCommandNew,
+  TestCommandTest, MockCommandBuilder;
 
 type
 

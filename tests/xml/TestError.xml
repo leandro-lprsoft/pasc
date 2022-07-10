@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestResults>
+  <!-- Generated using FPCUnit on 2022-07-10 15:19:31-->
+  <TestListing>
+    <TestSuite Name="" ElapsedTime="00:00:01.005" NumberOfErrors="0" NumberOfFailures="2" NumberOfRunTests="43" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsIO" ElapsedTime="00:00:00.003" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
+        <Test Name="TestGetFileContent" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestSaveFileContent" Result="OK" ElapsedTime="00:00:00.002"/>
+        <Test Name="TestFindInCodeFile" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestFindFile" Result="OK" ElapsedTime="00:00:00.001"/>
+      </TestSuite>
+      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.050" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="12" NumberOfIgnoredTests="0">
+        <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestAddRelativePath" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.016"/>
+        <Test Name="TestGetNextStringOf" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestGetNextStringOfEmpty" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.017"/>
+        <Test Name="TestParseContentLeakNone" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestOutputNoLeak" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestOutputMissingLeak" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestOutputLeakSimple" Result="OK" ElapsedTime="00:00:00.016"/>
+        <Test Name="TestOutputLeakIncomplete" Result="OK" ElapsedTime="00:00:00.000"/>
+      </TestSuite>
+      <TestSuite Name="TTestUtilsResources" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="1" NumberOfIgnoredTests="0">
+        <Test Name="TestGetResource" Result="OK" ElapsedTime="00:00:00.000"/>
+      </TestSuite>
+      <TestSuite Name="TTestUtilsShell" ElapsedTime="00:00:00.011" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="1" NumberOfIgnoredTests="0">
+        <Test Name="TestShellCommand" Result="OK" ElapsedTime="00:00:00.011"/>
+      </TestSuite>
+      <TestSuite Name="TTestUtilsTests" ElapsedTime="00:00:00.012" NumberOfErrors="0" NumberOfFailures="1" NumberOfRunTests="7" NumberOfIgnoredTests="0">
+        <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestParseXml" Result="OK" ElapsedTime="00:00:00.003"/>
+        <Test Name="TestParseXmlInvalid" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestParseXmlNoTests" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestParseXmlError" Result="Failed" ElapsedTime="00:00:00.000">
+          <Message>TTestUtilsTests.TestParseXmlError:  expected: &lt;1&gt; but was: &lt;0&gt;</Message>
+          <ExceptionClass>EAssertionFailedError</ExceptionClass>
+          <ExceptionMessage> expected: &lt;1&gt; but was: &lt;0&gt;</ExceptionMessage>
+        </Test>
+        <Test Name="TestOutputStructure" Result="OK" ElapsedTime="00:00:00.004"/>
+        <Test Name="TestOutputItemsMatchesSummary" Result="OK" ElapsedTime="00:00:00.004"/>
+      </TestSuite>
+      <TestSuite Name="TTestCommandClean" ElapsedTime="00:00:00.016" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
+        <Test Name="TestCheckAnswer" Result="OK" ElapsedTime="00:00:00.002"/>
+        <Test Name="TestCheckAnswerAll" Result="OK" ElapsedTime="00:00:00.002"/>
+        <Test Name="TestCheckAnswerCancel" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestDeleteFolder" Result="OK" ElapsedTime="00:00:00.003"/>
+        <Test Name="TestCleanForce" Result="OK" ElapsedTime="00:00:00.003"/>
+        <Test Name="TestCleanMockInput" Result="OK" ElapsedTime="00:00:00.003"/>
+        <Test Name="TestCleanCommandRegistry" Result="OK" ElapsedTime="00:00:00.002"/>
+      </TestSuite>
+      <TestSuite Name="TTestCommandInstall" ElapsedTime="00:00:00.911" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
+        <Test Name="TestInstallCommandRegistry" Result="OK" ElapsedTime="00:00:00.004"/>
+        <Test Name="TestCreateFolder" Result="OK" ElapsedTime="00:00:00.001"/>
+        <Test Name="TestCopyApp" Result="OK" ElapsedTime="00:00:00.031"/>
+        <Test Name="TestUpdateEnvironmentPathLinux" Result="OK" ElapsedTime="00:00:00.002"/>
+        <Test Name="TestUpdateEnvironmentPathMacos" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestUpdateEnvironmentPathWindows" Result="OK" ElapsedTime="00:00:00.412"/>
+        <Test Name="TestInstallCommandMain" Result="OK" ElapsedTime="00:00:00.461"/>
+      </TestSuite>
+      <TestSuite Name="TTestCommandNew" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="1" NumberOfRunTests="2" NumberOfIgnoredTests="0">
+        <Test Name="TestNewCommandRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestNewCommandMain" Result="Failed" ElapsedTime="00:00:00.000">
+          <Message>TTestCommandNew.TestNewCommandMain: todo</Message>
+          <ExceptionClass>EAssertionFailedError</ExceptionClass>
+          <ExceptionMessage>todo</ExceptionMessage>
+        </Test>
+      </TestSuite>
+      <TestSuite Name="TTestCommandTest" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
+        <Test Name="TestHookUp" Result="OK" ElapsedTime="00:00:00.000"/>
+        <Test Name="TestAnother" Result="OK" ElapsedTime="00:00:00.000"/>
+      </TestSuite>
+    </TestSuite>
+  </TestListing>
+  <Title>pasc console test runner</Title>
+  <NumberOfRunTests>43</NumberOfRunTests>
+  <NumberOfErrors>0</NumberOfErrors>
+  <NumberOfFailures>2</NumberOfFailures>
+  <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
+  <TotalElapsedTime>00:00:01.005</TotalElapsedTime>
+  <DateTimeRan>2022-07-10 15:19:32</DateTimeRan>
+</TestResults>

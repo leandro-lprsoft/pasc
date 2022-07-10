@@ -1,3 +1,7 @@
+/// <summary> This unit contains procedures to configure and execute a command to create 
+/// a new free pascal/lazarus project. With also some basic repo initialization, boss
+/// package manager ready and support to use vscode with pre configured tasks.
+/// </summary>
 unit Command.New;
 
 {$MODE DELPHI}{$H+}
@@ -7,8 +11,59 @@ interface
 uses
   Command.Interfaces;
 
+  /// <summary> This command creates a freepascal/lazarus project respecting a previously 
+  /// organized folder structure so that it is easier to operate the project in vscode, 
+  /// with git previously initialized and ready to work with boss dependency manager.
+  /// </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   procedure NewCommand(ABuilder: ICommandBuilder);
+
+  /// <summary> Registry a new command using the command builder from pascli. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// registry the command. </param>
   procedure Registry(ABuilder: ICommandBuilder);
+
+  {$IF DEFINED(TESTAPP)}
+
+  /// <summary> Creates the project folders structure with a src and .vscode folders on 
+  /// current path. Returns trough AProjectDir parameter the created folder. </summary>
+  /// <param name="AProjectName">The project name that will be used as the main folder 
+  /// name. </param>
+  /// <param name="AProjectDir">Returns the created folder complete path that was created.
+  /// </param>
+  procedure CreateSupportFilesForVSCode(const AProjectName, AProjectDir: string);
+
+  /// <summary> Create the task and launch files for vscode. Within the tasks created 
+  /// we have build, test build, test task using pasc to output the results. </summary>
+  /// <param name="AProjectName">The project name that will be used as the file name
+  /// for tasks and launch file. </param>
+  /// <param name="AProjectDir">Project source path. </param>
+  procedure CreateProjectFiles(const AProjectName, AProjectDir: string);
+
+  /// <summary> Configures the boss dependency manager to facilitate the installation of 
+  /// new project dependencies.</summary>
+  /// <param name="AProjectDir">Project source path. </param>
+  procedure InitializeBoss(const AProjectDir: string);
+
+  /// <summary> Init git repo on specified project folder. </summary>
+  /// <param name="AProjectDir">Project source path. </param>
+  procedure ChangeBossFileSourcePath(const AProjectDir: string);
+
+  /// <summary> Adjust boss files, just change the source parameter to subfolder ./src.
+  /// </summary>
+  /// <param name="AProjectDir">Project source path. </param>
+  procedure InitializeGit(const AProjectDir: string);
+
+  /// <summary> Creates the project folders structure with a src and .vscode folders on 
+  /// current path. Returns trough AProjectDir parameter the created folder. </summary>
+  /// <param name="AProjectName">The project name that will be used as the main folder 
+  /// name. </param>
+  /// <param name="AProjectDir">Returns the created folder complete path that was created.
+  /// </param>
+  procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
+
+  {$ENDIF}
 
 implementation
 
@@ -36,7 +91,6 @@ begin
   SetCurrentDir(AProjectDir);
   CreateDir('src');
   CreateDir('.vscode');
-
 end;
 
 procedure InitializeGit(const AProjectDir: string);

@@ -32,6 +32,7 @@ type
     procedure TestParseXml;
     procedure TestParseXmlInvalid;
     procedure TestParseXmlNoTests;
+    procedure TestParseXmlError;
     procedure TestOutputStructure;
     procedure TestOutputItemsMatchesSummary;
   end;
@@ -143,6 +144,16 @@ begin
   AssertEquals(0, FTestReport.TestSuiteCount);
   AssertEquals(0, FTestReport.TestsPassed);
   AssertEquals(0, FTestReport.TestsFailed);
+end;
+
+procedure TTestUtilsTests.TestParseXmlError;
+var
+  LXmlFile: string;
+begin
+  LXmlFile := ConcatPaths([ExtractFilePath(ParamStr(0)), 'xml', 'TestError.xml']);
+  FTestReport.ParseXmlTestsFile('TestApp', LXmlFile);
+  
+  AssertEquals(2, FTestReport.TestsFailed);
 end;
 
 procedure TTestUtilsTests.TestOutputStructure;
