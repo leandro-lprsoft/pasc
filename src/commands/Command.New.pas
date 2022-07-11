@@ -46,12 +46,13 @@ uses
   /// <param name="AProjectDir">Project source path. </param>
   procedure InitializeBoss(const AProjectDir: string);
 
-  /// <summary> Init git repo on specified project folder. </summary>
+  /// <summary> Adjust boss files, just change the source parameter to subfolder ./src.
+  /// </summary>
   /// <param name="AProjectDir">Project source path. </param>
   procedure ChangeBossFileSourcePath(const AProjectDir: string);
 
-  /// <summary> Adjust boss files, just change the source parameter to subfolder ./src.
-  /// </summary>
+  /// <summary> Init git repo on specified project folder and creates and .gitignore 
+  /// file specific to object pascal repo. </summary>
   /// <param name="AProjectDir">Project source path. </param>
   procedure InitializeGit(const AProjectDir: string);
 
@@ -70,6 +71,7 @@ implementation
 uses
   Classes,
   SysUtils,
+  Command.Colors,
   Utils.Shell,
   Utils.Resources,
   Utils.IO;
@@ -125,10 +127,12 @@ begin
 end;
 
 procedure InitializeBoss(const AProjectDir: string);
+var
+  LOutput: string;
 begin
   SetCurrentDir(AProjectDir);
   WriteLn('boss init --quiet');
-  ShellCommand('boss', ['init', '--quiet']);
+  LOutput := ShellCommand('boss', ['init', '--quiet']);
   WriteLn('adjusting "mainsrc" boss file attribute');
   ChangeBossFileSourcePath(AProjectDir);
 end;
@@ -203,8 +207,18 @@ var
 begin
   ABuilder.GetParsedArguments;
 
+  if not ABuilder.HasArguments then
+  begin
+    ABuilder.OutputColor('New command requires builder to accept an argument.', LightRed);
+    ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
+    exit;
+  end;
+
   if ABuilder.HasCommands then
-    WriteLn('Running pasc new command for ', ABuilder.Arguments[0].Value);
+  begin
+    ABuilder.OutputColor('Running pasc new command for ', ABuilder.ColorTheme.Other);
+    ABuilder.OutputColor(ABuilder.Arguments[0].Value, ABuilder.ColorTheme.Title);
+  end;
 
   try
     CreateProjectFolders(ABuilder.Arguments[0].Value, LProjectDir);
@@ -215,7 +229,7 @@ begin
   except
     on E: Exception do
     begin
-      WriteLn(E.Message);
+      ABuilder.OutputColor(E.Message, LightRed);
     end;
   end;
 end;

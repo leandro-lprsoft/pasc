@@ -18,7 +18,7 @@ type
   private
     FBuilder: ICommandBuilder;
     FExeName: string;
-    FProjectsFolder: string;
+    FWorkingFolder: string;
     FCurrentDir: string;
 
   protected
@@ -54,11 +54,17 @@ begin
   MockSetup(FBuilder);
   Command.New.Registry(FBuilder);
 
-  FProjectsFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
+  FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
   AnsweredAll := True;
-  
-  if DirectoryExists(FProjectsFolder) then
+    
+  // clean old data
+  if DirectoryExists(FWorkingFolder) then
     DeleteFolder(FBuilder, GetTempDir, '.' + ChangeFileExt(FExeName, ''));
+
+  // create new working folder
+  SetCurrentDir(GetTempDir);
+  CreateDir('.' + ChangeFileExt(FExeName, ''));
+  SetCurrentDir(FWorkingFolder);
 end;
 
 procedure TTestCommandNew.TearDown;
@@ -73,41 +79,125 @@ begin
 end;
 
 procedure TTestCommandNew.TestNewCommandBasic;
+var
+  LProjectDir: string;
 begin
-  AssertTrue('todo', false);
+  // arrange
+  FBuilder.AddArgument('project file name', acOptional);
+  FBuilder.UseArguments(['new', 'sample_test']);
+  FBuilder.Parse;
   
-  //NewCommand(FBuilder);
-  //AssertTrue('todo!', false);
+  // act
+  NewCommand(FBuilder);
+  
+  // assert
+  LProjectDir := GetCurrentDir;  
+  AssertTrue(
+    'Current path should contain the project name "sample_test". Check: ' + LProjectDir,
+    ContainsText(LProjectDir, 'sample_test'));
 end;
 
 procedure TTestCommandNew.TestCreateSupportFilesForVSCode;
+var
+  LProjectFolder, LExpected: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  CreateSupportFilesForVSCode('sample_test', LProjectFolder);
+
+  LExpected := ConcatPaths([LProjectFolder, '.vscode', 'tasks.json']);
+  AssertTrue(
+    'vscode tasks file "' + LExpected + '" does not exist',
+    FileExists(LExpected));
+
+  LExpected := ConcatPaths([LProjectFolder, '.vscode', 'launch.json']);
+  AssertTrue(
+    'vscode launch file "' + LExpected + '" does not exist',
+    FileExists(LExpected));
 end;
 
 procedure TTestCommandNew.TestCreateProjectFiles;
+var
+  LProjectFolder, LExpected: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  CreateProjectFiles('sample_test', LProjectFolder);
+
+  LExpected := ConcatPaths([LProjectFolder, 'sample_test.lpi']);
+  AssertTrue(
+    'Project file "' + LExpected + '" does not exist',
+    FileExists(LExpected));
+
+  LExpected := ConcatPaths([LProjectFolder, 'sample_test.lpr']);
+  AssertTrue(
+    'Project file "' + LExpected + '" does not exist',
+    FileExists(LExpected));
 end;
 
 procedure TTestCommandNew.TestInitializeBoss;
+var
+  LProjectFolder, LExpected: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  InitializeBoss(LProjectFolder);
+  
+  LExpected := ConcatPaths([LProjectFolder, 'boss.json']);
+  AssertTrue(
+    'Boss file "' + LExpected + '" does not exists', 
+    FileExists(LExpected));
 end;
 
 procedure TTestCommandNew.TestChangeBossFileSourcePath;
+var
+  LProjectFolder, LBossFile, LContent: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  InitializeBoss(LProjectFolder);
+  
+  LBossFile := ConcatPaths([LProjectFolder, 'boss.json']);
+  LContent := GetFileContent(LBossFile);
+
+  AssertTrue(
+    'Boss file "' + LBossFile + '" should contain string: "mainsrc": "src/"', 
+    ContainsText(LContent, '"mainsrc": "src/"'));
 end;
 
 procedure TTestCommandNew.TestInitializeGit;
+var
+  LProjectFolder, LExpected: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  InitializeGit(LProjectFolder);
+
+  LExpected := ConcatPaths([LProjectFolder, '.git']);
+  AssertTrue(
+    'Project folder "' + LExpected + '" does not exists', 
+    DirectoryExists(LExpected));
+
+  LExpected := ConcatPaths([LProjectFolder, '.gitignore']);
+  AssertTrue(
+    'gitignore file does not exists in project folder "' + LProjectFolder + '"', 
+    FileExists(LExpected));
 end;
 
 procedure TTestCommandNew.TestCreateProjectFolders;
+var
+  LProjectFolder, LExpected: string;
 begin
-  AssertTrue('todo', false);
+  CreateProjectFolders('sample_test', LProjectFolder);
+  
+  AssertTrue(
+    'Project folder "' + LProjectFolder + '" does not exists', 
+    DirectoryExists(LProjectFolder));
+
+  LExpected := ConcatPaths([LProjectFolder, '.vscode']);
+  AssertTrue(
+    'Project folder "' + LProjectFolder + '/.vscode" does not exists', 
+    DirectoryExists(LExpected));
+
+  LExpected := ConcatPaths([LProjectFolder, 'src']);
+  AssertTrue(
+    'Project folder "' + LProjectFolder + '/src" does not exists', 
+    DirectoryExists(LExpected));
 end;
 
 initialization
