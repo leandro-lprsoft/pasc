@@ -12,10 +12,12 @@ uses
   TestUtilsResources,
   TestUtilsShell,
   TestUtilsTests,
+  TestCommandBuild,
   TestCommandClean,
   TestCommandInstall,
   TestCommandNew,
-  TestCommandTest, MockCommandBuilder;
+  TestCommandTest, 
+  MockCommandBuilder;
 
 type
 
@@ -30,12 +32,14 @@ type
 
 var
   Application: TTestPascRunner;
+  HeapFileName: string;
 
 begin
   {$IF DECLARED(UseHeapTrace)}
-  if FileExists('tests/heap.trc') then
-    DeleteFile('tests/heap.trc');
-  SetHeapTraceOutput('tests/heap.trc');
+  HeapFileName := ConcatPaths([ExtractFilePath(ParamStr(0)), 'heap.trc']);
+  if FileExists(HeapFileName) then
+    DeleteFile(HeapFileName);
+  SetHeapTraceOutput(HeapFileName);
   {$ENDIF}
   Application := TTestPascRunner.Create(nil);
   Application.Initialize;

@@ -89,10 +89,15 @@ begin
 end;
 
 procedure TTestCommandTest.TestFindTestProject;
+var
+  LPath: string;
 begin
+  LPath := FCurrentDir;
+  if not ((EndsText('tests', LPath) or EndsText('tests' + PathDelim, LPath))) then
+    LPath := ConcatPaths([LPath, 'tests']);
   AssertEquals(
     ChangeFileExt(ParamStr(0), '.lpr'), 
-    FindTestProject(ConcatPaths([FCurrentDir, 'tests'])));
+    FindTestProject(LPath));
 end;
 
 initialization

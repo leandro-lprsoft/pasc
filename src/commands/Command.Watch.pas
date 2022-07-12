@@ -16,6 +16,8 @@ procedure WatchCommand(ABuilder: ICommandBuilder);
 begin
   if ABuilder.HasCommands then
     WriteLn('You called watch command');
+
+  // watch should change to tests sub folder to consider a project if --test passed
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

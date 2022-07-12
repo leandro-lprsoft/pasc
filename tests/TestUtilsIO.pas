@@ -40,8 +40,8 @@ begin
   AssertTrue(
     'Should find the file in the specified path',
     ContainsText(
-      FindFile(ConcatPaths([GetCurrentDir, 'tests']), 'compile.ps1'),
-      ConcatPaths(['tests', 'resources', 'compile.ps1'])
+      FindFile(FExePath, ExtractFileName(ParamStr(0))),
+      ExtractFileName(ParamStr(0))
     )
   );
 end;

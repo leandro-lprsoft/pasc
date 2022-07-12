@@ -85,9 +85,15 @@ begin
 end;
 
 procedure TTestUtilsLeak.TestAddRelativePath;
+var
+  LExpected: string;
 begin
+  LExpected := ConcatPaths(['.', 'tests', 'resources', 'leak_none.txt']);
+  if (EndsText('tests', GetCurrentDir) or EndsText('tests' + PathDelim, GetCurrentDir)) then
+    LExpected := ConcatPaths(['.', 'resources', 'leak_none.txt']);
+
   AssertEquals(
-    ConcatPaths(['.', 'tests', 'resources', 'leak_none.txt']),
+    LExpected,
     FLeakReport.AddRelativePath('leak_none.txt')    
   );
 end;
