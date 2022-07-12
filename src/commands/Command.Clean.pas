@@ -114,7 +114,7 @@ begin
   if DeleteDirectory(LCurrentDir, True) then 
   begin
     RemoveDir(LCurrentDir);
-    ABuilder.OutputColor('...removed.', ABuilder.ColorTheme.Other);
+    ABuilder.OutputColor('...removed.'#13#10, ABuilder.ColorTheme.Other);
   end;
 end;
 

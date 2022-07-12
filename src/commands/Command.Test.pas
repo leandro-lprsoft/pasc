@@ -1,3 +1,10 @@
+/// <summary> This unit contains procedures to configure and execute a command to create 
+/// dipslay unit tests colored output. Also should display source code location for each
+/// failed test. 
+/// 
+/// If a heap trace file is found on test project directory an output with possible leaks
+/// is generated.
+/// </summary>
 unit Command.Test;
 
 {$MODE DELPHI}{$H+}
@@ -7,8 +14,40 @@ interface
 uses
   Command.Interfaces;
 
+  /// <summary> This command recursively searches for a previously compiled test project 
+  /// from the current folder and runs it. At the end of the execution, an xml file with 
+  /// the same name as the test project is expected to be read. From this reading, a result
+  /// is generated with the objective of highlighting the tests that failed, formatting the 
+  /// name of the source code file with a line and column in a format that vscode is able to 
+  /// understand and providing the developer with a link for quick navigation through the code.
+  ///
+  /// If a memory leak trace file named heap.trc is found, the command also outputs 
+  /// information with details about the possible memory leaks in a format that vscode can 
+  /// provide easy navigation through the code.
+  /// </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   procedure TestCommand(ABuilder: ICommandBuilder);
+
+  /// <summary> Registry a test command using the command builder from pascli. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// registry the command. </param>
   procedure Registry(ABuilder: ICommandBuilder);
+
+  {$IF DEFINED(TESTAPP)}
+
+  /// <summary> From the current directory it tries to locate an fpcunit compatible test 
+  /// project that has been previously compiled. Returns complete test file executable name
+  /// </summary>  
+  function GetTestExecutable: string;
+
+  /// <summary> From the current directory it tries to locate an fpcunit compatible test 
+  /// project. Returns the test project file name. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions or to iteract with the user. </param>
+  function FindTestProject(const AProjectDir: string): string;
+  
+  {$ENDIF}
 
 implementation
 
@@ -18,17 +57,8 @@ uses
   StrUtils,
   Utils.Tests,
   Utils.Leak,
-  Utils.Shell;
-
-function FindInCodeFile(ACodeFile: TStringList; const AText: string): string;
-var
-  I: Integer;
-begin
-  Result := '';
-  for I := 0 to ACodeFile.Count - 1 do
-    if ContainsText(ACodeFile.Strings[I], AText) then
-      Exit(IntToStr(I + 1) + ':1');
-end;
+  Utils.Shell,
+  Utils.IO;
 
 function FindTestProject(const AProjectDir: string): string;
 var
