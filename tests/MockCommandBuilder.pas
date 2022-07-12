@@ -9,16 +9,18 @@ uses
   Classes,
   rtti, 
   typinfo,
-  Command.Interfaces;
+  Command.Interfaces,
+  Utils.Shell;
 
   procedure MockSetup(ABuilder: ICommandBuilder);
   procedure MockCommand(ABuilder: ICommandBuilder);
   function MockInputLn: string;
   procedure MockOutput(const AMessage: string);
   procedure MockOutputColor(const AMessage: string; const AColor: byte);
+  function MockShell(const AProgram: string; AParams: TArray<string>): string;
 
 var
-  MockCommandCapture, MockInputLnResult, MockOutputCaptured: string;
+  MockCommandCapture, MockInputLnResult, MockOutputCaptured, MockShellCapture: string;
   MockStart, MockTimeout: QWord;
 
 implementation
@@ -28,6 +30,7 @@ begin
   MockCommandCapture := '';
   MockInputLnResult := '';
   MockOutputCaptured := '';
+  MockShellCapture := '';
   ABuilder.InputLn := MockInputLn;
   ABuilder.Output := MockOutput;
   ABuilder.OutputColor := MockOutputColor;
@@ -58,6 +61,16 @@ end;
 procedure MockOutputColor(const AMessage: string; const AColor: byte);
 begin
   MockOutputCaptured := MockOutputCaptured + AMessage;
+end;
+
+function MockShell(const AProgram: string; AParams: TArray<string>): string;
+var
+  LParam: string;
+begin
+  MockShellCapture := AProgram;
+  for LParam in AParams do
+    MockShellCapture := MockShellCapture + ' ' + LParam;
+  Result := MockShellCapture;
 end;
 
 end.

@@ -67,28 +67,32 @@ begin
   // arrange
   FBuilder.UseArguments(['test']);
   FBuilder.Parse;
+
+  // cannot call TestPasc again because it would produce recursive calls indenitely
+  // so we need to change ShellCommand and check if it's being called.
+  ShellExecute := @MockShell;
   
-  // act
-  // can´t call TestCommand, it will create an infinete loop
-  // mock shell command on builder
-  // create a property ShellCallback = procedure (const ACommand: string; params: TArray<string>)
-  // command test and others should use injected ShellCallback
-  // TestCommand(FBuilder);
-  
+  TestCommand(FBuilder);
+    
   // assert
   AssertTrue(
     'Output should contain keyword: "Starting" ',
-    ContainsText(MockOutputCaptured, 'sample_test'));
+    ContainsText(MockOutputCaptured, 'Starting'));
+  AssertTrue(
+    'Should call the test app: "TestPasc" ',
+    ContainsText(MockShellCapture, 'TestPasc'));
 end;
 
 procedure TTestCommandTest.TestGetTestExecutable;
 begin
-  AssertTrue('todo!', false);
+  AssertEquals(ParamStr(0), GetTestExecutable);
 end;
 
 procedure TTestCommandTest.TestFindTestProject;
 begin
-  AssertTrue('todo!', false);
+  AssertEquals(
+    ChangeFileExt(ParamStr(0), '.lpr'), 
+    FindTestProject(ConcatPaths([FCurrentDir, 'tests'])));
 end;
 
 initialization

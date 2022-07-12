@@ -130,7 +130,7 @@ begin
   LExeFile := GetTestExecutable;
   LExeOnly := ExtractFileName(LExeFile);
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
-  LOutput := ShellCommand(LExeFile, ['-a', '--file=' + LXmlFile]);
+  LOutput := ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
 
   LReport := TTestReport.New(ABuilder, ExtractFilePath(LExeFile));
   try

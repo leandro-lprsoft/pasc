@@ -11,9 +11,21 @@ uses
   SysUtils,
   Process;
 
-  /// executes a program and returns the output as funciton result and also provide a execution status
-  /// through AStatus out parameter
+type
+
+  /// <summary> function type to execute programs or commands. See ShellCommand function
+  /// for more info. </summary>
+  TShellCommandFunc = function (const AProgram: string; AParams: TArray<string>): string;
+
+  /// <summary> executes a program and returns the output as funciton result and also provide a execution status
+  /// through AStatus out parameter </summary>
+  /// <param name="AProgram"> Program name or command to be executed. </param>
+  /// <param name="AParams"> Array of argumentos to be passed to the 
+  /// program or command being called </param>
   function ShellCommand(const AProgram: string; AParams: TArray<string>): string;
+
+var
+  ShellExecute: TShellCommandFunc = @ShellCommand;
 
 implementation
 
