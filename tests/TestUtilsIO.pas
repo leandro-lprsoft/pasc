@@ -16,6 +16,7 @@ type
   TTestUtilsIO = class(TTestCase)
   private
     FExePath: string;
+    FCurrentDir: string;
   public
     procedure Setup; override;
   published
@@ -23,6 +24,7 @@ type
     procedure TestSaveFileContent;
     procedure TestFindInCodeFile;
     procedure TestFindFile;
+    procedure TestFindProjectFile;
   end;
 
 implementation
@@ -33,6 +35,7 @@ uses
 procedure TTestUtilsIO.Setup;
 begin
   FExePath := ExtractFilePath(ParamStr(0));
+  FCurrentDir := GetCurrentDir;
 end;
 
 procedure TTestUtilsIO.TestFindFile;
@@ -98,6 +101,23 @@ begin
   // assert
   AssertTrue('File was not created', LExists);
   AssertTrue('Text should be returned by GetFileContent function.', ContainsText(LActualContent, LContent));
+end;
+
+procedure TTestUtilsIO.TestFindProjectFile;
+var
+  LPath: string;
+begin
+  LPath := FCurrentDir;
+  if not ((EndsText('tests', LPath) or EndsText('tests' + PathDelim, LPath))) then
+    LPath := ConcatPaths([LPath, 'tests']);
+
+  AssertEquals(
+    ChangeFileExt(ParamStr(0), '.lpr'), 
+    FindProjectFile(LPath, ''));
+
+  AssertEquals(
+    ChangeFileExt(ParamStr(0), '.lpr'), 
+    FindProjectFile(LPath, 'TestRunner'));
 end;
 
 initialization

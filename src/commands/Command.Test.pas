@@ -34,20 +34,10 @@ uses
   /// registry the command. </param>
   procedure Registry(ABuilder: ICommandBuilder);
 
-  {$IF DEFINED(TESTAPP)}
-
   /// <summary> From the current directory it tries to locate an fpcunit compatible test 
   /// project that has been previously compiled. Returns complete test file executable name
   /// </summary>  
   function GetTestExecutable: string;
-
-  /// <summary> From the current directory it tries to locate an fpcunit compatible test 
-  /// project. Returns the test project file name. </summary>
-  /// <param name="ABuilder"> Command builder of the main application that will be used to
-  /// output user instructions or to iteract with the user. </param>
-  function FindTestProject(const AProjectDir: string): string;
-  
-  {$ENDIF}
 
 implementation
 
@@ -60,47 +50,15 @@ uses
   Utils.Shell,
   Utils.IO;
 
-function FindTestProject(const AProjectDir: string): string;
-var
-  LResult: TStringList;
-  LSearch: TSearchRec;
-  LCodeFile: string;
-begin
-  Result := '';
-  if not DirectoryExists(AProjectDir) then
-    Exit;
-
-  LResult := TStringList.Create;
-  if FindFirst(ConcatPaths([AProjectDir, '*.lpr']), faAnyFile, LSearch) = 0 then
-    try
-      repeat
-        if ((LSearch.Attr and faAnyFile) <> 0) and (ExtractFileExt(LSearch.Name) = '.lpr') then
-        begin
-          LCodeFile := ConcatPaths([AProjectDir, LSearch.Name]);
-          LResult.LoadFromFile(LCodeFile);
-          if FindInCodeFile(LResult, 'TestRunner') <> '' then
-          begin
-            FindClose(LSearch);
-            Exit(LCodeFile);
-          end;
-          LResult.Clear;
-        end;
-      until FindNext(LSearch) <> 0;
-    finally
-      FindClose(LSearch);
-      LResult.Free;
-    end;  
-end;
-
 function GetTestExecutable: string;
 var
   LProjectFile, LExeFile: string;
 begin
   Result := '';
 
-  LProjectFile := FindTestProject(GetCurrentDir);
+  LProjectFile := FindProjectFile(GetCurrentDir, 'TestRunner');
   if LProjectFile = '' then
-    LProjectFile := FindTestProject(ConcatPaths([GetCurrentDir, 'tests']));
+    LProjectFile := FindProjectFile(ConcatPaths([GetCurrentDir, 'tests']), 'TestRunner');
 
   if LProjectFile = '' then
   begin
@@ -157,8 +115,20 @@ begin
   ABuilder
     .AddCommand(
       'test',
-      'run the tests and display a nice report, with links to testing methods,'#13#10 +
-      'with posible leak info too.'#13#10 +
+      'run the tests and display a nice report, with links to testing methods.'#13#10 +
+      ''#13#10 +
+      'This command recursively searches for a previously compiled test project '#13#10 +
+      'from the current folder and runs it. At the end of the execution, an xml '#13#10 +
+      'file with the same name as the test project is expected to be read. From '#13#10 + 
+      'this reading, a result is generated with the objective of highlighting '#13#10 +
+      'the tests that failed, formatting the name of the source code file with '#13#10 + 
+      'a line and column in a format that vscode is able to understand and '#13#10 +
+      'providing the developer with a link for quick navigation through the code.'#13#10 +
+      ''#13#10 +
+      'If a memory leak trace file named heap.trc is found, the command also outputs '#13#10 + 
+      'information with details about the possible memory leaks in a format that vscode can '#13#10 + 
+      'provide easy navigation through the code. '#13#10 +
+      ''#13#10 +
       'Ex: ' + ABuilder.ExeName + ' test',
       @TestCommand,
       [ccNoParameters]);

@@ -13,8 +13,12 @@ uses
   /// <summary> This command uses the lazbuild tool to build the specified project. If one
   /// was not provided, try to find one on current directory and builds it.
   /// 
-  /// The iead is just to have a build command to facilitate the watch command that pasc 
-  /// implements.
+  /// The purpose of this command is to automate the build process along with the 
+  /// watch command.
+  ///
+  /// The command accepts two build options --debug or --release. The project file must have both
+  /// modes with these respective names. If no option is passed, the lazbuild tool will run 
+  // in default mode.
   /// </summary>
   /// <param name="ABuilder"> Command builder that will provide the output callback to print
   /// info about the command execution </param>
@@ -38,6 +42,7 @@ implementation
 uses
   Classes,
   SysUtils,
+  StrUtils,
   Command.Colors,
   Utils.Shell;
 
@@ -69,7 +74,7 @@ end;
 procedure BuildCommand(ABuilder: ICommandBuilder);
 var
   LProjectFile: string = '';
-  LOutput: string;
+  LOutput, LBuildMode: string;
 begin
   if ABuilder.HasArguments then
     LProjectFile := ABuilder.Arguments[0].Value;
@@ -99,7 +104,10 @@ begin
   
   // shell command to build the project
   try
-    LOutput := ShellExecute('lazbuild', [LProjectFile]);
+    LBuildMode := IfThen(ABuilder.CheckOption('d'), '--build-mode=Debug', '');
+    LBuildMode := IfThen(ABuilder.CheckOption('r'), '--build-mode=Release', '');
+
+    LOutput := ShellExecute('lazbuild', [LProjectFile, LBuildMode]);
     ABuilder.OutputColor(LOutput + #13#10, ABuilder.ColorTheme.Other);
   except
     on E: Exception do

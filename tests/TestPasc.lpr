@@ -17,6 +17,7 @@ uses
   TestCommandInstall,
   TestCommandNew,
   TestCommandTest, 
+  TestCommandWatch,
   MockCommandBuilder;
 
 type

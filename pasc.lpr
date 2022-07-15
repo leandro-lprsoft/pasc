@@ -28,14 +28,15 @@ begin
   PascApp := TCommandApp.Create(nil);
   try
     PascApp.Title := 'Object pascal CLI tool for use with vscode.';
+    PascApp.CommandBuilder.UseShortDescriptions := True;
     PascApp.CommandBuilder.ColorTheme := DarkColorTheme;
 
     Command.Build.Registry(PascApp.CommandBuilder);
     Command.Clean.Registry(PascApp.CommandBuilder);
+    Command.Usage.Registry(PascApp.CommandBuilder);
     Command.Install.Registry(PascApp.CommandBuilder);
     Command.New.Registry(PascApp.CommandBuilder);
     Command.Test.Registry(PascApp.CommandBuilder);
-    Command.Usage.Registry(PascApp.CommandBuilder);
     Command.Version.Registry(PascApp.CommandBuilder);
     Command.Watch.Registry(PascApp.CommandBuilder);
 

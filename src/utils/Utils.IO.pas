@@ -33,6 +33,13 @@ uses
   /// <param name="ACurrentDir">Folder from which to search including subfolders</param>
   /// <param name="AFileName">Name of the file to be searched</param>
   function FindFile(const ACurrentDir, AFileName: string): string;
+
+  /// <summary> From the current directory it tries to locate a lazarus project that contains
+  /// a specific text. If AText is empty the first project found will be returned.
+  /// Returns the project file name. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions or to iteract with the user. </param>
+  function FindProjectFile(const AProjectDir, AText: string): string;
   
 implementation
 
@@ -108,6 +115,38 @@ begin
       FindClose(LSearch);
     end;
   Result := '';
+end;
+
+function FindProjectFile(const AProjectDir, AText: string): string;
+var
+  LResult: TStringList;
+  LSearch: TSearchRec;
+  LCodeFile: string;
+begin
+  Result := '';
+  if not DirectoryExists(AProjectDir) then
+    Exit;
+
+  LResult := TStringList.Create;
+  if FindFirst(ConcatPaths([AProjectDir, '*.lpr']), faAnyFile, LSearch) = 0 then
+    try
+      repeat
+        if ((LSearch.Attr and faAnyFile) <> 0) and (ExtractFileExt(LSearch.Name) = '.lpr') then
+        begin
+          LCodeFile := ConcatPaths([AProjectDir, LSearch.Name]);
+          LResult.LoadFromFile(LCodeFile);
+          if (AText = '') or (FindInCodeFile(LResult, AText) <> '') then
+          begin
+            FindClose(LSearch);
+            Exit(LCodeFile);
+          end;
+          LResult.Clear;
+        end;
+      until FindNext(LSearch) <> 0;
+    finally
+      FindClose(LSearch);
+      LResult.Free;
+    end;  
 end;
 
 end.

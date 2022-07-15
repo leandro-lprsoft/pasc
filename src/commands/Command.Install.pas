@@ -227,7 +227,11 @@ begin
     .AddCommand(
       'install',
       'Install pasc on user home folder and add it to path.'#13#10 +
-      'Ex: ' + ABuilder.ExeName + ' install',
+      'A folder called .pasc will be created on user''s home folder and will be added to '#13#10 +
+      'the path environment variable. You may need to restart the terminal to this '#13#10 +
+      'change takes effect. '#13#10 +
+      'Administration privileges may be required to execute this command.'#13#10 +
+      'Ex: ./' + ABuilder.ExeName + ' install',
       @InstallCommand,
       [ccNoParameters]);  
 end;

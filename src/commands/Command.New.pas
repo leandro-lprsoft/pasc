@@ -240,6 +240,10 @@ begin
     .AddCommand(
       'new',
       'Creates a new free pascal program.'#13#10 +
+      'From the current path create a subfolder with the given project name, '#13#10 +
+      'initialize git, initialize the boss dependency manager, create build '#13#10 +
+      'and debug support files for use with vscode and create a project based '#13#10 +
+      'on a simple free pascal template.'#13#10 +
       'Ex: pasc new <project name>',
       @NewCommand,
       [ccRequiresOneArgument]);

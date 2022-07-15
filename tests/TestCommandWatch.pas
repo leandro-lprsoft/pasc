@@ -1,4 +1,4 @@
-unit TestCommandTest;
+unit TestCommandWatch;
 
 {$MODE DELPHI}{$H+}
 
@@ -14,7 +14,7 @@ uses
 
 type
 
-  TTestCommandTest= class(TTestCase)
+  TTestCommandWatch= class(TTestCase)
   private
     FBuilder: ICommandBuilder;
     FExeName: string;
@@ -25,9 +25,8 @@ type
     procedure SetUp; override;
     procedure TearDown; override;
   published
-    procedure TestCommandTestRegistry;    
-    procedure TestCommandTestBasic;
-    procedure TestGetTestExecutable;
+    procedure TestCommandWatchRegistry;    
+    procedure TestCommandWatchBasic;
   end;
 
 implementation
@@ -36,32 +35,32 @@ uses
   Resources,
   StrUtils,
   MockCommandBuilder,
-  Command.Test,
+  Command.Watch,
   Utils.IO,
   Utils.Shell;
 
-procedure TTestCommandTest.SetUp;
+procedure TTestCommandWatch.SetUp;
 begin
   FCurrentDir := GetCurrentDir;
   FExeName := ExtractFileName(ParamStr(0));
   FBuilder := TCommandBuilder.Create(FExeName);
   MockSetup(FBuilder);
-  Command.Test.Registry(FBuilder);
+  Command.Watch.Registry(FBuilder);
 
   FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
 end;
 
-procedure TTestCommandTest.TearDown;
+procedure TTestCommandWatch.TearDown;
 begin
   SetCurrentDir(FCurrentDir);
 end;
 
-procedure TTestCommandTest.TestCommandTestRegistry;
+procedure TTestCommandWatch.TestCommandWatchRegistry;
 begin
-  AssertEquals('test', FBuilder.Commands[0].Name);
+  AssertEquals('watch', FBuilder.Commands[0].Name);
 end;
 
-procedure TTestCommandTest.TestCommandTestBasic;
+procedure TTestCommandWatch.TestCommandWatchBasic;
 begin
   // arrange
   FBuilder.UseArguments(['test']);
@@ -71,7 +70,7 @@ begin
   // so we need to change ShellCommand and check if it's being called.
   ShellExecute := @MockShell;
   
-  TestCommand(FBuilder);
+  WatchCommand(FBuilder);
     
   // assert
   AssertTrue(
@@ -82,12 +81,7 @@ begin
     ContainsText(MockShellCapture, 'TestPasc'));
 end;
 
-procedure TTestCommandTest.TestGetTestExecutable;
-begin
-  AssertEquals(ParamStr(0), GetTestExecutable);
-end;
-
 initialization
-  RegisterTest(TTestCommandTest);
+  RegisterTest(TTestCommandWatch);
   
 end.
