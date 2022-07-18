@@ -12,6 +12,7 @@ uses
   TestUtilsResources,
   TestUtilsShell,
   TestUtilsTests,
+  TestUtilsWatcher,  
   TestCommandBuild,
   TestCommandClean,
   TestCommandInstall,
