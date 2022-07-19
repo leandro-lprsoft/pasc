@@ -44,6 +44,13 @@ type
     /// </param>
     function Ignore(const AIgnoreKind: TIgnoreKind; AItems: TArray<string>): IPathWatcher;
 
+    /// <summary>Sets maximum timeout in milliseconds to call the watcher run callback. Every time run 
+    /// is called this timer is reset. If the maximum timeout is reached TPathWatcher is terminated.
+    /// Default value is 3600 seconds or 3,600,000 milliseconds.
+    /// </summary>
+    /// <param name="ATime">Number of milliseconds to set the maximum timeout.</param>
+    function Timeout(const ATime: Longint): IPathWatcher;
+
     /// <summary>Defines the callback procedure that should be executed when a change is detected.
     /// </summary>
     /// <param name="AProc">A procedure that will be called after a change</param>

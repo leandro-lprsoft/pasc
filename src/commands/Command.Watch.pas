@@ -32,13 +32,27 @@ implementation
 
 uses
   SysUtils,
+  Utils.Interfaces,
   Utils.IO,
+  Utils.Watcher,
   Command.Test;
+
+var
+  Builder: ICommandBuilder;
+  ProjectFile: string;
+
+function RunUserCommandAsRequested(const AFile: string): Boolean;
+begin
+  WriteLn(AFile);
+  Result := False;
+end;
 
 procedure WatchCommand(ABuilder: ICommandBuilder);
 var
   LIsTest, LIsRun: boolean;
   LProjectFile: string;
+
+  LPathWatcher: IPathWatcher;
 begin
   LIsTest := ABuilder.CheckOption('t');
   LIsRun := ABuilder.CheckOption('r');
@@ -61,8 +75,23 @@ begin
       raise Exception.Create('no project found on current path');
   end;
 
-  ABuilder.OutputColor(LProjectFile, ABuilder.ColorTheme.Value);
+  ABuilder.OutputColor(GetCurrentDir + #13#10, ABuilder.ColorTheme.Value);
+  ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
 
+  Builder := ABuilder;
+  ProjectFile := LProjectFile;
+
+  //Create TPathWatcherInstance and configure it
+  //Start Watcher
+  LPathWatcher := 
+    TPathWatcher
+      .New
+      .Path(GetCurrentDir)
+      .Ignore(ikStartsText, ['.'])
+      .Ignore(ikExtension, ['.exe', '', '.dll', '.so'])
+      .Run(RunUserCommandAsRequested);
+      
+  LPathWatcher.Start;
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

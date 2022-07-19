@@ -7,6 +7,7 @@ interface
 uses
   Classes, 
   SysUtils, 
+  StrUtils,
   fpcunit,
   testregistry,
   Command.Interfaces,  
@@ -21,7 +22,6 @@ type
     FExeName: string;
     FWorkingFolder: string;
     FBuilder: ICommandBuilder;
-    FPathWatcher: IPathWatcher;
   public
     procedure Setup; override;
     procedure TearDown; override;
@@ -31,6 +31,7 @@ type
     procedure TestIgnoreFolder;
     procedure TestIgnoreFile;
     procedure TestIgnoreExtension;
+    procedure TestTimeout;
   end;
 
 implementation
@@ -38,15 +39,51 @@ implementation
 uses
   Command.Builder,
   Command.Clean,
+  Utils.IO,
   MockCommandBuilder;
 
 var
+  Finished, CustomTimeout: LongInt;
   CaptureWatchExecute: string;
+  CustomIgnoreFolder, CustomIgnoreStartsText, CustomIgnoreFiles, CustomIgnoreExtensions: TArray<string>;
 
 function MockWatchExecute(const AContent: string): Boolean;
 begin
-  CaptureWatchExecute := AContent;
-  Result := True;
+  CaptureWatchExecute := 
+    IfThen(CaptureWatchExecute <> '', CaptureWatchExecute + #13#10, '') + 
+    AContent;
+  Result := not SameText(AContent, 'first run');
+end;
+
+procedure RunWatcher;
+var
+  LWatcher: IPathWatcher;
+  LPath, LExeName: string;
+begin
+  try
+    LExeName := ExtractFileName(ParamStr(0));
+    LPath := ConcatPaths([GetTempDir, '.' + ChangeFileExt(LExeName, '')]);
+    LWatcher := 
+      TPathWatcher
+        .New
+        .Path(LPath)
+        .Ignore(ikStartsText, CustomIgnoreStartsText)        
+        .Ignore(ikFolder, CustomIgnoreFolder)
+        .Ignore(ikFile, CustomIgnoreFiles)
+        .Ignore(ikExtension, CustomIgnoreExtensions)
+        .Timeout(CustomTimeout)
+        .Run(MockWatchExecute);
+
+    LWatcher.Start;
+  finally
+    InterLockedIncrement(Finished);
+  end;
+end;
+
+procedure AppendToArray(var AArray: TArray<string>; const AText: string);
+begin
+  SetLength(AArray, Length(AArray) + 1);
+  AArray[Length(AArray) - 1] := AText;
 end;
 
 procedure TTestUtilsWatcher.Setup;
@@ -56,8 +93,17 @@ begin
   FBuilder := TCommandBuilder.Create(FExeName);
   MockSetup(FBuilder);
 
-  FPathWatcher := TPathWatcher.New;
   CaptureWatchExecute := '';
+  Finished := 0;
+  CustomTimeout := 3000;
+
+  SetLength(CustomIgnoreFolder, 0);
+  SetLength(CustomIgnoreStartsText, 0);
+  SetLength(CustomIgnoreFiles, 0);
+  SetLength(CustomIgnoreExtensions, 0);
+
+  AppendToArray(CustomIgnoreFolder, '.');
+  AppendToArray(CustomIgnoreFolder, '..');
 
   FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
   AnsweredAll := True;
@@ -79,28 +125,135 @@ begin
 end;
 
 procedure TTestUtilsWatcher.TestBasicWatch;
+var
+  LThread: TThread;
 begin
+  CustomTimeout := 50;
 
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  Sleep(100);
+
+  // change working folder
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+
+  // check for CaptureWatchExecute
+  AssertTrue(
+    'shoud detect change for test_for_watch.txt ' + CaptureWatchExecute, 
+    ContainsText(CaptureWatchExecute, 'test_for_watch.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreStartText;
+var
+  LThread: TThread;
 begin
-  
+  AppendToArray(CustomIgnoreStartsText, 'samp');
+  CustomTimeout := 50;
+
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  // change working folder
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'samp_for_watch.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+
+  // check for CaptureWatchExecute
+  AssertFalse(
+    'shoud not detect change for samp_for_watch.txt', 
+    ContainsText(CaptureWatchExecute, 'samp_for_watch.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreFolder;
+var
+  LThread: TThread;
 begin
-  
+  AppendToArray(CustomIgnoreFolder, 'newfolder');
+  CustomTimeout := 50;
+
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  // change working folder
+  CreateDir('newfolder');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'newfolder', 'new_file.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+
+  AssertFalse(
+    'shoud not detect change creation on newfolder ' + CaptureWatchExecute, 
+    ContainsText(CaptureWatchExecute, 'new_file.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreFile;
+var
+  LThread: TThread;
 begin
-  
+  AppendToArray(CustomIgnoreFiles, 'ignore_file.txt');
+  CustomTimeout := 50;
+
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  // change working folder
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'ignore_file.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+
+  AssertFalse(
+    'shoud not detect change creation on ignore_file.txt ' + CaptureWatchExecute, 
+    ContainsText(CaptureWatchExecute, 'ignore_file.txt')); 
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreExtension;
+var
+  LThread: TThread;
 begin
-  
+  AppendToArray(CustomIgnoreExtensions, '.txt');
+  CustomTimeout := 50;
+
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  // change working folder
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'ignore_file.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+
+  AssertFalse(
+    'shoud not detect change creation on ignore_file.txt ' + CaptureWatchExecute, 
+    ContainsText(CaptureWatchExecute, 'ignore_file.txt')); 
+end;
+
+procedure TTestUtilsWatcher.TestTimeout;
+var
+  LThread: TThread;
+begin
+  CustomTimeout := 50;
+
+  LThread := TThread.CreateAnonymousThread(RunWatcher);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  while Finished = 0 do
+    Sleep(100);
+
+  AssertTrue(
+    'shoud detect timeout exceeded', 
+    ContainsText(CaptureWatchExecute, 'timeout exceeded'));    
 end;
 
 initialization

@@ -8,9 +8,13 @@ interface
 
 uses
   Classes,
+  SysUtils,
+  Generics.Collections,
   Utils.Interfaces;
 
 type
+  TDictFile = TDictionary<string, string>;
+
   TPathWatcher = class(TInterfacedObject, IPathWatcher)
   private
     FPath: String;
@@ -20,16 +24,69 @@ type
     FIgnoreFiles: TArray<string>;
     FIgnoreExt: TArray<string>;
 
+    FTimeout: LongInt;
+
     FWatcherRun: TWatcherRunCallback;
 
+    FCurrentFile: TDictFile;
+    
     /// <summary>Add all items from AData array to AArray without duplicates. </summary>
-    procedure AppendDataToArray(AArray, AData: TArray<string>);
+    procedure AppendDataToArray(var AArray: TArray<string>; AData: TArray<string>);
+
+    /// <summary>Create a dictionary where the filename is the key and the value is the last 
+    /// modified date and time. The added files will be those found in the informed folder, 
+    /// including subfolders as well. Ignore settings will be applied as well.
+    /// 
+    /// Validations will be made during the assembly of the list, as long as an old list is 
+    /// passed as a parameter. Among the validations we have:
+    /// 1. If it is a new file in relation to the old list. Ends the process and returns the
+    /// name of the new file in the FChangeMessage parameter.
+    /// 2. If the last modification date of the file is different. Ends the process and 
+    /// returns the name of the new file in the FChangeMessage parameter.
+    /// 3. If the file count is different between the old and new list. Returns a message 
+    /// stating that there was a deletion.
+    ///
+    /// At the end of the process the FCurrentFile will be overwritten if no change was detected.
+    /// <param name="ANew">If a new list is passed, changes will be added to it instead of
+    /// creating a new empty list. Should not be informed. </param>
+    /// <param name="AChangeMessage">It is an output parameter, will contain a change 
+    /// description. If no change was detected it will be empty</param>
+    procedure BuildFileList(const APath: string; ANew: TDictFile; const AJustBuild: Boolean;
+      out AChangeMessage: string);
+
+    /// <summary>Returns true if item should be ignored because its name starts with text
+    /// present on a list of texts to be ignored. </summary>
+    /// <param name="ASearchRec">Current search result record thar reprents a file or 
+    /// a folder.</param>
+    function CheckIgnoreStartText(ASearchRec: TSearchRec): Boolean;
+
+    /// <summary>Returns true if item should be ignored because its name is equal to anyone
+    /// on the list of folders to be ignored. </summary>
+    /// <param name="ASearchRec">Current search result record thar reprents a file or 
+    /// a folder.</param>
+    function CheckIgnoreFolders(ASearchRec: TSearchRec): Boolean;
+
+    /// <summary>Returns true if item should be ignored because its name is equal to anyone
+    /// on the list of files to be ignored. </summary>
+    /// <param name="ASearchRec">Current search result record thar reprents a file or 
+    /// a folder.</param>
+    function CheckIgnoreFiles(ASearchRec: TSearchRec): Boolean;
+
+    /// <summary>Returns true if item should be ignored because its name is equal to anyone
+    /// on the list of extensions to be ignored. </summary>
+    /// <param name="ASearchRec">Current search result record thar reprents a file or 
+    /// a folder.</param>
+    function CheckIgnoreExt(ASearchRec: TSearchRec): Boolean;
 
   public
 
-    /// <summary>Default class constructor. Initialize interanl arrays. Use new method for class
+    /// <summary>Default class constructor. Initialize interanal arrays and dictionaries. 
+    /// Use new method for as default class factory.
     /// instantiation. </summary>
     constructor Create;
+
+    /// <summary>Default class destructor. Release resources. </summary>
+    destructor Destroy; override;
 
     /// <summary>Factory method for TPathWatcher, this is the recommended method to create a new
     /// instance of the class. </summary>
@@ -53,6 +110,13 @@ type
     /// </param>
     function Ignore(const AIgnoreKind: TIgnoreKind; AItems: TArray<string>): IPathWatcher;
 
+    /// <summary>Sets maximum timeout in milliseconds to call the watcher run callback. Every time run 
+    /// is called this timer is reset. If the maximum timeout is reached TPathWatcher is terminated.
+    /// Default value is 3600 seconds or 3,600,000 milliseconds.
+    /// </summary>
+    /// <param name="ATime">Number of milliseconds to set the maximum timeout.</param>
+    function Timeout(const ATime: Longint): IPathWatcher;
+
     /// <summary>Defines the callback procedure that should be executed when a change is detected.
     /// </summary>
     /// <param name="AProc">A procedure that will be called after a change</param>
@@ -69,21 +133,28 @@ type
 implementation
 
 uses
-  SysUtils;
+  StrUtils;
 
 constructor TPathWatcher.Create;
 begin
   FPath := '';
+  FTimeout := 3600000;
   SetLength(FIgnoreStartText, 0);
   SetLength(FIgnoreFolders, 0);
   SetLength(FIgnoreFiles, 0);
   SetLength(FIgnoreExt, 0);  
   FWatcherRun := nil;
+  FCurrentFile := TDictFile.Create;
 end;
 
 class function TPathWatcher.New: IPathWatcher;
 begin
   Result := Self.Create;
+end;
+
+destructor TPathWatcher.Destroy;
+begin
+  FCurrentFile.Free;
 end;
 
 function TPathWatcher.Path(const APath: string): IPathWatcher;
@@ -96,7 +167,7 @@ begin
   Result := Self;
 end;
 
-procedure TPathWatcher.AppendDataToArray(AArray: TArray<string>; AData: TArray<string>);
+procedure TPathWatcher.AppendDataToArray(var AArray: TArray<string>; AData: TArray<string>);
 var
   LNewItem, LOldItem: string;
   LFound: Boolean;
@@ -119,8 +190,108 @@ begin
   end;
 end;
 
+procedure TPathWatcher.BuildFileList(const APath: string; ANew: TDictFile; const AJustBuild: Boolean;
+  out AChangeMessage: string);
+var
+  LSearch: TSearchRec;
+  LFirst: Boolean = false;
+  LKey, LValue: string;
+begin
+  if not Assigned(ANew) then
+  begin
+    ANew := TDictFile.Create;
+    LFirst := True;
+  end;
+  
+  if FindFirst(ConcatPaths([APath, AllFilesMask]), faDirectory or faAnyFile, LSearch) = 0 then
+    try
+      repeat
+        if CheckIgnoreStartText(LSearch) or 
+           CheckIgnoreFolders(LSearch) or
+           CheckIgnoreFiles(LSearch) or 
+           CheckIgnoreExt(LSearch) then
+          continue;
+
+        if (LSearch.Attr and faAnyFile) <> 0 then
+        begin
+          LKey := ConcatPaths([APath, LSearch.Name]);
+
+          if not ANew.ContainsKey(LKey) then
+          begin
+            LValue := IntToStr(FileAge(LKey)) + '_' + IntToStr(LSearch.Size);
+            ANew.Add(LKey, LValue);
+          end;
+                    
+          if (not AJustBuild) then
+          begin
+            if (not FCurrentFile.ContainsKey(LKey)) then
+            begin
+              if (not ((LSearch.Attr and faDirectory) <> 0)) then
+              begin
+                AChangeMessage := 'new: ' + LKey;
+                FCurrentFile.Add(LKey, ANew[LKey]);
+                break;
+              end;
+            end
+            else 
+            if (FCurrentFile[LKey] <> ANew[LKey]) then
+            begin
+              AChangeMessage := 'modified: ' + LKey;
+              FCurrentFile[LKey] := ANew[LKey];
+              break;
+            end;
+          end;
+        end;
+
+        // search inside sub folder unless it is in ignore list
+        if ((LSearch.Attr and faDirectory) <> 0) and (not AnsiMatchText(LSearch.Name, ['.', '..'])) then
+        begin
+          BuildFileList(
+            ConcatPaths([APath, LSearch.Name]), 
+            ANew,
+            AJustBuild,
+            AChangeMessage);
+          if AChangeMessage <> '' then
+            break;
+        end;
+      until FindNext(LSearch) <> 0;
+    except
+      on E: Exception do
+      begin
+        FindClose(LSearch);
+        FreeAndNil(ANew);
+        AChangeMessage := 'error: ' + E.Message;
+      end;
+    end;
+
+    FindClose(LSearch);
+  
+    if (LFirst) and (AChangeMessage = '') and (Assigned(FCurrentFile)) and (not AJustBuild) then
+    begin
+      if ANew.Count < FCurrentFile.Count then 
+      begin
+        AChangeMessage := 'delete';
+      end;
+    end;
+
+    if (LFirst) then
+    begin
+      if FCurrentFile.Count = 0 then
+      begin
+        FreeAndNil(FCurrentFile);
+        FCurrentFile := ANew;
+        ANew := nil;
+      end
+      else
+        FreeAndNil(ANew);
+    end;
+end;
+
 function TPathWatcher.Ignore(const AIgnoreKind: TIgnoreKind; AItems: TArray<string>): IPathWatcher;
 begin
+  if Length(AItems) = 0 then
+    exit(Self);
+
   case AIgnoreKind of 
   ikStartsText:
     AppendDataToArray(FIgnoreStartText, AItems);
@@ -134,6 +305,12 @@ begin
   Result := Self;
 end;
 
+function TPathWatcher.Timeout(const ATime: Longint): IPathWatcher;
+begin
+  FTimeout := ATime;
+  Result := Self;
+end;
+
 function TPathWatcher.Run(const AWatcherRun: TWatcherRunCallback): IPathWatcher;
 begin
   FWatcherRun := AWatcherRun;
@@ -141,6 +318,10 @@ begin
 end;
 
 function TPathWatcher.Start: IPathWatcher;
+var
+  LCurrent: TDictFile = nil;
+  LChangeMessage: string;
+  LStart: QWord;
 begin
   if (not DirectoryExists(FPath)) or (FPath = '') then
     raise Exception.Create('Path "' + FPath + '" doest not exist');
@@ -148,33 +329,68 @@ begin
   if not Assigned(FWatcherRun) then
     raise Exception.Create('Watcher callback not assigned, call Run method to assign one.');
 
-  // start a loop
+  // build initial file list
+  BuildFileList(FPath, nil, True, LChangeMessage);
 
-  // from current path build a file name list with full file names that will be the key of the list
-  // store file age of each file also
-  // BuildFileList(FOldFiles, FNewFiles, FChangeMessage);
+  if FWatcherRun('first run') then
+    exit(Self);
 
-  // during the list creation if exists an old list check
-  // 1. new item is added: triggers the FWatcherRun
-  // 2. item exists and file age is different: triggers the FWatcherRun
-  // 3. item exists and file size is different: triggers the FWatcherRun
-  // 3. old list count is different from new list count: triggers the FWatcherRun
+  try
+    LStart := GetTickCount64;
+    while True do
+    begin
+      BuildFileList(FPath, nil, False, LChangeMessage);
 
-  // if FChangeMessage <> '' then
-  // begin
-  //   if FWatcherRun(FChangeMessage) then
-  //     break;
-  //   FreeAndNil(FOldFiles);
-  //   FreeAndNil(FNewFiles);
-  // end;
+      if LChangeMessage <> '' then
+      begin
+        FreeAndNil(LCurrent);
+        if FWatcherRun(LChangeMessage) then
+          break;
+      end;
 
+      if (GetTickCount64 - LStart) >= FTimeout then
+      begin
+        FWatcherRun('timeout exceeded');
+        break;
+      end;
 
-  // if FWactherRun was called
-  // 1. If FWatcherRun returns true, the loop should end.
-  // 2. Clear FOldList e FNewLIst, the next iteration will populate a new list
-
-  // if FOldList does not exists, FOldList := FNewList; FNewList := nil;
+      Sleep(200);
+    end;
+  finally
+    FreeAndNil(LCurrent);
+  end;
   Result := Self;
+end;
+
+function TPathWatcher.CheckIgnoreStartText(ASearchRec: TSearchRec): Boolean;
+var
+  LItem: string;
+begin
+  Result := False;
+  for LItem in FIgnoreStartText do
+    if StartsText(LItem, ASearchRec.Name) then
+      exit(True);
+end;
+
+function TPathWatcher.CheckIgnoreFolders(ASearchRec: TSearchRec): Boolean;
+begin
+  Result := False;
+  if (ASearchRec.Attr and faDirectory) <> 0 then
+    Result := AnsiMatchText(ASearchRec.Name, FIgnoreFolders);
+end;
+
+function TPathWatcher.CheckIgnoreFiles(ASearchRec: TSearchRec): Boolean;
+begin
+  Result := False;
+  if (ASearchRec.Attr and faAnyFile) <> 0 then
+    Result := AnsiMatchText(ASearchRec.Name, FIgnoreFiles);
+end;
+
+function TPathWatcher.CheckIgnoreExt(ASearchRec: TSearchRec): Boolean;
+begin
+  Result := False;
+  if ((ASearchRec.Attr and faAnyFile) <> 0) and ((ASearchRec.Attr and faDirectory) = 0) then
+    Result := AnsiMatchText(ExtractFileExt(ASearchRec.Name), FIgnoreExt);
 end;
 
 end.

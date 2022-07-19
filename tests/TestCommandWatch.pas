@@ -70,7 +70,7 @@ begin
   // so we need to change ShellCommand and check if it's being called.
   ShellExecute := @MockShell;
   
-  WatchCommand(FBuilder);
+ //WatchCommand(FBuilder);
     
   // assert
   AssertTrue(
