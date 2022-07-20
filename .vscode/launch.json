@@ -11,7 +11,7 @@
       "windows": { "target": "./tests/TestPasc.exe" },
       "linux": { "target": "./tests/TestPasc" },
       "osx": { "target": "./tests/TestPasc" },
-      "arguments": "--suite=TestNewCommandBasic",
+      "arguments": "--suite=TestCommandWatchCheckIfShellExecuteCallbackIsCalled",
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build tests"
     }

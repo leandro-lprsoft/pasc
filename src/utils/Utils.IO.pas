@@ -128,8 +128,8 @@ begin
     Exit;
 
   LResult := TStringList.Create;
-  if FindFirst(ConcatPaths([AProjectDir, '*.lpr']), faAnyFile, LSearch) = 0 then
-    try
+  try
+    if FindFirst(ConcatPaths([AProjectDir, '*.lpr']), faAnyFile, LSearch) = 0 then
       repeat
         if ((LSearch.Attr and faAnyFile) <> 0) and (ExtractFileExt(LSearch.Name) = '.lpr') then
         begin
@@ -143,10 +143,10 @@ begin
           LResult.Clear;
         end;
       until FindNext(LSearch) <> 0;
-    finally
-      FindClose(LSearch);
-      LResult.Free;
-    end;  
+  finally
+    FindClose(LSearch);
+    LResult.Free;
+  end;  
 end;
 
 end.

@@ -243,7 +243,7 @@ begin
           end;
         end;
 
-        // search inside sub folder unless it is in ignore list
+        // search inside sub folder
         if ((LSearch.Attr and faDirectory) <> 0) and (not AnsiMatchText(LSearch.Name, ['.', '..'])) then
         begin
           BuildFileList(
@@ -319,7 +319,6 @@ end;
 
 function TPathWatcher.Start: IPathWatcher;
 var
-  LCurrent: TDictFile = nil;
   LChangeMessage: string;
   LStart: QWord;
 begin
@@ -334,31 +333,25 @@ begin
 
   if FWatcherRun('first run') then
     exit(Self);
+  
+  LStart := GetTickCount64;
+  while True do
+  begin
+    BuildFileList(FPath, nil, False, LChangeMessage);
 
-  try
-    LStart := GetTickCount64;
-    while True do
-    begin
-      BuildFileList(FPath, nil, False, LChangeMessage);
-
-      if LChangeMessage <> '' then
-      begin
-        FreeAndNil(LCurrent);
-        if FWatcherRun(LChangeMessage) then
-          break;
-      end;
-
-      if (GetTickCount64 - LStart) >= FTimeout then
-      begin
-        FWatcherRun('timeout exceeded');
+    if LChangeMessage <> '' then
+      if FWatcherRun(LChangeMessage) then
         break;
-      end;
-
-      Sleep(200);
+    
+    if (GetTickCount64 - LStart) >= FTimeout then
+    begin
+      FWatcherRun('timeout exceeded');
+      break;
     end;
-  finally
-    FreeAndNil(LCurrent);
+
+    Sleep(75);
   end;
+  
   Result := Self;
 end;
 

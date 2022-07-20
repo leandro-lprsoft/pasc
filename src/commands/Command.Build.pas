@@ -76,9 +76,18 @@ var
   LProjectFile: string = '';
   LOutput, LBuildMode: string;
 begin
-  if ABuilder.HasArguments then
-    LProjectFile := ABuilder.Arguments[0].Value;
-  LProjectFile := FindProject(GetCurrentDir, LProjectFile);
+  if Length(ABuilder.GetParsedArguments) > 0 then
+  begin
+    LProjectFile := ABuilder.GetParsedArguments[0].Value;
+    if not FileExists(LProjectFile) then
+    begin
+      ABuilder.OutputColor('Project ' + LProjectFile + ' not found.'#13#10, LightRed);
+      exit;    
+    end;
+  end;
+
+  if not FileExists(LProjectFile) then
+    LProjectFile := FindProject(GetCurrentDir, LProjectFile);
 
   if Trim(LProjectFile) = '' then
   begin

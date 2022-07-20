@@ -44,16 +44,7 @@ uses
 
 var
   Finished, CustomTimeout: LongInt;
-  CaptureWatchExecute: string;
   CustomIgnoreFolder, CustomIgnoreStartsText, CustomIgnoreFiles, CustomIgnoreExtensions: TArray<string>;
-
-function MockWatchExecute(const AContent: string): Boolean;
-begin
-  CaptureWatchExecute := 
-    IfThen(CaptureWatchExecute <> '', CaptureWatchExecute + #13#10, '') + 
-    AContent;
-  Result := not SameText(AContent, 'first run');
-end;
 
 procedure RunWatcher;
 var
@@ -93,7 +84,7 @@ begin
   FBuilder := TCommandBuilder.Create(FExeName);
   MockSetup(FBuilder);
 
-  CaptureWatchExecute := '';
+  MockCaptureWatchExecute := '';
   Finished := 0;
   CustomTimeout := 3000;
 
@@ -128,13 +119,13 @@ procedure TTestUtilsWatcher.TestBasicWatch;
 var
   LThread: TThread;
 begin
-  CustomTimeout := 50;
+  CustomTimeout := 500;
 
   LThread := TThread.CreateAnonymousThread(RunWatcher);
   LThread.FreeOnTerminate := True;
   LThread.Start;
 
-  Sleep(100);
+  Sleep(50);
 
   // change working folder
   SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.txt']), 'test content');
@@ -144,8 +135,8 @@ begin
 
   // check for CaptureWatchExecute
   AssertTrue(
-    'shoud detect change for test_for_watch.txt ' + CaptureWatchExecute, 
-    ContainsText(CaptureWatchExecute, 'test_for_watch.txt'));
+    'shoud detect change for test_for_watch.txt ' + MockCaptureWatchExecute, 
+    ContainsText(MockCaptureWatchExecute, 'test_for_watch.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreStartText;
@@ -165,10 +156,9 @@ begin
   while Finished = 0 do
     Sleep(50);
 
-  // check for CaptureWatchExecute
   AssertFalse(
     'shoud not detect change for samp_for_watch.txt', 
-    ContainsText(CaptureWatchExecute, 'samp_for_watch.txt'));
+    ContainsText(MockCaptureWatchExecute, 'samp_for_watch.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreFolder;
@@ -190,8 +180,8 @@ begin
     Sleep(50);
 
   AssertFalse(
-    'shoud not detect change creation on newfolder ' + CaptureWatchExecute, 
-    ContainsText(CaptureWatchExecute, 'new_file.txt'));
+    'shoud not detect change creation on newfolder ' + MockCaptureWatchExecute, 
+    ContainsText(MockCaptureWatchExecute, 'new_file.txt'));
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreFile;
@@ -212,8 +202,8 @@ begin
     Sleep(50);
 
   AssertFalse(
-    'shoud not detect change creation on ignore_file.txt ' + CaptureWatchExecute, 
-    ContainsText(CaptureWatchExecute, 'ignore_file.txt')); 
+    'shoud not detect change creation on ignore_file.txt ' + MockCaptureWatchExecute, 
+    ContainsText(MockCaptureWatchExecute, 'ignore_file.txt')); 
 end;
 
 procedure TTestUtilsWatcher.TestIgnoreExtension;
@@ -234,8 +224,8 @@ begin
     Sleep(50);
 
   AssertFalse(
-    'shoud not detect change creation on ignore_file.txt ' + CaptureWatchExecute, 
-    ContainsText(CaptureWatchExecute, 'ignore_file.txt')); 
+    'shoud not detect change creation on ignore_file.txt ' + MockCaptureWatchExecute, 
+    ContainsText(MockCaptureWatchExecute, 'ignore_file.txt')); 
 end;
 
 procedure TTestUtilsWatcher.TestTimeout;
@@ -253,7 +243,7 @@ begin
 
   AssertTrue(
     'shoud detect timeout exceeded', 
-    ContainsText(CaptureWatchExecute, 'timeout exceeded'));    
+    ContainsText(MockCaptureWatchExecute, 'timeout exceeded'));    
 end;
 
 initialization

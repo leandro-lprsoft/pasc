@@ -44,7 +44,6 @@ implementation
 uses
   Classes,
   SysUtils,
-  StrUtils,
   Utils.Tests,
   Utils.Leak,
   Utils.Shell,
@@ -83,12 +82,11 @@ var
   LExeFile, LExeOnly, LXmlFile: string;
   LReport: TTestReport;
   LLeak: TLeakReport;
-  LOutput: string;
 begin
   LExeFile := GetTestExecutable;
   LExeOnly := ExtractFileName(LExeFile);
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
-  LOutput := ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
+  ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
 
   LReport := TTestReport.New(ABuilder, ExtractFilePath(LExeFile));
   try

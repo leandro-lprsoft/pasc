@@ -6,6 +6,7 @@ interface
 
 uses
   SysUtils, 
+  StrUtils,
   Classes,
   rtti, 
   typinfo,
@@ -18,9 +19,11 @@ uses
   procedure MockOutput(const AMessage: string);
   procedure MockOutputColor(const AMessage: string; const AColor: byte);
   function MockShell(const AProgram: string; AParams: TArray<string>): string;
+  function MockWatchExecute(const AContent: string): Boolean;
 
 var
-  MockCommandCapture, MockInputLnResult, MockOutputCaptured, MockShellCapture: string;
+  MockCommandCapture, MockInputLnResult, MockOutputCaptured, MockShellCapture, 
+  MockCaptureWatchExecute: string;
   MockStart, MockTimeout: QWord;
 
 implementation
@@ -67,10 +70,18 @@ function MockShell(const AProgram: string; AParams: TArray<string>): string;
 var
   LParam: string;
 begin
-  MockShellCapture := AProgram;
+  MockShellCapture := IfThen(MockShellCapture <> '', MockShellCapture + #13#10, '') + AProgram;
   for LParam in AParams do
     MockShellCapture := MockShellCapture + ' ' + LParam;
   Result := MockShellCapture;
+end;
+
+function MockWatchExecute(const AContent: string): Boolean;
+begin
+  MockCaptureWatchExecute := 
+    IfThen(MockCaptureWatchExecute <> '', MockCaptureWatchExecute + #13#10, '') + 
+    AContent;
+  Result := not SameText(AContent, 'first run');
 end;
 
 end.

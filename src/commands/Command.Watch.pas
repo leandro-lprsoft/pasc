@@ -8,7 +8,8 @@ unit Command.Watch;
 interface
 
 uses
-  Command.Interfaces;
+  Command.Interfaces,
+  Utils.Interfaces;
 
   /// <summary> This command aims to monitor for changes in the current directory. Changes 
   /// considered are new files, changes to existing files, and file deletions.
@@ -28,36 +29,42 @@ uses
   /// registry the command. </param>  
   procedure Registry(ABuilder: ICommandBuilder);
 
+  /// <summary> Execute the command requested by the user, it will be passed to IPathWatcher 
+  /// so that it executes it. It is prepared to run the project build and tests as long as 
+  /// there is a respective executable. . </summary>
+  /// <param name="AFile"> Filename that triggered the action change. </param>  
+  function RunUserCommandAsRequested(const AFile: string): Boolean;
+
+var
+  /// <summary> Allows to define another function to process the changes detected by the 
+  /// Watcher. The main purpose is to use this variable to easily implement unit tests.
+  /// </summary>
+  RunWatcherCallback: TWatcherRunCallback;
+
+  /// <summary> Allows to set a custom timeout to wait for an change event. The main purpose 
+  /// is to use this variable to easily implement unit tests.
+  /// </summary>
+  CommandWatchTimeout: LongInt = 3600000;
+
 implementation
 
 uses
   SysUtils,
-  Utils.Interfaces,
+  Command.Test,
+  Command.Build,
   Utils.IO,
-  Utils.Watcher,
-  Command.Test;
+  Utils.Watcher;
 
 var
   Builder: ICommandBuilder;
   ProjectFile: string;
+  IsTest, IsBuild: Boolean;
 
-function RunUserCommandAsRequested(const AFile: string): Boolean;
-begin
-  WriteLn(AFile);
-  Result := False;
-end;
-
-procedure WatchCommand(ABuilder: ICommandBuilder);
+function GetProjectFileName(ABuilder: ICommandBuilder): string;
 var
-  LIsTest, LIsRun: boolean;
   LProjectFile: string;
-
-  LPathWatcher: IPathWatcher;
 begin
-  LIsTest := ABuilder.CheckOption('t');
-  LIsRun := ABuilder.CheckOption('r');
-
-  if LIsTest then
+  if ABuilder.CheckOption('test') then
   begin
     LProjectFile := FindProjectFile(GetCurrentDir, 'TestRunner');
     if not FileExists(LProjectFile) then
@@ -74,23 +81,52 @@ begin
     if not FileExists(LProjectFile) then
       raise Exception.Create('no project found on current path');
   end;
+  Result := LProjectFile;
+end;
 
+function RunUserCommandAsRequested(const AFile: string): Boolean;
+begin
+  WriteLn('ProjectFile: ', ProjectFile);
+  WriteLn(AFile);
+
+  if IsBuild then
+  begin
+    Builder.UseArguments(['build', ProjectFile]);
+    Builder.Parse;
+    BuildCommand(Builder);
+  end;
+
+  if IsTest then
+  begin
+    Builder.UseArguments(['test']);
+    Builder.Parse;
+    TestCommand(Builder);
+  end;
+
+  Result := False;
+end;
+
+procedure WatchCommand(ABuilder: ICommandBuilder);
+var
+  LPathWatcher: IPathWatcher;
+begin
   ABuilder.OutputColor(GetCurrentDir + #13#10, ABuilder.ColorTheme.Value);
   ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
 
   Builder := ABuilder;
-  ProjectFile := LProjectFile;
+  ProjectFile := GetProjectFileName(ABuilder);
+  IsTest := Builder.CheckOption('test');
+  IsBuild := Builder.CheckOption('build');
 
-  //Create TPathWatcherInstance and configure it
-  //Start Watcher
   LPathWatcher := 
     TPathWatcher
       .New
       .Path(GetCurrentDir)
       .Ignore(ikStartsText, ['.'])
-      .Ignore(ikExtension, ['.exe', '', '.dll', '.so'])
-      .Run(RunUserCommandAsRequested);
-      
+      .Ignore(ikFolder, ['lib', 'backup'])
+      .Ignore(ikExtension, ['.exe', '', '.dll', '.so', '.trc', '.xml', '.res'])
+      .Timeout(CommandWatchTimeout)
+      .Run(RunWatcherCallback);
   LPathWatcher.Start;
 end;
 
@@ -100,8 +136,8 @@ begin
     .AddCommand(
       'watch',
       'watch for project folder changes to build, tests, or just runs the app.'#13#10 +
-      'Ex: ' + ABuilder.ExeName + ' watch'#13#10 +
-      'Ex: ' + ABuilder.ExeName + ' watch sample1.lpr',
+      'Ex: ' + ABuilder.ExeName + ' watch --build --test .'#13#10 +
+      'Ex: ' + ABuilder.ExeName + ' watch --build --run',
       @WatchCommand,
       [ccRequiresOneArgument])
       .AddOption(
@@ -114,5 +150,8 @@ begin
           't', 'test', 
           'build test project and run it', ['r']);
 end;
+
+initialization
+  RunWatcherCallback := RunUserCommandAsRequested;
 
 end.
