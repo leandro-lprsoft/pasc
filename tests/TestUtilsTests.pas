@@ -152,7 +152,6 @@ var
 begin
   LXmlFile := ConcatPaths([ExtractFilePath(ParamStr(0)), 'xml', 'TestError.xml']);
   FTestReport.ParseXmlTestsFile('TestApp', LXmlFile);
-  
   AssertEquals(2, FTestReport.TestsFailed);
 end;
 

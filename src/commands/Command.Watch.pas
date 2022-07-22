@@ -50,6 +50,7 @@ implementation
 
 uses
   SysUtils,
+  StrUtils,
   Command.Test,
   Command.Build,
   Utils.IO,
@@ -59,6 +60,12 @@ var
   Builder: ICommandBuilder;
   ProjectFile: string;
   IsTest, IsBuild: Boolean;
+
+procedure OutputWatcherInfo(const ATitle, AText: string);
+begin
+  Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
+  Builder.OutputColor(AText + #13#10, Builder.ColorTheme.Other);
+end;
 
 function GetProjectFileName(ABuilder: ICommandBuilder): string;
 var
@@ -85,23 +92,32 @@ begin
 end;
 
 function RunUserCommandAsRequested(const AFile: string): Boolean;
+var
+  LStart: QWord;
 begin
-  WriteLn('ProjectFile: ', ProjectFile);
-  WriteLn(AFile);
-
+  OutputWatcherInfo('Event', AFile);
+  LStart := GetTickCount64;
+  
   if IsBuild then
   begin
+    OutputWatcherInfo('Watcher', 'Build started'#13#10);
     Builder.UseArguments(['build', ProjectFile]);
     Builder.Parse;
     BuildCommand(Builder);
+    OutputWatcherInfo('', '');
   end;
 
   if IsTest then
   begin
+    OutputWatcherInfo('Watcher', 'test started'#13#10);
     Builder.UseArguments(['test']);
     Builder.Parse;
     TestCommand(Builder);
   end;
+
+  OutputWatcherInfo(
+    'Watcher', 
+    'cycle elapsed time: ' + FloatToStr((GetTickCount64 - LStart) / 1000.0) + ' seconds'#13#10);
 
   Result := False;
 end;
@@ -110,14 +126,17 @@ procedure WatchCommand(ABuilder: ICommandBuilder);
 var
   LPathWatcher: IPathWatcher;
 begin
-  ABuilder.OutputColor(GetCurrentDir + #13#10, ABuilder.ColorTheme.Value);
-  ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
-
   Builder := ABuilder;
+
+  OutputWatcherInfo('Watcher', 'started');
+  OutputWatcherInfo('Path', GetCurrentDir);
+
   ProjectFile := GetProjectFileName(ABuilder);
   IsTest := Builder.CheckOption('test');
   IsBuild := Builder.CheckOption('build');
-
+  
+  OutputWatcherInfo('Project', ProjectFile);
+  
   LPathWatcher := 
     TPathWatcher
       .New
@@ -135,7 +154,13 @@ begin
   ABuilder
     .AddCommand(
       'watch',
-      'watch for project folder changes to build, tests, or just runs the app.'#13#10 +
+      'monitor current path for changes and execute selected commands'#13#10 +
+      'a project file can be provided, if you don''t want to specify '#13#10 +
+      'a file just pass a . as an argument. In this case, pasc looks '#13#10 +
+      'for a project in the current folder. If the --test option is '#13#10 +
+      'used, pasc will look for a test project based on fpcunit. '#13#10 +
+      'The goal is to run a build cycle and tests when changes to the '#13#10 +
+      'folder are detected. '#13#10 +
       'Ex: ' + ABuilder.ExeName + ' watch --build --test .'#13#10 +
       'Ex: ' + ABuilder.ExeName + ' watch --build --run',
       @WatchCommand,
