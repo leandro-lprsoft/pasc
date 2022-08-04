@@ -71,7 +71,7 @@ begin
     Exit;
   
   ABuilder.OutputColor(' Are you sure? ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor('[c]ancel ', LightRed);
+  ABuilder.OutputColor('[c]ancel ', ABuilder.ColorTheme.Error);
   ABuilder.OutputColor('[y]es, [a]ll: ', ABuilder.ColorTheme.Value);
   ABuilder.OutputColor(': ', ABuilder.ColorTheme.Other);
   LInvalidKey := True;
@@ -155,7 +155,7 @@ begin
     begin
       if not SameText(E.Message, 'Cleaning aborted.') then
         raise;
-      ABuilder.OutputColor(E.Message + #13#10, LightRed);
+      ABuilder.OutputColor(E.Message + #13#10, ABuilder.ColorTheme.Error);
     end;
   end;
 end;

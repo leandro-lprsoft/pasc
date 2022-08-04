@@ -81,7 +81,7 @@ begin
     LProjectFile := ABuilder.GetParsedArguments[0].Value;
     if not FileExists(LProjectFile) then
     begin
-      ABuilder.OutputColor('Project ' + LProjectFile + ' not found.'#13#10, LightRed);
+      ABuilder.OutputColor('Project ' + LProjectFile + ' not found.'#13#10, ABuilder.ColorTheme.Error);
       exit;    
     end;
   end;
@@ -96,7 +96,7 @@ begin
       ABuilder.ColorTheme.Other);
     ABuilder.OutputColor(
       'does not exist.'#13#10,
-      LightRed);
+      ABuilder.ColorTheme.Error);
     exit;      
   end;
   
@@ -106,7 +106,7 @@ begin
     on E: Exception do
     begin
       ABuilder.OutputColor('lazbuild does not exist or its path is not configure to be in PATH environment.',
-      LightRed);
+      ABuilder.ColorTheme.Error);
       exit;      
     end;
   end;
@@ -124,7 +124,7 @@ begin
     on E: Exception do
     begin
       ABuilder.OutputColor('error trying to build the project file.',
-      LightRed);
+      ABuilder.ColorTheme.Error);
       exit;      
     end;
   end;

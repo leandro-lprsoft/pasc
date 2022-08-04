@@ -356,7 +356,7 @@ begin
   
   for LItem in TestCaseData do
   begin
-    LColor := IfThen(LItem.Status <> 'OK', LightRed, LightGreen);
+    LColor := IfThen(LItem.Status <> 'OK', ABuilder.ColorTheme.Error, LightGreen);
 
     FBuilder.OutputColor(PadLeft(LItem.Status + ' ', 13), LColor);
     FBuilder.OutputColor('[' + PadLeft(TrimTime(LItem.Time), 12) + ']', FBuilder.ColorTheme.Other);
