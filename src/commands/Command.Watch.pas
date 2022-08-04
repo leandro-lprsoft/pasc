@@ -72,7 +72,7 @@ end;
 procedure OutputWatcherError(const ATitle, AError: string);
 begin
   Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
-  Builder.OutputColor(AError + #13#10, LightRed);
+  Builder.OutputColor(AError + #13#10, Builder.ColorTheme.Error);
 end;
 
 function GetProjectFileName(ABuilder: ICommandBuilder): string;

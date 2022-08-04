@@ -263,7 +263,7 @@ begin
   
   for LItem in LeakData do
   begin
-    FBuilder.OutputColor(PadLeft('Leak ', 13), LightRed);
+    FBuilder.OutputColor(PadLeft('Leak ', 13), FBuilder.ColorTheme.Error);
     FBuilder.OutputColor('[' + PadLeft(LItem.Size, 12) + '] ', FBuilder.ColorTheme.Other);
 
     LIndex := 0;

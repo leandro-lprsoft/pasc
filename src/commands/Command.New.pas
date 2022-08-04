@@ -209,7 +209,7 @@ begin
 
   if not ABuilder.HasArguments then
   begin
-    ABuilder.OutputColor('New command requires builder to accept an argument.', LightRed);
+    ABuilder.OutputColor('New command requires builder to accept an argument.', ABuilder.ColorTheme.Error);
     ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
     exit;
   end;
@@ -229,7 +229,7 @@ begin
   except
     on E: Exception do
     begin
-      ABuilder.OutputColor(E.Message, LightRed);
+      ABuilder.OutputColor(E.Message, ABuilder.ColorTheme.Error);
     end;
   end;
 end;
