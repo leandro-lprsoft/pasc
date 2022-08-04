@@ -84,7 +84,7 @@ end;
 
 procedure TTestCommandTest.TestGetTestExecutable;
 begin
-  AssertEquals(ParamStr(0), GetTestExecutable);
+  AssertEquals(ParamStr(0), GetTestExecutable(FBuilder));
 end;
 
 initialization

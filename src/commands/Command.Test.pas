@@ -35,9 +35,12 @@ uses
   procedure Registry(ABuilder: ICommandBuilder);
 
   /// <summary> From the current directory it tries to locate an fpcunit compatible test 
-  /// project that has been previously compiled. Returns complete test file executable name
+  /// project that has been previously compiled. Returns complete test file executable name.
+  /// If the function returns empty, the project does not exist or is not of the expected type.
   /// </summary>  
-  function GetTestExecutable: string;
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output info about the existence of the test project and whether it is valid. </param>
+  function GetTestExecutable(ABuilder: ICommandBuilder): string;
 
 implementation
 
@@ -49,7 +52,7 @@ uses
   Utils.Shell,
   Utils.IO;
 
-function GetTestExecutable: string;
+function GetTestExecutable(ABuilder: ICommandBuilder): string;
 var
   LProjectFile, LExeFile: string;
 begin
@@ -61,16 +64,16 @@ begin
 
   if LProjectFile = '' then
   begin
-    WriteLn(
-      'Test project not found on current dir or tests sub folder. ' +
-      'Projet type should use fpcunit');
+    ABuilder.Output(
+      'A test project was not found in the current path or in a tests subfolder. '#13#10 +
+      'The test project must be based on the fpcunit test framework.');
     exit;
   end;
     
   LExeFile := ChangeFileExt(LProjectFile, {$IF DEFINED(WINDOWS)}'.exe'{$ELSE}''{$ENDIF});
   if not FileExists(LExeFile) then
   begin
-    WriteLn('Executable test not found. Build it before running pasc test');
+    ABuilder.Output('Executable test not found. Build it before running pasc test');
     exit;
   end;
 
@@ -83,7 +86,9 @@ var
   LReport: TTestReport;
   LLeak: TLeakReport;
 begin
-  LExeFile := GetTestExecutable;
+  LExeFile := GetTestExecutable(ABuilder);
+  if LExeFile.IsEmpty then
+    Exit;
   LExeOnly := ExtractFileName(LExeFile);
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
   ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);

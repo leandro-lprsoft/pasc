@@ -117,6 +117,8 @@ begin
     LBuildMode := IfThen(ABuilder.CheckOption('r'), '--build-mode=Release', '');
 
     LOutput := ShellExecute('lazbuild', [LProjectFile, LBuildMode]);
+    if ContainsText(LOutput, 'Error: ') then
+      ABuilder.State := 'Error during build was detected.';
     ABuilder.OutputColor(LOutput + #13#10, ABuilder.ColorTheme.Other);
   except
     on E: Exception do

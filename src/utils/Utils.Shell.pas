@@ -49,7 +49,7 @@ begin
     for LParam in AParams do
       LProcess.Parameters.Add(LParam);
 
-    LProcess.Options := [poUsePipes];
+    LProcess.Options := [poUsePipes, poStdErrToOutPut];
     LProcess.Execute;
 
     LStream := TMemoryStream.Create;

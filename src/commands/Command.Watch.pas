@@ -53,18 +53,26 @@ uses
   StrUtils,
   Command.Test,
   Command.Build,
+  Command.Colors,
   Utils.IO,
+  Utils.Shell,
   Utils.Watcher;
 
 var
   Builder: ICommandBuilder;
   ProjectFile: string;
-  IsTest, IsBuild: Boolean;
+  IsTest, IsBuild, IsRun: Boolean;
 
 procedure OutputWatcherInfo(const ATitle, AText: string);
 begin
   Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
   Builder.OutputColor(AText + #13#10, Builder.ColorTheme.Other);
+end;
+
+procedure OutputWatcherError(const ATitle, AError: string);
+begin
+  Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
+  Builder.OutputColor(AError + #13#10, LightRed);
 end;
 
 function GetProjectFileName(ABuilder: ICommandBuilder): string;
@@ -94,6 +102,7 @@ end;
 function RunUserCommandAsRequested(const AFile: string): Boolean;
 var
   LStart: QWord;
+  LExt: string = {$IFDEF UNIX}''{$ELSE}'.exe'{$ENDIF};
 begin
   OutputWatcherInfo('Event', AFile);
   LStart := GetTickCount64;
@@ -104,6 +113,16 @@ begin
     Builder.UseArguments(['build', ProjectFile]);
     Builder.Parse;
     BuildCommand(Builder);
+
+    if Builder.State <> '' then 
+    begin
+      OutputWatcherInfo('', '');
+      OutputWatcherError('Watcher', Builder.State);
+      Builder.State := '';
+      OutputWatcherInfo('', '');
+      exit(false);
+    end;
+
     OutputWatcherInfo('', '');
   end;
 
@@ -113,6 +132,13 @@ begin
     Builder.UseArguments(['test']);
     Builder.Parse;
     TestCommand(Builder);
+  end;
+
+  if IsRun then
+  begin
+    OutputWatcherInfo('Watcher', 'running ' + ChangeFileExt(ProjectFile, LExt) + #13#10);
+    Builder.Output(ShellCommand(ChangeFileExt(ProjectFile, LExt), []));
+    OutputWatcherInfo('', '');
   end;
 
   OutputWatcherInfo(
@@ -134,6 +160,7 @@ begin
   ProjectFile := GetProjectFileName(ABuilder);
   IsTest := Builder.CheckOption('test');
   IsBuild := Builder.CheckOption('build');
+  IsRun := Builder.CheckOption('run');
   
   OutputWatcherInfo('Project', ProjectFile);
   
