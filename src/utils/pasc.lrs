@@ -101,3 +101,60 @@ LazarusResources.Add('update-path-ps1','TXT',[
 LazarusResources.Add('update-path-sh','TXT',[
   'source $HOME/.profile'#13#10'chmod +x $1'
 ]);
+LazarusResources.Add('fpcunitprojectlpi','TXT',[
+  '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
+  +'ons>'#13#10'    <Version Value="12"/>'#13#10'    <PathDelim Value="\"/>'#13
+  +#10'    <General>'#13#10'      <SessionStorage Value="InProjectDir"/>'#13#10
+  +'      <Title Value="fpcunitproject1"/>'#13#10'      <UseAppBundle Value="Fa'
+  +'lse"/>'#13#10'      <ResourceType Value="res"/>'#13#10'    </General>'#13#10
+  +'    <BuildModes>'#13#10'      <Item Name="Default" Default="True"/>'#13#10
+  +'    </BuildModes>'#13#10'    <PublishOptions>'#13#10'      <Version Value="'
+  +'2"/>'#13#10'      <UseFileFilters Value="True"/>'#13#10'    </PublishOption'
+  +'s>'#13#10'    <RunParams>'#13#10'      <FormatVersion Value="2"/>'#13#10'  '
+  +'  </RunParams>'#13#10'    <RequiredPackages>'#13#10'      <Item>'#13#10'   '
+  +'     <PackageName Value="FCL"/>'#13#10'      </Item>'#13#10'    </RequiredP'
+  +'ackages>'#13#10'    <Units>'#13#10'      <Unit>'#13#10'        <Filename Va'
+  +'lue="fpcunitproject1.lpr"/>'#13#10'        <IsPartOfProject Value="True"/>'
+  +#13#10'      </Unit>'#13#10'      <Unit>'#13#10'        <Filename Value="tes'
+  +'tcase1.pas"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10'       '
+  +' <UnitName Value="TestCase1"/>'#13#10'      </Unit>'#13#10'    </Units>'#13
+  +#10'  </ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Value'
+  +'="11"/>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'      '
+  +'<Filename Value="fpcunitproject1"/>'#13#10'    </Target>'#13#10'    <Search'
+  +'Paths>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <Uni'
+  +'tOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>'#13#10'    </Search'
+  +'Paths>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10'    <Excepti'
+  +'ons>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'#13#10'     '
+  +' </Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodetoolError"/>'
+  +#13#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Value="EFOpenE'
+  +'rror"/>'#13#10'      </Item>'#13#10'    </Exceptions>'#13#10'  </Debugging>'
+  +#13#10'</CONFIG>'#13#10
+]);
+LazarusResources.Add('fpcunitprojectlpr','TXT',[
+  'program fpcunitproject1;'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'uses'
+  +#13#10'  Classes, consoletestrunner, TestCase1;'#13#10#13#10'type'#13#10#13
+  +#10'  { TMyTestRunner }'#13#10#13#10'  TMyTestRunner = class(TTestRunner)'#13
+  +#10'  protected'#13#10'  // override the protected methods of TTestRunner to'
+  +' customize its behavior'#13#10'  end;'#13#10#13#10'var'#13#10'  Application'
+  +': TMyTestRunner;'#13#10#13#10'begin'#13#10'  Application := TMyTestRunner.C'
+  +'reate(nil);'#13#10'  Application.Initialize;'#13#10'  Application.Title := '
+  +'''FPCUnit Console test runner'';'#13#10'  Application.Run;'#13#10'  Applica'
+  +'tion.Free;'#13#10'end.'#13#10
+]);
+LazarusResources.Add('testcase1pas','TXT',[
+  'unit TestCase1;'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'interface'#13
+  +#10#13#10'uses'#13#10'  Classes, '#13#10'  SysUtils, '#13#10'  fpcunit, '#13
+  +#10'  testutils, '#13#10'  testregistry;'#13#10#13#10'type'#13#10#13#10'  TT'
+  +'estCase1= class(TTestCase)'#13#10'  protected'#13#10'    procedure SetUp; o'
+  +'verride;'#13#10'    procedure TearDown; override;'#13#10'  published'#13#10
+  +'    procedure TestThatPasses;'#13#10'    procedure TestThatFails;'#13#10'  '
+  +'  procedure TestThatLeaks;'#13#10'  end;'#13#10#13#10'implementation'#13#10
+  +#13#10'procedure TTestCase1.SetUp;'#13#10'begin'#13#10#13#10'end;'#13#10#13
+  +#10'procedure TTestCase1.TearDown;'#13#10'begin'#13#10#13#10'end;'#13#10#13
+  +#10'procedure TTestCase1.TestThatFails;'#13#10'begin'#13#10'  Fail(''Write y'
+  +'our own test'');'#13#10'end;'#13#10#13#10'procedure TTestCase1.TestThatPass'
+  +'es;'#13#10'begin'#13#10'  '#13#10'end;'#13#10#13#10'procedure TTestCase1.Te'
+  +'stThatLeaks;'#13#10'var'#13#10'  LObject: TObject;'#13#10'begin'#13#10'  LO'
+  +'bject := TObject.Create;'#13#10'end;'#13#10#13#10'initialization'#13#10'  R'
+  +'egisterTest(TTestCase1);'#13#10#13#10'end.'#13#10#13#10
+]);

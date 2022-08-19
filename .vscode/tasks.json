@@ -31,9 +31,9 @@
     {
       "label": "build resources",
       "type": "shell",
-      "windows": {"command": "./src/resources/compile.ps1"},
-      "linux": {"command": "./src/resources/compile.sh"},
-      "osx": {"command": "./src/resources/compile.sh"},
+      "windows": {"command": "./resources/compile.ps1"},
+      "linux": {"command": "./resources/compile.sh"},
+      "osx": {"command": "./resources/compile.sh"},
       "group": {
         "kind": "build",
         "isDefault": false

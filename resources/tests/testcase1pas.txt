@@ -1,0 +1,62 @@
+unit {TestCase1};
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, 
+  SysUtils, 
+  fpcunit, 
+  testutils, 
+  testregistry;
+
+type
+
+  T{TestCase1}= class(TTestCase)
+  protected
+    procedure SetUp; override;
+    procedure TearDown; override;
+  published
+    procedure TestThatPasses;
+    procedure TestThatFails;
+    procedure TestThatLeaks;
+  end;
+
+implementation
+
+procedure T{TestCase1}.SetUp;
+begin
+
+end;
+
+procedure T{TestCase1}.TearDown;
+begin
+
+end;
+
+procedure T{TestCase1}.TestThatFails;
+begin
+  Fail('Write your own test');
+end;
+
+procedure T{TestCase1}.TestThatPasses;
+begin
+  
+end;
+
+procedure T{TestCase1}.TestThatLeaks;
+var
+  LObject: TObject;
+begin
+  LObject := TObject.Create;
+  // LObject.Free; 
+  // above line is commented just to leak and show pasc leak report funcionality 
+  // just uncomment it and run the tests again to see a report without leaks
+end;
+
+initialization
+  RegisterTest(T{TestCase1});
+
+end.
+
