@@ -305,11 +305,15 @@ begin
   LQualifiedPath := FindFile(ProjectSource, AFile);
   if LQualifiedPath = '' then
     LQualifiedPath := FindFile(GetCurrentDir, AFile);
-
+  
   if LQualifiedPath = '' then
     LRelativePath := './'
   else
-    LRelativePath := '.' + StringReplace(LQualifiedPath, GetCurrentDir, '', [rfReplaceAll, rfIgnoreCase]);
+  begin
+    LRelativePath := LQualifiedPath;
+    // vscode is not able to open files in the project source path using relative path
+    // LRelativePath := StringReplace(LQualifiedPath, IncludeTrailingPathDelimiter(GetCurrentDir), '', [rfReplaceAll, rfIgnoreCase]);
+  end;
 
   Result := LRelativePath;
 end;

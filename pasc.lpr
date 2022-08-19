@@ -9,6 +9,7 @@ uses
   {$ENDIF}
   Command.Interfaces,
   Command.App,
+  Command.Add,
   Command.Build,
   Command.Clean,
   Command.Colors,
@@ -31,6 +32,7 @@ begin
     PascApp.CommandBuilder.UseShortDescriptions := True;
     PascApp.CommandBuilder.ColorTheme := DarkColorTheme;
 
+    Command.Add.Registry(PascApp.CommandBuilder);
     Command.Build.Registry(PascApp.CommandBuilder);
     Command.Clean.Registry(PascApp.CommandBuilder);
     Command.Usage.Registry(PascApp.CommandBuilder);

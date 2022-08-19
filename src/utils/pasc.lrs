@@ -31,7 +31,17 @@ LazarusResources.Add('tasksjson','TXT',[
   +'           "severity": 5,'#13#10'           "code": 6,'#13#10'           "m'
   +'essage": 7'#13#10'        },'#13#10'        "severity": "info"'#13#10'     '
   +' },      '#13#10'      "group": {'#13#10'        "kind": "build",'#13#10'  '
-  +'      "isDefault": true'#13#10'      }'#13#10'    }'#13#10'  ]'#13#10'}'
+  +'      "isDefault": true'#13#10'      }'#13#10'    },'#13#10'    {'#13#10'  '
+  +'    "label": "build tests",'#13#10'      "type": "shell",'#13#10'      "com'
+  +'mand": "lazbuild",'#13#10'      "args": ["tests/Test{PROJECTNAME}.lpi"],'#13
+  +#10'      "dependsOn": "build tests resources"'#13#10'    },'#13#10'    {'#13
+  +#10'      "label": "tests",'#13#10'      "type": "shell",'#13#10'      "comm'
+  +'and": "pasc",'#13#10'      "args": ["test"],'#13#10'      "group": {'#13#10
+  +'        "kind": "test",'#13#10'        "isDefault": true'#13#10'      },'#13
+  +#10'      "dependsOn": "build tests"'#13#10'    },'#13#10'    {'#13#10'     '
+  +' "label": "watch: build and tests",'#13#10'      "type": "shell",'#13#10'  '
+  +'    "command": "pasc",'#13#10'      "args": ["watch", "--build", "--test", '
+  +'"."],'#13#10'      "problemMatcher": []'#13#10'    }'#13#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('projectlpi','TXT',[
   '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
@@ -105,56 +115,258 @@ LazarusResources.Add('fpcunitprojectlpi','TXT',[
   '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
   +'ons>'#13#10'    <Version Value="12"/>'#13#10'    <PathDelim Value="\"/>'#13
   +#10'    <General>'#13#10'      <SessionStorage Value="InProjectDir"/>'#13#10
-  +'      <Title Value="fpcunitproject1"/>'#13#10'      <UseAppBundle Value="Fa'
-  +'lse"/>'#13#10'      <ResourceType Value="res"/>'#13#10'    </General>'#13#10
-  +'    <BuildModes>'#13#10'      <Item Name="Default" Default="True"/>'#13#10
-  +'    </BuildModes>'#13#10'    <PublishOptions>'#13#10'      <Version Value="'
-  +'2"/>'#13#10'      <UseFileFilters Value="True"/>'#13#10'    </PublishOption'
-  +'s>'#13#10'    <RunParams>'#13#10'      <FormatVersion Value="2"/>'#13#10'  '
-  +'  </RunParams>'#13#10'    <RequiredPackages>'#13#10'      <Item>'#13#10'   '
-  +'     <PackageName Value="FCL"/>'#13#10'      </Item>'#13#10'    </RequiredP'
-  +'ackages>'#13#10'    <Units>'#13#10'      <Unit>'#13#10'        <Filename Va'
-  +'lue="fpcunitproject1.lpr"/>'#13#10'        <IsPartOfProject Value="True"/>'
-  +#13#10'      </Unit>'#13#10'      <Unit>'#13#10'        <Filename Value="tes'
-  +'tcase1.pas"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10'       '
-  +' <UnitName Value="TestCase1"/>'#13#10'      </Unit>'#13#10'    </Units>'#13
-  +#10'  </ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Value'
-  +'="11"/>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'      '
-  +'<Filename Value="fpcunitproject1"/>'#13#10'    </Target>'#13#10'    <Search'
-  +'Paths>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <Uni'
-  +'tOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>'#13#10'    </Search'
-  +'Paths>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10'    <Excepti'
-  +'ons>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'#13#10'     '
-  +' </Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodetoolError"/>'
-  +#13#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Value="EFOpenE'
-  +'rror"/>'#13#10'      </Item>'#13#10'    </Exceptions>'#13#10'  </Debugging>'
-  +#13#10'</CONFIG>'#13#10
+  +'      <Title Value="{TESTPROJECTNAME}"/>'#13#10'      <UseAppBundle Value="'
+  +'False"/>'#13#10'      <ResourceType Value="res"/>'#13#10'    </General>'#13
+  +#10'    <VersionInfo>'#13#10'      <UseVersionInfo Value="True"/>'#13#10'   '
+  +'   <MajorVersionNr Value="1"/>'#13#10'      <MinorVersionNr Value="0"/>'#13
+  +#10'      <RevisionNr Value="0"/>'#13#10'    </VersionInfo>'#13#10'    <Buil'
+  +'dModes>'#13#10'      <Item Name="Default" Default="True"/>'#13#10'    </Bui'
+  +'ldModes>'#13#10'    <PublishOptions>'#13#10'      <Version Value="2"/>'#13
+  +#10'      <UseFileFilters Value="True"/>'#13#10'    </PublishOptions>'#13#10
+  +'    <RunParams>'#13#10'      <FormatVersion Value="2"/>'#13#10'    </RunPar'
+  +'ams>'#13#10'    <RequiredPackages>'#13#10'      <Item>'#13#10'        <Pack'
+  +'ageName Value="FCL"/>'#13#10'      </Item>'#13#10'    </RequiredPackages>'
+  +#13#10'    <Units>'#13#10'      <Unit>'#13#10'        <Filename Value="{TEST'
+  +'PROJECTNAME}.lpr"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10' '
+  +'     </Unit>'#13#10'      <Unit>'#13#10'        <Filename Value="testcase1.'
+  +'pas"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10'        <UnitN'
+  +'ame Value="TestCase1"/>'#13#10'      </Unit>'#13#10'    </Units>'#13#10'  <'
+  +'/ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Value="11"/'
+  +'>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'      <Filen'
+  +'ame Value="{TESTPROJECTNAME}"/>'#13#10'    </Target>'#13#10'    <SearchPath'
+  +'s>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <UnitOut'
+  +'putDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>'#13#10'    </SearchPath'
+  +'s>'#13#10'    <Linking>'#13#10'      <Debugging>'#13#10'        <DebugInfoT'
+  +'ype Value="dsDwarf3"/>'#13#10'        <UseHeaptrc Value="True"/>'#13#10'   '
+  +'   </Debugging>'#13#10'    </Linking>'#13#10'  </CompilerOptions>'#13#10'  '
+  +'<Debugging>'#13#10'    <Exceptions>'#13#10'      <Item>'#13#10'        <Nam'
+  +'e Value="EAbort"/>'#13#10'      </Item>'#13#10'      <Item>'#13#10'        '
+  +'<Name Value="ECodetoolError"/>'#13#10'      </Item>'#13#10'      <Item>'#13
+  +#10'        <Name Value="EFOpenError"/>'#13#10'      </Item>'#13#10'    </Ex'
+  +'ceptions>'#13#10'  </Debugging>'#13#10'</CONFIG>'#13#10
 ]);
 LazarusResources.Add('fpcunitprojectlpr','TXT',[
-  'program fpcunitproject1;'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'uses'
-  +#13#10'  Classes, consoletestrunner, TestCase1;'#13#10#13#10'type'#13#10#13
-  +#10'  { TMyTestRunner }'#13#10#13#10'  TMyTestRunner = class(TTestRunner)'#13
-  +#10'  protected'#13#10'  // override the protected methods of TTestRunner to'
-  +' customize its behavior'#13#10'  end;'#13#10#13#10'var'#13#10'  Application'
-  +': TMyTestRunner;'#13#10#13#10'begin'#13#10'  Application := TMyTestRunner.C'
-  +'reate(nil);'#13#10'  Application.Initialize;'#13#10'  Application.Title := '
-  +'''FPCUnit Console test runner'';'#13#10'  Application.Run;'#13#10'  Applica'
-  +'tion.Free;'#13#10'end.'#13#10
+  'program {TESTPROJECTNAME};'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'use'
+  +'s'#13#10'  Classes, '#13#10'  SysUtils,'#13#10'  consoletestrunner, '#13#10
+  +'  {TestCase1};'#13#10#13#10'{$R *.res}'#13#10#13#10'type'#13#10#13#10'  { T'
+  +'MyTestRunner }'#13#10#13#10'  TMyTestRunner = class(TTestRunner)'#13#10'  p'
+  +'rotected'#13#10'  // override the protected methods of TTestRunner to custo'
+  +'mize its behavior'#13#10'  end;'#13#10#13#10'procedure InitializeHeapFileNa'
+  +'me;'#13#10'var'#13#10'  HeapFileName: string;'#13#10'begin'#13#10'  {$IF DE'
+  +'CLARED(UseHeapTrace)}'#13#10'  HeapFileName := ConcatPaths([ExtractFilePath'
+  +'(ParamStr(0)), ''heap.trc'']);'#13#10'  if FileExists(HeapFileName) then'#13
+  +#10'    DeleteFile(HeapFileName);'#13#10'  SetHeapTraceOutput(HeapFileName);'
+  +#13#10'  {$ENDIF}'#13#10'end;'#13#10#13#10'var'#13#10'  Application: TMyTest'
+  +'Runner;'#13#10#13#10'begin'#13#10'  InitializeHeapFileName;'#13#10'  Applic'
+  +'ation := TMyTestRunner.Create(nil);'#13#10'  Application.Initialize;'#13#10
+  +'  Application.Title := ''FPCUnit Console test runner'';'#13#10'  Applicatio'
+  +'n.Run;'#13#10'  Application.Free;'#13#10'end.'#13#10
 ]);
 LazarusResources.Add('testcase1pas','TXT',[
-  'unit TestCase1;'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'interface'#13
+  'unit {TestCase1};'#13#10#13#10'{$mode objfpc}{$H+}'#13#10#13#10'interface'#13
   +#10#13#10'uses'#13#10'  Classes, '#13#10'  SysUtils, '#13#10'  fpcunit, '#13
-  +#10'  testutils, '#13#10'  testregistry;'#13#10#13#10'type'#13#10#13#10'  TT'
-  +'estCase1= class(TTestCase)'#13#10'  protected'#13#10'    procedure SetUp; o'
-  +'verride;'#13#10'    procedure TearDown; override;'#13#10'  published'#13#10
-  +'    procedure TestThatPasses;'#13#10'    procedure TestThatFails;'#13#10'  '
-  +'  procedure TestThatLeaks;'#13#10'  end;'#13#10#13#10'implementation'#13#10
-  +#13#10'procedure TTestCase1.SetUp;'#13#10'begin'#13#10#13#10'end;'#13#10#13
-  +#10'procedure TTestCase1.TearDown;'#13#10'begin'#13#10#13#10'end;'#13#10#13
-  +#10'procedure TTestCase1.TestThatFails;'#13#10'begin'#13#10'  Fail(''Write y'
-  +'our own test'');'#13#10'end;'#13#10#13#10'procedure TTestCase1.TestThatPass'
-  +'es;'#13#10'begin'#13#10'  '#13#10'end;'#13#10#13#10'procedure TTestCase1.Te'
-  +'stThatLeaks;'#13#10'var'#13#10'  LObject: TObject;'#13#10'begin'#13#10'  LO'
-  +'bject := TObject.Create;'#13#10'end;'#13#10#13#10'initialization'#13#10'  R'
-  +'egisterTest(TTestCase1);'#13#10#13#10'end.'#13#10#13#10
+  +#10'  testutils, '#13#10'  testregistry;'#13#10#13#10'type'#13#10#13#10'  T{'
+  +'TestCase1}= class(TTestCase)'#13#10'  protected'#13#10'    procedure SetUp;'
+  +' override;'#13#10'    procedure TearDown; override;'#13#10'  published'#13
+  +#10'    procedure TestThatPasses;'#13#10'    procedure TestThatFails;'#13#10
+  +'    procedure TestThatLeaks;'#13#10'  end;'#13#10#13#10'implementation'#13
+  +#10#13#10'procedure T{TestCase1}.SetUp;'#13#10'begin'#13#10#13#10'end;'#13#10
+  +#13#10'procedure T{TestCase1}.TearDown;'#13#10'begin'#13#10#13#10'end;'#13#10
+  +#13#10'procedure T{TestCase1}.TestThatFails;'#13#10'begin'#13#10'  Fail(''Wr'
+  +'ite your own test'');'#13#10'end;'#13#10#13#10'procedure T{TestCase1}.TestT'
+  +'hatPasses;'#13#10'begin'#13#10'  '#13#10'end;'#13#10#13#10'procedure T{Test'
+  +'Case1}.TestThatLeaks;'#13#10'var'#13#10'  LObject: TObject;'#13#10'begin'#13
+  +#10'  LObject := TObject.Create;'#13#10'  // LObject.Free; '#13#10'  // abov'
+  +'e line is commented just to leak and show pasc leak report funcionality '#13
+  +#10'  // just uncomment it and run the tests again to see a report without l'
+  +'eaks'#13#10'end;'#13#10#13#10'initialization'#13#10'  RegisterTest(T{TestCa'
+  +'se1});'#13#10#13#10'end.'#13#10#13#10
+]);
+LazarusResources.Add('buildps1','TXT',[
+  '$CurrentPath = Get-Location'#13#10'function Exit-Script {'#13#10'  Set-Locat'
+  +'ion $CurrentPath'#13#10'  Exit'#13#10'}'#13#10#13#10'function Test-CommandE'
+  +'xists'#13#10'{'#13#10'  param ($command)'#13#10'  $oldPreference = $ErrorAc'
+  +'tionPreference'#13#10'  $ErrorActionPreference = "stop"'#13#10'  try {'#13
+  +#10'    if (Get-Command $command) {'#13#10'      RETURN $true'#13#10'    }'
+  +#13#10'  } catch {'#13#10'    RETURN $false'#13#10'  } finally {'#13#10'    '
+  +'$ErrorActionPreference=$oldPreference'#13#10'  }'#13#10'}'#13#10#13#10'func'
+  +'tion Get-BasePath {'#13#10'  $CurrentDir = Get-Location'#13#10'  if ($Curre'
+  +'ntDir -notmatch ''\\$'') {'#13#10'    $CurrentDir = Join-Path -Path $Curren'
+  +'tDir -ChildPath "\"'#13#10'  }'#13#10#13#10'  if ($CurrentDir -match ''gene'
+  +'rate\\$'') {'#13#10'    $CurrentDir = Join-Path -Path $CurrentDir "..\.."'
+  +#13#10'    $CurrentDir = Resolve-Path -Path $CurrentDir'#13#10'  }'#13#10#13
+  +#10'  if ($CurrentDir -match ''docs\\$'') {'#13#10'    $CurrentDir = Join-Pa'
+  +'th -Path $CurrentDir ".."'#13#10'    $CurrentDir = Resolve-Path -Path $Curr'
+  +'entDir'#13#10'  }'#13#10#13#10'  RETURN $CurrentDir '#13#10'}'#13#10#13#10
+  +'$ItemAllUnits = ''<li><a href="AllUnits.html">Units</a></li>'''#13#10'$Item'
+  +'AllIdentifiers = ''<li><a href="AllIdentifiers.html">Identifiers</a></li>'''
+  +#13#10'function Set-NavigationItemOrder {'#13#10'  param ($file)'#13#10'  '
+  +#13#10'  $Content = Get-Content -Path $file'#13#10#13#10'  $Content = $Conte'
+  +'nt.Replace(''<li><a href="quickstart.html">Quick start</a></li>'', '''')'#13
+  +#10'  $Content = $Content.Replace($ItemAllUnits, ''<li><a href="quickstart.h'
+  +'tml">Quick start</a></li>'' + $ItemAllUnits)'#13#10#13#10'  $Content = $Con'
+  +'tent.Replace($ItemAllUnits, ''<hr><li>Reference<ul style="margin-left: 10px'
+  +';">'' + $ItemAllUnits)'#13#10'  $Content = $Content.Replace($ItemAllIdentif'
+  +'iers, $ItemAllIdentifiers + ''</li></ul>'')'#13#10#13#10'  Set-Content -Pat'
+  +'h $file -Value $Content'#13#10'}'#13#10#13#10'if (Test-CommandExists "pasdo'
+  +'c") {'#13#10'  Write-Host "Pasdoc found"'#13#10'} else {'#13#10'  Write-Hos'
+  +'t "Pasdoc was not found, is required to build the documentation. Please ins'
+  +'tall it or make sure that it is in current path."'#13#10'  Exit-Script  '#13
+  +#10'}'#13#10#13#10'$BasePath = Get-BasePath'#13#10'$DocArgs = '#13#10'  "--f'
+  +'ormat=html " + '#13#10'  "--css=" + $BasePath + "docs\generate\custom.css "'
+  +' +'#13#10'  "--use-tipue-search " +'#13#10'  "--output " + $BasePath + "doc'
+  +'s " +'#13#10'  "--introduction=" + $BasePath + "docs\generate\introduction.'
+  +'txt " +'#13#10'  "--additional="  + $BasePath + "docs\generate\quickstart.t'
+  +'xt " +'#13#10'  $BasePath + "src\*.pas " + $BasePath + "{PROJECTNAME}.lpr "'
+  +#13#10#13#10'Start-Process -FilePath "pasdoc" -ArgumentList $DocArgs -Wait -'
+  +'NoNewWindow'#13#10#13#10'$DocPath = Join-Path -Path $BasePath -ChildPath "d'
+  +'ocs\*.html"'#13#10#13#10'Get-ChildItem -Path $DocPath -Recurse | ForEach-Ob'
+  +'ject {'#13#10'  Set-NavigationItemOrder -file $_'#13#10'}'
+]);
+LazarusResources.Add('customcss','TXT',[
+  '/*'#13#10'  Copyright 1998-2018 PasDoc developers.'#13#10#13#10'  This file '
+  +'is part of "PasDoc".'#13#10#13#10'  "PasDoc" is free software; you can redi'
+  +'stribute it and/or modify'#13#10'  it under the terms of the GNU General Pu'
+  +'blic License as published by'#13#10'  the Free Software Foundation; either '
+  +'version 2 of the License, or'#13#10'  (at your option) any later version.'
+  +#13#10#13#10'  "PasDoc" is distributed in the hope that it will be useful,'
+  +#13#10'  but WITHOUT ANY WARRANTY; without even the implied warranty of'#13
+  +#10'  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'#13#10' '
+  +' GNU General Public License for more details.'#13#10#13#10'  You should hav'
+  +'e received a copy of the GNU General Public License'#13#10'  along with "Pa'
+  +'sDoc"; if not, write to the Free Software'#13#10'  Foundation, Inc., 51 Fra'
+  +'nklin Street, Fifth Floor, Boston, MA 02110-1301, USA'#13#10#13#10'  ------'
+  +'----------------------------------------------------------------------'#13
+  +#10'*/'#13#10#13#10'body, html {'#13#10'  margin: 0;'#13#10'  padding: 0;'#13
+  +#10'}'#13#10#13#10'body {'#13#10'  font-family: system-ui,-apple-system,"Seg'
+  +'oe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-ser'
+  +'if,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji'
+  +'";'#13#10'  color: black;'#13#10'  background-color: white;'#13#10'}'#13#10
+  +#13#10'.container {'#13#10'  width: 100%;'#13#10'  height: 100%;'#13#10'  bo'
+  +'rder-spacing: 0;'#13#10'}'#13#10#13#10'.navigation {'#13#10'  float: left;'
+  +#13#10'  width: 20em; /* must match .content margin-left */'#13#10'  height:'
+  +' 100%;'#13#10'  color: white;'#13#10'  background-color: #787878;'#13#10'  '
+  +'position: fixed;'#13#10'  margin: 0;'#13#10'  box-sizing: border-box; /* wi'
+  +'thout this, you could not have padding here, it would overlap with .content'
+  +', causing errors on narrow screens */'#13#10'  padding: 1em;'#13#10'}'#13#10
+  +'.navigation ul {'#13#10'  margin: 0em;'#13#10'  padding: 0em;'#13#10'}'#13
+  +#10'.navigation li {'#13#10'  list-style-type: none;'#13#10'  margin: 0.2em '
+  +'0em 0em 0em;'#13#10'  padding: 0.25em;'#13#10'}'#13#10'.navigation h2 {'#13
+  +#10'  text-align: center;'#13#10'  margin: 0em;'#13#10'  padding: 0.5em;'#13
+  +#10'}'#13#10#13#10'.content {'#13#10'  margin-left: 20em; /* must match .nav'
+  +'igation width */'#13#10'  box-sizing: border-box; /* without this, you coul'
+  +'d not have padding here, it would overlap with .navigation, causing errors '
+  +'on narrow screens */'#13#10'  padding: 1em;'#13#10'}'#13#10'.content h1 {'
+  +#13#10'  margin-top: 0;'#13#10'}'#13#10#13#10'.appinfo {'#13#10'  float: rig'
+  +'ht;'#13#10'  text-align: right;'#13#10'  margin-bottom: 1em;'#13#10'}'#13#10
+  +#13#10'img { border:0px; }'#13#10#13#10'hr {'#13#10'  border-bottom: medium '
+  +'none;'#13#10'  border-top: thin solid #888;'#13#10'}'#13#10#13#10'a:link {c'
+  +'olor:blue; text-decoration: none; }'#13#10'a:visited {color:darkblue; text-'
+  +'decoration: none; }'#13#10'a:hover {text-decoration: underline; }'#13#10'a:'
+  +'active {text-decoration: underline; }'#13#10#13#10'.navigation a:link { col'
+  +'or: white; text-decoration: none; }'#13#10'.navigation a:visited { color: w'
+  +'hite; text-decoration: none; }'#13#10'.navigation a:hover { color: white; f'
+  +'ont-weight: bold; text-decoration: none; }'#13#10'.navigation a:active { co'
+  +'lor: white; text-decoration: none; }'#13#10#13#10'a.bold:link {color:blue; '
+  +'text-decoration: none; font-weight:normal; }'#13#10'a.bold:visited {color:d'
+  +'arkblue; text-decoration: none; font-weight:normal; }'#13#10'a.bold:hover {'
+  +'text-decoration: underline; font-weight:bold; }'#13#10'a.bold:active {text-'
+  +'decoration: underline; font-weight:bold; }'#13#10#13#10'a.section {color: g'
+  +'reen; text-decoration: none; font-weight: normal; }'#13#10'a.section:hover '
+  +'{color: green; text-decoration: underline; font-weight: bold; }'#13#10#13#10
+  +'ul.useslist a:link {color:blue; text-decoration: none; font-weight:normal; '
+  +'}'#13#10'ul.useslist a:visited {color:darkblue; text-decoration: none; font'
+  +'-weight:normal; }'#13#10'ul.useslist a:hover {text-decoration: underline; f'
+  +'ont-weight:bold; }'#13#10'ul.useslist a:active {text-decoration: underline;'
+  +' font-weight:bold; }'#13#10#13#10'ul.hierarchy { list-style-type:none; }'#13
+  +#10'ul.hierarchylevel { list-style-type:none; }'#13#10#13#10'p.unitlink a:li'
+  +'nk {color: blue; text-decoration: none; font-weight:normal; }'#13#10'p.unit'
+  +'link a:visited {color:darkblue; text-decoration: none; font-weight:normal; '
+  +'}'#13#10'p.unitlink a:hover {text-decoration: underline; font-weight:bold; '
+  +'}'#13#10'p.unitlink a:active {text-decoration: underline; font-weight:bold;'
+  +' }'#13#10#13#10'tr.list { background: #eee; }'#13#10'tr.list2 { background:'
+  +' #eee; }'#13#10'tr.listheader { background: lightgray; color: black; }'#13
+  +#10#13#10'table.wide_list { border-spacing:2px; width:100%; }'#13#10'table.w'
+  +'ide_list td { vertical-align:top; padding:4px; }'#13#10#13#10'table.markerl'
+  ,'egend { width:auto; }'#13#10'table.markerlegend td.legendmarker { text-alig'
+  +'n:center; }'#13#10#13#10'.sections { background:white; }'#13#10'.sections .'
+  +'one_section {'#13#10'  background:lightgray;'#13#10'  display: inline-block'
+  +';'#13#10'  margin: 0.2em;'#13#10'  padding: 0.5em 1em;'#13#10'}'#13#10#13#10
+  +'table.summary td.itemcode { width:100%; }'#13#10'table.detail td.itemcode {'
+  +' width:100%; }'#13#10#13#10'td.itemname {white-space:nowrap; }'#13#10'td.it'
+  +'emunit {white-space:nowrap; }'#13#10'td.itemdesc { width:100%; }'#13#10#13
+  +#10'div.nodescription { color:red; }'#13#10'dl.parameters dt {'#13#10'  colo'
+  +'r:blue;'#13#10'}'#13#10#13#10'code {'#13#10'  font-family: monospace;'#13#10
+  +'  font-size:1.2em;'#13#10'}'#13#10#13#10'/* style for warning and note tag '
+  +'*/'#13#10'dl.tag.warning {'#13#10'  margin-left:-2px;'#13#10'  padding-left'
+  +': 3px;'#13#10'  border-left:4px solid;'#13#10'  border-color: #FF0000;'#13
+  +#10'}'#13#10'dl.tag.note {'#13#10'  margin-left:-2px;'#13#10'  padding-left:'
+  +' 3px;'#13#10'  border-left:4px solid;'#13#10'  border-color: #D0C000;'#13#10
+  +'}'#13#10#13#10'/* Various browsers have various default styles for <h6>,'#13
+  +#10'   sometimes ugly for our purposes, so it''s best to set things'#13#10' '
+  +'  like font-size and font-weight in out pasdoc.css explicitly. */'#13#10'h6'
+  +'.description_section {'#13#10'  /* font-size 100% means that it has the sam'
+  +'e font size as the'#13#10'     parent element, i.e. normal description text'
+  +' */'#13#10'  font-size: 100%;'#13#10'  font-weight: bold;'#13#10'  /* By de'
+  +'fault browsers usually have some large margin-bottom and'#13#10'     margin'
+  +'-top for <h1-6> tags. In our case, margin-bottom is'#13#10'     unnecessary'
+  +', we want to visually show that description_section'#13#10'     is closely '
+  +'related to content below. In this situation'#13#10'     (where the font siz'
+  +'e is just as a normal text), smaller bottom'#13#10'     margin seems to loo'
+  +'k good. */'#13#10'  margin-top: 1.4em;'#13#10'  margin-bottom: 0em;'#13#10
+  +'}'#13#10#13#10'h1 {'#13#10'  font-size: 1.8em;'#13#10'  color: #005A9C;'#13
+  +#10'}'#13#10#13#10'h2 {'#13#10'  font-size: 1.5em;'#13#10'  color: #005A9C;'
+  +#13#10'}'#13#10#13#10'/* Style applied to Pascal code in documentation'#13#10
+  +'   (e.g. produced by @longcode tag) } */'#13#10'.longcode {'#13#10'  font-f'
+  +'amily: monospace;'#13#10'  font-size: 1.2em;'#13#10'  background-color: #ee'
+  +'e;'#13#10'  padding: 0.5em;'#13#10'  border: thin solid #ccc;'#13#10'}'#13
+  +#10'span.pascal_string { color: #000080; }'#13#10'span.pascal_keyword { font'
+  +'-weight: bolder; }'#13#10'span.pascal_comment { color: #000080; font-style:'
+  +' italic; }'#13#10'span.pascal_compiler_comment { color: #008000; }'#13#10's'
+  +'pan.pascal_numeric { }'#13#10'span.pascal_hex { }'#13#10#13#10'p.hint_direc'
+  +'tive { color: red; }'#13#10#13#10'input#search_text { }'#13#10'input#search'
+  +'_submit_button { }'#13#10#13#10'acronym.mispelling { background-color: #f00'
+  +'; }'#13#10#13#10'/* Actually this reduces vertical space between *every* pa'
+  +'ragraph'#13#10'   inside list with @itemSpacing(compact).'#13#10'   While w'
+  +'e would like to reduce this space only for the'#13#10'   top of 1st and bot'
+  +'tom of last paragraph within each list item.'#13#10'   But, well, user prob'
+  +'ably will not do any paragraph breaks'#13#10'   within a list with @itemSpa'
+  +'cing(compact) anyway, so it''s'#13#10'   acceptable solution. */'#13#10'ul.'
+  +'compact_spacing p { margin-top: 0em; margin-bottom: 0em; }'#13#10'ol.compac'
+  +'t_spacing p { margin-top: 0em; margin-bottom: 0em; }'#13#10'dl.compact_spac'
+  +'ing p { margin-top: 0em; margin-bottom: 0em; }'#13#10#13#10'/* Style for ta'
+  +'ble created by @table tags:'#13#10'   just some thin border.'#13#10#13#10' '
+  +'  This way we have some borders around the cells'#13#10'   (so cells are vi'
+  +'sibly separated), but the border'#13#10'   "blends with the background" so '
+  +'it doesn''t look too ugly.'#13#10'   Hopefully it looks satisfactory in mos'
+  +'t cases and for most'#13#10'   people.'#13#10#13#10'   We add padding for c'
+  +'ells, otherwise they look too close.'#13#10'   This is normal thing to do w'
+  +'hen border-collapse is set to'#13#10'   collapse (because this eliminates s'
+  +'pacing between cells).'#13#10'*/'#13#10'table.table_tag { border-collapse: '
+  +'collapse; }'#13#10'table.table_tag td { border: 1pt solid gray; padding: 0.'
+  +'3em; }'#13#10'table.table_tag th { border: 1pt solid gray; padding: 0.3em; '
+  +'}'#13#10#13#10'table.detail {'#13#10'  border: 1pt solid gray;'#13#10'  mar'
+  +'gin-top: 0.3em;'#13#10'  margin-bottom: 0.3em;'#13#10'}'#13#10#13#10'.searc'
+  +'h-form { white-space: nowrap; }'#13#10'.search-input input { max-width: 80%'
+  +'; } /* this provides some safe space to always fit even on very narrow scre'
+  +'ens */'#13#10'.search-input input, .search-button { display: inline-block; '
+  +'vertical-align: middle; }'#13#10'.search-input { display: inline-block; }'
+  +#13#10#13#10'/* Do not make extra vertical space at the beginning/end of tab'
+  ,'le cells.'#13#10'   We need ">" selector, to not change paragraphs inside l'
+  +'ists inside'#13#10'   table cells. */'#13#10'table.table_tag td > p:first-c'
+  +'hild,'#13#10'table.table_tag th > p:first-child,'#13#10'       td.itemdesc '
+  +'> p:first-child { margin-top: 0em; }'#13#10#13#10'table.table_tag td > p:la'
+  +'st-child,'#13#10'table.table_tag th > p:last-child,'#13#10'       td.itemde'
+  +'sc > p:last-child { margin-bottom: 0em; }'#13#10
+]);
+LazarusResources.Add('introduction','TXT',[
+  '@title(Overview)'#13#10'@shorttitle({PROJECTNAME})'#13#10#13#10'{PROJECTNAME'
+  +'} is an application or library to ...'#13#10#13#10'This is the documentatio'
+  +'n overview of the application or library feel free to change it.'#13#10#13
+  +#10'Check pasdoc documentation on the web: https://pasdoc.github.io/'
+]);
+LazarusResources.Add('quickstart','TXT',[
+  '@title(Quick start)'#13#10'@shorttitle(Quick start)'#13#10#13#10'@section(1 '
+  +'SecFirst Step One)'#13#10#13#10'Text for step one.'#13#10#13#10'@section(1 '
+  +'SecSecond Step Two)'#13#10#13#10'Text for step two.'
 ]);

@@ -5,10 +5,16 @@
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="fpcunitproject1"/>
+      <Title Value="{TESTPROJECTNAME}"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="0"/>
+      <RevisionNr Value="0"/>
+    </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
     </BuildModes>
@@ -26,7 +32,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="fpcunitproject1.lpr"/>
+        <Filename Value="{TESTPROJECTNAME}.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -40,12 +46,18 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="fpcunitproject1"/>
+      <Filename Value="{TESTPROJECTNAME}"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf3"/>
+        <UseHeaptrc Value="True"/>
+      </Debugging>
+    </Linking>
   </CompilerOptions>
   <Debugging>
     <Exceptions>

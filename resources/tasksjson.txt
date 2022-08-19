@@ -26,6 +26,31 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "build tests",
+      "type": "shell",
+      "command": "lazbuild",
+      "args": ["tests/Test{PROJECTNAME}.lpi"],
+      "dependsOn": "build tests resources"
+    },
+    {
+      "label": "tests",
+      "type": "shell",
+      "command": "pasc",
+      "args": ["test"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "dependsOn": "build tests"
+    },
+    {
+      "label": "watch: build and tests",
+      "type": "shell",
+      "command": "pasc",
+      "args": ["watch", "--build", "--test", "."],
+      "problemMatcher": []
     }
   ]
 }

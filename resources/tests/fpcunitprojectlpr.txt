@@ -4,6 +4,7 @@ program {TESTPROJECTNAME};
 
 uses
   Classes, 
+  SysUtils,
   consoletestrunner, 
   {TestCase1};
 

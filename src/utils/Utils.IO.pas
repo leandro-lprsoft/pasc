@@ -16,6 +16,11 @@ uses
   /// <param AName="AFileName"> File name that will have its content returned </param>
   function GetFileContent(const AFileName: string): string;
 
+  /// <summary> Get the contents of a JSON AFileName in string. Remove commented lines to make 
+  /// possible do parse its content. Returns JSON content.</summary>
+  /// <param AName="AFileName"> File name that will have its content returned </param>
+  function GetJsonFileContentWithOutComments(const AFileName: string): string;
+
   /// <summary> Save AContent string in the provided file name. </summary>
   /// <param name="AFileName">Target file name, the file name will be replaced </param>
   /// <param name="AContent">Content string that will be saved on the file </param>
@@ -40,6 +45,12 @@ uses
   /// <param name="ABuilder"> Command builder of the main application that will be used to
   /// output user instructions or to iteract with the user. </param>
   function FindProjectFile(const AProjectDir, AText: string): string;
+
+  /// <summary> From the current directory it tries to locate a source file. Any file with 
+  /// .pas or .pp extension will be considered as source file. 
+  /// Returns the first occurence of a source file. Returns empty if not source file was found.</summary>
+  /// <param name="AProjectDir"> Project path from which to search </param>
+  function FindSourceFile(const AProjectDir: string): string;
   
 implementation
 
@@ -52,6 +63,30 @@ begin
   try
     LFile.LoadFromFile(AFileName);
     Result := LFile.Text;
+    LFile.Free;
+  except
+    on E: Exception do
+    begin
+      LFile.Free;
+      raise;
+    end;
+  end;
+end;
+
+function GetJsonFileContentWithOutComments(const AFileName: string): string;
+var
+  LFile: TStringList = nil;
+  I: Integer;
+begin
+  Result := '';
+  LFile := TStringList.Create;
+  try
+    LFile.LoadFromFile(AFileName);
+
+    for i := 0 to LFile.Count - 1 do
+      if not (Pos('//', Trim(LFile[I])) = 1) then
+        Result := Result + LFile[I];
+
     LFile.Free;
   except
     on E: Exception do
@@ -147,6 +182,37 @@ begin
     FindClose(LSearch);
     LResult.Free;
   end;  
+end;
+
+function FindSourceFile(const AProjectDir: string): string;
+var
+  LSearch: TSearchRec;
+  LFileFound: string;
+begin
+  if FindFirst(ConcatPaths([AProjectDir, AllFilesMask]), faDirectory or faAnyFile, LSearch) = 0 then
+    try
+      repeat
+        if ((LSearch.Attr and faDirectory) <> 0) and 
+            (not AnsiMatchText(LSearch.Name, ['.', '..', '.git'])) then
+        begin
+          LFileFound := FindSourceFile(ConcatPaths([AProjectDir, LSearch.Name]));
+          if LFileFound <> '' then
+            Exit(LFileFound);
+        end
+        else
+        begin
+          if (ExtractFileExt(LSearch.Name) = '.pas') or (ExtractFileExt(LSearch.Name) = '.pp') then
+          begin
+            LFileFound := ConcatPaths([AProjectDir, LSearch.Name]);
+            if (LFileFound <> '') then
+              Exit(LFileFound);
+          end;
+        end;
+      until FindNext(LSearch) <> 0;
+    finally
+      FindClose(LSearch);
+    end;
+  Result := '';
 end;
 
 end.

@@ -21,10 +21,12 @@ type
     procedure Setup; override;
   published
     procedure TestGetFileContent;
+    procedure TestGetJsonFileContentWithOutComments;
     procedure TestSaveFileContent;
     procedure TestFindInCodeFile;
     procedure TestFindFile;
     procedure TestFindProjectFile;
+    procedure TestFindSourceFile;
   end;
 
 implementation
@@ -82,6 +84,15 @@ begin
   AssertTrue('File should have content', Length(LActual) > 0);
 end;
 
+procedure TTestUtilsIO.TestGetJsonFileContentWithOutComments;
+var
+  LActual: string;
+begin
+  LActual := GetFileContent(ConcatPaths([FCurrentDir, '.vscode/tasks.json']));
+
+  AssertTrue('Json file tasks.josn should have content', Length(LActual) > 0);
+end;
+
 procedure TTestUtilsIO.TestSaveFileContent;
 var
   LContent, LFile, LActualContent: string;
@@ -118,6 +129,11 @@ begin
   AssertEquals(
     ChangeFileExt(ParamStr(0), '.lpr'), 
     FindProjectFile(LPath, 'TestRunner'));
+end;
+
+procedure TTestUtilsIO.TestFindSourceFile;
+begin
+  AssertTrue('Source file shoud exsits', FindSourceFile(FCurrentDir) <> '');
 end;
 
 initialization

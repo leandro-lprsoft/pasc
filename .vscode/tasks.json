@@ -67,6 +67,13 @@
         "isDefault": true
       },
       "dependsOn": "build tests"
+    },
+    {
+      "label": "watch: build and tests",
+      "type": "shell",
+      "command": "pasc",
+      "args": ["watch", "--build", "--test", "."],
+      "problemMatcher": []
     }
   ]
 }

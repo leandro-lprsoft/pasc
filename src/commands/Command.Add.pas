@@ -11,8 +11,8 @@ interface
 uses
   Command.Interfaces;
 
-  /// <summary> This command adds features to the project like a unit tests project to
-  /// tests subfolder, or adds code documentation capabilities to the project base on pasdoc
+  /// <summary> This command adds features to the project like a unit tests project creating a
+  /// tests subfolder, or adds code documentation capabilities to the project base on pasdoc.
   /// </summary>
   /// <param name="ABuilder"> Command builder of the main application that will be used to
   /// output user instructions about the execution state of this command. </param>
@@ -29,16 +29,20 @@ uses
   /// we have build, test build, test task using pasc to output the results. </summary>
   /// <param name="AProjectName">The project name that will be used as the file name
   /// for tasks and launch file. </param>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure CreateTestProjectFiles(const AProjectName, AProjectDir: string);
+  procedure CreateTestProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 
-  /// <summary> Creates the project folders structure with a src and .vscode folders on 
-  /// current path. Returns trough AProjectDir parameter the created folder. </summary>
-  /// <param name="AProjectName">The project name that will be used as the main folder 
-  /// name. </param>
-  /// <param name="AProjectDir">Returns the created folder complete path that was created.
+  /// <summary> Create docs folder, generate sub folder for documetation build using pasdoc. Add 
+  /// minimal template files for documentation. Add an item to tasks.json to run docs/generate/build.ps1 
+  /// script. This script will call pasdoc to generate code documentation. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>  
+  /// <param name="AProjectName">The project name that will be used to create the documentation
   /// </param>
-  procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
+  /// <param name="AProjectDir">Project source path. </param>
+  procedure CreateDocsFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 
   {$ENDIF}
 
@@ -47,51 +51,52 @@ implementation
 uses
   Classes,
   SysUtils,
+  StrUtils,
   Command.Colors,
-  Utils.Shell,
-  Utils.Resources,
-  Utils.IO;
+  Utils.IO,
+  Utils.Output,
+  Utils.Resources;
 
-procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
-begin
-  AProjectDir := ConcatPaths([GetCurrentDir, AProjectName]);
-
-  if AProjectName = '' then
-    raise Exception.Create('Project name not provided.');
-  
-  if DirectoryExists(AProjectDir) then
-    raise Exception.Create('There is already a folder with this name in the current directory.');
-  
-  if FileExists(AProjectDir) then
-    raise Exception.Create('There is already a file with this name in the current directory.');
-
-  CreateDir(AProjectName);
-  SetCurrentDir(AProjectDir);
-  CreateDir('src');
-  CreateDir('.vscode');
-end;
-
-procedure CreateTestProjectFiles(const AProjectName, AProjectDir: string);
+procedure CreateTestProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
   LFile: TStringList = nil;
-  LContent: string;
+  LContent, LTestsDir, LTestProject: string;
 begin
   try
-    WriteLn('Creating project files'); 
+    OutputInfo(ABuilder, 'Starting', 'to add a test project to the current folder'); 
+
+    LTestsDir := ConcatPaths([AProjectDir, 'tests']);
+    LTestProject := 'Test' + AProjectName;
     SetCurrentDir(AProjectDir);
+
+    OutputInfo(ABuilder, 'Creating', 'tests sub folder'); 
+
+    if not DirectoryExists(LTestsDir) then
+      CreateDir('tests');
+
+    OutputInfo(ABuilder, 'Creating', 'test project files'); 
    
     LFile := TStringList.Create;
 
-    LContent := GetResource('projectlpr');
-    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+    LContent := GetResource('fpcunitprojectlpr');
+    LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
+    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, AProjectName + '.lpr']));
+    LFile.SaveToFile(ConcatPaths([LTestsDir, LTestProject + '.lpr']));
 
-    LContent := GetResource('projectlpi');
-    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+    LContent := GetResource('fpcunitprojectlpi');
+    LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
     LFile.Clear;
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, AProjectName + '.lpi']));
+    LFile.SaveToFile(ConcatPaths([LTestsDir, LTestProject + '.lpi']));
+
+    LContent := GetResource('testcase1pas');
+    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
+    LFile.Clear;
+    LFile.AddText(LContent);
+    LFile.SaveToFile(ConcatPaths([LTestsDir, 'TestCase' + AProjectName + '.pas']));
+
+    OutputInfo(ABuilder, 'Done', 'test project added with success'); 
 
     LFile.Free;
   except
@@ -103,27 +108,57 @@ begin
   end;  
 end;
 
-procedure CreateSupportFilesForVSCode(const AProjectName, AProjectDir: string);
+procedure CreateDocsFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
   LFile: TStringList = nil;
-  LContent: string;
+  LContent, LDocsDir: string;
 begin
   try
-    WriteLn('Creating vs code taks and launch files'); 
+    OutputInfo(ABuilder, 'Docs', 'adding documentation resources to the project'); 
+
+    LDocsDir := ConcatPaths([AProjectDir, 'docs']);
     SetCurrentDir(AProjectDir);
+
+    OutputInfo(ABuilder, 'Creating', 'docs sub folder'); 
+
+    if not DirectoryExists(LDocsDir) then
+      CreateDir('docs');
+
+    if not DirectoryExists(ConcatPaths([LDocsDir, 'generate'])) then
+    begin
+      SetCurrentDir(LDocsDir);
+      CreateDir('generate');
+      SetCurrentDir(AProjectDir);
+    end;
+
+    LDocsDir := ConcatPaths([LDocsDir, 'generate']);
+
+    OutputInfo(ABuilder, 'Creating', 'documentation resource files'); 
    
     LFile := TStringList.Create;
 
-    LContent := GetResource('launchjson');
+    LContent := GetResource('buildps1');
     LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, '.vscode', 'launch.json']));
+    LFile.SaveToFile(ConcatPaths([LDocsDir, 'build.ps1']));
 
-    LContent := GetResource('tasksjson');
+    LContent := GetResource('customcss');
+    LFile.Clear;
+    LFile.AddText(LContent);
+    LFile.SaveToFile(ConcatPaths([LDocsDir, 'custom.css']));
+
+    LContent := GetResource('introduction');
     LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
     LFile.Clear;
     LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([AProjectDir, '.vscode', 'tasks.json']));
+    LFile.SaveToFile(ConcatPaths([LDocsDir, 'introduction.txt']));
+
+    LContent := GetResource('quickstart');
+    LFile.Clear;
+    LFile.AddText(LContent);
+    LFile.SaveToFile(ConcatPaths([LDocsDir, 'quickstart.txt']));
+
+    OutputInfo(ABuilder, 'Done', 'documentation resources added with success'); 
 
     LFile.Free;
   except
@@ -138,32 +173,43 @@ end;
 procedure AddCommand(ABuilder: ICommandBuilder);
 var
   LProjectDir: string = '';
+  LAddTests, LAddDocs: Boolean;
+  LProjectName: string;
+  LSourceFound: Boolean = false;
 begin
-  ABuilder.GetParsedArguments;
-
-  if not ABuilder.HasArguments then
-  begin
-    ABuilder.OutputColor('New command requires builder to accept an argument.', ABuilder.ColorTheme.Error);
-    ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
-    exit;
-  end;
-
-  if ABuilder.HasCommands then
-  begin
-    ABuilder.OutputColor('Running pasc new command for ', ABuilder.ColorTheme.Other);
-    ABuilder.OutputColor(ABuilder.Arguments[0].Value, ABuilder.ColorTheme.Title);
-  end;
-
+  LAddTests := ABuilder.CheckOption('tests');
+  LAddDocs := ABuilder.CheckOption('docs');
   try
-    CreateProjectFolders(ABuilder.Arguments[0].Value, LProjectDir);
-    CreateProjectFiles(ABuilder.Arguments[0].Value, LProjectDir);
-    CreateSupportFilesForVSCode(ABuilder.Arguments[0].Value, LProjectDir);
-    InitializeGit(LProjectDir);
-    InitializeBoss(LProjectDir);
+    OutputInfo(ABuilder, ABuilder.ExeName, 'running command Add');
+    LProjectDir := GetCurrentDir;
+    LProjectName := FindProjectFile(LProjectDir, '');
+    LSourceFound := FindSourceFile(LProjectDir) <> '';
+
+    OutputInfo(ABuilder, 'Project', IfThen(LProjectName = '', 'not found', LProjectName));
+    OutputInfo(ABuilder, 'Source', 
+      IfThen(LSourceFound, 'at least one pascal file detected', 'No pascal source file found'));
+
+    if (not (LProjectName <> '')) and (not LSourceFound) then
+      raise Exception.Create('No project or source file found in current directory.');
+
+    if LAddTests then
+    begin
+      if DirectoryExists(ConcatPaths([LProjectDir, 'tests'])) then
+        raise Exception.Create('There is already a tests folder in the current directory.');
+      CreateTestProjectFiles(ABuilder, ExtractFileName(LProjectDir), LProjectDir);
+    end;
+
+    if LAddDocs then
+    begin
+      if DirectoryExists(ConcatPaths([LProjectDir, 'docs'])) then
+        raise Exception.Create('There is already a docs folder in the current directory.');
+      CreateDocsFiles(ABuilder, ExtractFileName(LProjectDir), LProjectDir);
+    end;
+      
   except
     on E: Exception do
     begin
-      ABuilder.OutputColor(E.Message, ABuilder.ColorTheme.Error);
+      OutputError(ABuilder, 'Error', E.Message);
     end;
   end;
 end;
@@ -173,14 +219,21 @@ begin
   ABuilder
     .AddCommand(
       'add',
-      'adds a unit test project or documentation capabilities.'#13#10 +
-      'From the current path create a subfolder with the given project name, '#13#10 +
-      'initialize git, initialize the boss dependency manager, create build '#13#10 +
-      'and debug support files for use with vscode and create a project based '#13#10 +
-      'on a simple free pascal template.'#13#10 +
-      'Ex: pasc new <project name>',
-      @NewCommand,
-      [ccRequiresOneArgument]);
+      'adds a unit test project or documentation capabilities to an existing project.'#13#10 +
+      'For this command to work you need to provide at least one option. '#13#10 +
+      'Ex: pasc add <option>',
+      @AddCommand,
+      [ccRequiresOneOption])
+      .AddOption(
+        't',
+        'tests',
+        'adds a unit test project based on fpcunit test framework. ',
+        [])
+      .AddOption(
+        'd',
+        'docs',
+        'adds resources that automates the project documentation.',
+        []);
 end;
 
 end.
