@@ -74,6 +74,13 @@
       "command": "pasc",
       "args": ["watch", "--build", "--test", "."],
       "problemMatcher": []
+    },
+    {
+      "label": "pasdoc: build documentation",
+      "type": "shell",
+      "command": "./docs/generate/build.ps1",
+      "args": [],
+      "problemMatcher": []
     }
   ]
 }

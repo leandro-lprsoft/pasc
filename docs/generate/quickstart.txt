@@ -1,0 +1,10 @@
+@title(Quick start)
+@shorttitle(Quick start)
+
+@section(1 SecFirst Step One)
+
+Text for step one.
+
+@section(1 SecSecond Step Two)
+
+Text for step two.

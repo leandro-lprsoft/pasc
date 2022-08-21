@@ -64,10 +64,17 @@
       "dependsOn": "lazbuild: tests build"
     },
     {
-      "label": "pasc: watch, build and tests",
+      "label": "pasc: watch, build tests and run tests",
       "type": "shell",
       "command": "pasc",
       "args": ["watch", "--build", "--test", "."],
+      "problemMatcher": []
+    },
+    {
+      "label": "pasdoc: build documentation",
+      "type": "shell",
+      "command": "./docs/generate/build.ps1",
+      "args": [],
       "problemMatcher": []
     }
   ]
