@@ -51,14 +51,14 @@
       }
     },
     {
-      "label": "build tests",
+      "label": "pasc: tests build",
       "type": "shell",
       "command": "lazbuild",
       "args": ["./tests/TestPasc.lpi"],
       "dependsOn": "build tests resources"
     },
     {
-      "label": "tests",
+      "label": "pasc: tests",
       "type": "shell",
       "command": "./pasc",
       "args": ["test"],
@@ -66,10 +66,10 @@
         "kind": "test",
         "isDefault": true
       },
-      "dependsOn": "build tests"
+      "dependsOn": "pasc: tests build"
     },
     {
-      "label": "watch: build and tests",
+      "label": "pasc: watch, build and tests",
       "type": "shell",
       "command": "pasc",
       "args": ["watch", "--build", "--test", "."],

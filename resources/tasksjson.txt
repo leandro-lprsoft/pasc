@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
+      "label": "lazbuild: build",
       "type": "shell",
       "command": "lazbuild",
       "args": ["./{PROJECTNAME}.lpi"],
@@ -28,14 +28,32 @@
       }
     },
     {
-      "label": "build tests",
+      "label": "lazbuild: tests build",
       "type": "shell",
       "command": "lazbuild",
       "args": ["tests/Test{PROJECTNAME}.lpi"],
-      "dependsOn": "build tests resources"
+      ,
+      "problemMatcher": {
+        "owner": "external",
+        "fileLocation": ["absolute"],
+        "pattern": {
+           "regexp": "(([A-Za-z]):\\\\(?:[^\\/:*?\"<>|\\r\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.*(Fatal|Error|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",
+           "file": 1,
+           "line": 3,
+           "column": 4,
+           "severity": 5,
+           "code": 6,
+           "message": 7
+        },
+        "severity": "info"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
     },
     {
-      "label": "tests",
+      "label": "pasc: run tests",
       "type": "shell",
       "command": "pasc",
       "args": ["test"],
@@ -43,10 +61,10 @@
         "kind": "test",
         "isDefault": true
       },
-      "dependsOn": "build tests"
+      "dependsOn": "lazbuild: tests build"
     },
     {
-      "label": "watch: build and tests",
+      "label": "pasc: watch, build and tests",
       "type": "shell",
       "command": "pasc",
       "args": ["watch", "--build", "--test", "."],

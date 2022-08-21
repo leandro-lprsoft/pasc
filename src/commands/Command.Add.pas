@@ -110,64 +110,44 @@ end;
 
 procedure CreateDocsFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
-  LFile: TStringList = nil;
   LContent, LDocsDir: string;
 begin
-  try
-    OutputInfo(ABuilder, 'Docs', 'adding documentation resources to the project'); 
+  OutputInfo(ABuilder, 'Docs', 'adding documentation resources to the project'); 
+  OutputInfo(ABuilder, 'Creating', 'docs sub folder'); 
 
-    LDocsDir := ConcatPaths([AProjectDir, 'docs']);
+  LDocsDir := ConcatPaths([AProjectDir, 'docs']);
+  if not DirectoryExists(LDocsDir) then
+  begin
     SetCurrentDir(AProjectDir);
+    CreateDir('docs');
+  end;
 
-    OutputInfo(ABuilder, 'Creating', 'docs sub folder'); 
+  LDocsDir := ConcatPaths([LDocsDir, 'generate']);
+  if not DirectoryExists(LDocsDir) then
+  begin
+    SetCurrentDir(ConcatPaths([AProjectDir, 'docs']));
+    CreateDir('generate');
+  end;
 
-    if not DirectoryExists(LDocsDir) then
-      CreateDir('docs');
+  SetCurrentDir(AProjectDir);
 
-    if not DirectoryExists(ConcatPaths([LDocsDir, 'generate'])) then
-    begin
-      SetCurrentDir(LDocsDir);
-      CreateDir('generate');
-      SetCurrentDir(AProjectDir);
-    end;
+  OutputInfo(ABuilder, 'Creating', 'documentation resource files'); 
+  
+  LContent := GetResource('buildps1');
+  LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+  SaveFileContent(ConcatPaths([LDocsDir, 'build.ps1']), LContent);
 
-    LDocsDir := ConcatPaths([LDocsDir, 'generate']);
+  LContent := GetResource('customcss');
+  SaveFileContent(ConcatPaths([LDocsDir, 'custom.css']), LContent);
 
-    OutputInfo(ABuilder, 'Creating', 'documentation resource files'); 
-   
-    LFile := TStringList.Create;
+  LContent := GetResource('introduction');
+  LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
+  SaveFileContent(ConcatPaths([LDocsDir, 'introduction.txt']), LContent);
 
-    LContent := GetResource('buildps1');
-    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LDocsDir, 'build.ps1']));
-
-    LContent := GetResource('customcss');
-    LFile.Clear;
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LDocsDir, 'custom.css']));
-
-    LContent := GetResource('introduction');
-    LContent := StringReplace(LContent, '{PROJECTNAME}', AProjectName, [rfReplaceAll]);
-    LFile.Clear;
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LDocsDir, 'introduction.txt']));
-
-    LContent := GetResource('quickstart');
-    LFile.Clear;
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LDocsDir, 'quickstart.txt']));
-
-    OutputInfo(ABuilder, 'Done', 'documentation resources added with success'); 
-
-    LFile.Free;
-  except
-    on E: Exception do
-    begin
-      FreeAndNil(LFile);
-      raise;
-    end;
-  end;  
+  LContent := GetResource('quickstart');
+  SaveFileContent(ConcatPaths([LDocsDir, 'quickstart.txt']), LContent);
+  
+  OutputInfo(ABuilder, 'Done', 'documentation resources added with success'); 
 end;
 
 procedure AddCommand(ABuilder: ICommandBuilder);
@@ -184,6 +164,12 @@ begin
     LProjectDir := GetCurrentDir;
     LProjectName := FindProjectFile(LProjectDir, '');
     LSourceFound := FindSourceFile(LProjectDir) <> '';
+
+    if (not LAddTests) and (not LAddDocs) then
+    begin
+      OutputInfo(ABuilder, 'Error', 'you must specify at least one of the options --tests or --docs');
+      Exit;
+    end;
 
     OutputInfo(ABuilder, 'Project', IfThen(LProjectName = '', 'not found', LProjectName));
     OutputInfo(ABuilder, 'Source', 
