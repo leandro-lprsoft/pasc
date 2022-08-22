@@ -48,10 +48,13 @@ LazarusResources.Add('tasksjson','TXT',[
   +'ommand": "pasc",'#13#10'      "args": ["test"],'#13#10'      "group": {'#13
   +#10'        "kind": "test",'#13#10'        "isDefault": true'#13#10'      },'
   +#13#10'      "dependsOn": "lazbuild: tests build"'#13#10'    },'#13#10'    {'
-  +#13#10'      "label": "pasc: watch, build and tests",'#13#10'      "type": "'
-  +'shell",'#13#10'      "command": "pasc",'#13#10'      "args": ["watch", "--b'
-  +'uild", "--test", "."],'#13#10'      "problemMatcher": []'#13#10'    }'#13#10
-  +'  ]'#13#10'}'
+  +#13#10'      "label": "pasc: watch, build tests and run tests",'#13#10'     '
+  +' "type": "shell",'#13#10'      "command": "pasc",'#13#10'      "args": ["wa'
+  +'tch", "--build", "--test", "."],'#13#10'      "problemMatcher": []'#13#10' '
+  +'   },'#13#10'    {'#13#10'      "label": "pasdoc: build documentation",'#13
+  +#10'      "type": "shell",'#13#10'      "command": "./docs/generate/build.ps'
+  +'1",'#13#10'      "args": [],'#13#10'      "problemMatcher": []'#13#10'    }'
+  +#13#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('projectlpi','TXT',[
   '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'

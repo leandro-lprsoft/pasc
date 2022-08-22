@@ -74,35 +74,26 @@ begin
     if not DirectoryExists(LTestsDir) then
       CreateDir('tests');
 
-    OutputInfo(ABuilder, 'Creating', 'test project files'); 
-   
-    LFile := TStringList.Create;
+    OutputInfo(ABuilder, 'Creating', 'test project files');    
 
     LContent := GetResource('fpcunitprojectlpr');
     LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
     LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LTestsDir, LTestProject + '.lpr']));
-
+    SaveFileContent(ConcatPaths([LTestsDir, LTestProject + '.lpr']), LContent);
+    
     LContent := GetResource('fpcunitprojectlpi');
     LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
-    LFile.Clear;
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LTestsDir, LTestProject + '.lpi']));
-
+    SaveFileContent(ConcatPaths([LTestsDir, LTestProject + '.lpi']), LContent);
+    
     LContent := GetResource('testcase1pas');
     LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
-    LFile.Clear;
-    LFile.AddText(LContent);
-    LFile.SaveToFile(ConcatPaths([LTestsDir, 'TestCase' + AProjectName + '.pas']));
-
+    SaveFileContent(ConcatPaths([LTestsDir, 'TestCase' + AProjectName + '.pas']), LContent);
+    
     OutputInfo(ABuilder, 'Done', 'test project added with success'); 
 
-    LFile.Free;
   except
     on E: Exception do
     begin
-      FreeAndNil(LFile);
       raise;
     end;
   end;  

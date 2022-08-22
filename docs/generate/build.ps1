@@ -46,6 +46,9 @@ function Set-NavigationItemOrder {
   
   $Content = Get-Content -Path $file
 
+  $Content = $Content.Replace('<li><a href="install.html">Install</a></li>', '')
+  $Content = $Content.Replace($ItemAllUnits, '<li><a href="install.html">Install</a></li>' + $ItemAllUnits)
+
   $Content = $Content.Replace('<li><a href="quickstart.html">Quick start</a></li>', '')
   $Content = $Content.Replace($ItemAllUnits, '<li><a href="quickstart.html">Quick start</a></li>' + $ItemAllUnits)
 
@@ -69,6 +72,7 @@ $DocArgs =
   "--use-tipue-search " +
   "--output " + $BasePath + "docs " +
   "--introduction=" + $BasePath + "docs\generate\introduction.txt " +
+  "--additional="  + $BasePath + "docs\generate\install.txt " +
   "--additional="  + $BasePath + "docs\generate\quickstart.txt " +
   $BasePath + "src\commands\*.pas " + 
   $BasePath + "src\utils\*.pas " + 

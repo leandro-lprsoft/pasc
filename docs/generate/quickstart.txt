@@ -1,10 +1,23 @@
 @title(Quick start)
 @shorttitle(Quick start)
 
-@section(1 SecFirst Step One)
+Assuming that pasc is already installed you can continue in this section.
 
-Text for step one.
+@section(1 SecFirst Create a new project)
 
-@section(1 SecSecond Step Two)
+Create a new project using pasc, open a terminal, navigate to your project path and run the following command:
 
-Text for step two.
+@longCode(
+  pasc new helloWorld
+  code .
+)
+
+This command will create a subfolder named helloWorld and will create the project structure inside it.
+
+@section(1 SecSecond Checking the project structure)
+
+@section(1 SecThird Type some code)
+
+@section(1 SecFourth Using the vscode tasks)
+
+@section(1 SecFourth Advanced features)
