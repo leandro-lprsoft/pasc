@@ -28,41 +28,53 @@ uses
 
   /// <summary> Creates the project folders structure with a src and .vscode folders on 
   /// current path. Returns trough AProjectDir parameter the created folder. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectName">The project name that will be used as the main folder 
   /// name. </param>
   /// <param name="AProjectDir">Returns the created folder complete path that was created.
   /// </param>
-  procedure CreateSupportFilesForVSCode(const AProjectName, AProjectDir: string);
+  procedure CreateSupportFilesForVSCode(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 
   /// <summary> Create the task and launch files for vscode. Within the tasks created 
   /// we have build, test build, test task using pasc to output the results. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectName">The project name that will be used as the file name
   /// for tasks and launch file. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure CreateProjectFiles(const AProjectName, AProjectDir: string);
+  procedure CreateProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 
   /// <summary> Configures the boss dependency manager to facilitate the installation of 
   /// new project dependencies.</summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure InitializeBoss(const AProjectDir: string);
+  procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
 
   /// <summary> Adjust boss files, just change the source parameter to subfolder ./src.
   /// </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure ChangeBossFileSourcePath(const AProjectDir: string);
+  procedure ChangeBossFileSourcePath(ABuilder: ICommandBuilder; const AProjectDir: string);
 
   /// <summary> Init git repo on specified project folder and creates and .gitignore 
   /// file specific to object pascal repo. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure InitializeGit(const AProjectDir: string);
+  procedure InitializeGit(ABuilder: ICommandBuilder; const AProjectDir: string);
 
   /// <summary> Creates the project folders structure with a src and .vscode folders on 
   /// current path. Returns trough AProjectDir parameter the created folder. </summary>
+  /// <param name="ABuilder"> Command builder of the main application that will be used to
+  /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectName">The project name that will be used as the main folder 
   /// name. </param>
   /// <param name="AProjectDir">Returns the created folder complete path that was created.
   /// </param>
-  procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
+  procedure CreateProjectFolders(ABuilder: ICommandBuilder; const AProjectName: string; out AProjectDir: string);
 
   {$ENDIF}
 
@@ -74,11 +86,13 @@ uses
   Command.Colors,
   Utils.Shell,
   Utils.Resources,
-  Utils.IO;
+  Utils.IO,
+  Utils.Output;
 
-procedure CreateProjectFolders(const AProjectName: string; out AProjectDir: string);
+procedure CreateProjectFolders(ABuilder: ICommandBuilder; const AProjectName: string; out AProjectDir: string);
 begin
   AProjectDir := ConcatPaths([GetCurrentDir, AProjectName]);
+  OutputInfo(ABuilder, 'Creating', 'project folders');
 
   if AProjectName = '' then
     raise Exception.Create('Project name not provided.');
@@ -95,28 +109,17 @@ begin
   CreateDir('.vscode');
 end;
 
-procedure InitializeGit(const AProjectDir: string);
+procedure InitializeGit(ABuilder: ICommandBuilder; const AProjectDir: string);
 var
-  LFile: TStringList = nil;
+  LGitOutput: string;
 begin
-  try
-    SetCurrentDir(AProjectDir);
-    WriteLn(ShellCommand('git', ['init']));
-
-    LFile := TStringList.Create;
-    LFile.AddText(GetResource('gitignore'));
-    LFile.SaveToFile(ConcatPaths([AProjectDir, '.gitignore']));
-    LFile.Free;
-  except
-    on E: Exception do
-    begin
-      FreeAndNil(LFile);
-      raise;
-    end;
-  end;
+  SetCurrentDir(AProjectDir);
+  LGitOutput := ShellCommand('git', ['init']);
+  OutputInfo(ABuilder, 'git', LGitOutput);
+  SaveFileContent(ConcatPaths([AProjectDir, '.gitignore']), GetResource('gitignore'));
 end;
 
-procedure ChangeBossFileSourcePath(const AProjectDir: string);
+procedure ChangeBossFileSourcePath(ABuilder: ICommandBuilder; const AProjectDir: string);
 var
   LFile, LContent: string;
 begin
@@ -126,24 +129,24 @@ begin
   SaveFileContent(LFile, LContent);
 end;
 
-procedure InitializeBoss(const AProjectDir: string);
+procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
 var
   LOutput: string;
 begin
   SetCurrentDir(AProjectDir);
-  WriteLn('boss init --quiet');
+  OutputInfo(ABuilder, 'boss', 'Initializing boss dependency manager');
   LOutput := ShellCommand('boss', ['init', '--quiet']);
-  WriteLn('adjusting "mainsrc" boss file attribute');
-  ChangeBossFileSourcePath(AProjectDir);
+  OutputInfo(ABuilder, 'boss', 'adjusting "mainsrc" boss file attribute');
+  ChangeBossFileSourcePath(ABuilder, AProjectDir);
 end;
 
-procedure CreateProjectFiles(const AProjectName, AProjectDir: string);
+procedure CreateProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
   LFile: TStringList = nil;
   LContent: string;
 begin
   try
-    WriteLn('Creating project files'); 
+    OutputInfo(ABuilder, 'Creating', 'project files');
     SetCurrentDir(AProjectDir);
    
     LFile := TStringList.Create;
@@ -169,13 +172,13 @@ begin
   end;  
 end;
 
-procedure CreateSupportFilesForVSCode(const AProjectName, AProjectDir: string);
+procedure CreateSupportFilesForVSCode(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
   LFile: TStringList = nil;
   LContent: string;
 begin
   try
-    WriteLn('Creating vs code taks and launch files'); 
+    OutputInfo(ABuilder, 'Creating', 'vs code tasks and launch files');
     SetCurrentDir(AProjectDir);
    
     LFile := TStringList.Create;
@@ -209,23 +212,23 @@ begin
 
   if not ABuilder.HasArguments then
   begin
-    ABuilder.OutputColor('New command requires builder to accept an argument.', ABuilder.ColorTheme.Error);
-    ABuilder.OutputColor('', ABuilder.ColorTheme.Other);
+    OutputError(ABuilder, 'error', 'New command requires builder to accept an argument.');
     exit;
   end;
 
   if ABuilder.HasCommands then
   begin
-    ABuilder.OutputColor('Running pasc new command for ', ABuilder.ColorTheme.Other);
-    ABuilder.OutputColor(ABuilder.Arguments[0].Value, ABuilder.ColorTheme.Title);
+    OutputInfo(ABuilder, 'Running', 'pasc new command for ', False);
+    ABuilder.OutputColor(ABuilder.Arguments[0].Value + #13#10, ABuilder.ColorTheme.Value);
   end;
 
   try
-    CreateProjectFolders(ABuilder.Arguments[0].Value, LProjectDir);
-    CreateProjectFiles(ABuilder.Arguments[0].Value, LProjectDir);
-    CreateSupportFilesForVSCode(ABuilder.Arguments[0].Value, LProjectDir);
-    InitializeGit(LProjectDir);
-    InitializeBoss(LProjectDir);
+    CreateProjectFolders(ABuilder, ABuilder.Arguments[0].Value, LProjectDir);
+    CreateProjectFiles(ABuilder, ABuilder.Arguments[0].Value, LProjectDir);
+    CreateSupportFilesForVSCode(ABuilder, ABuilder.Arguments[0].Value, LProjectDir);
+    InitializeGit(ABuilder, LProjectDir);
+    InitializeBoss(ABuilder, LProjectDir);
+    OutputInfo(ABuilder, 'Project', 'was created successfully.');
   except
     on E: Exception do
     begin

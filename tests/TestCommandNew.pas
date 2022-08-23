@@ -101,8 +101,8 @@ procedure TTestCommandNew.TestCreateSupportFilesForVSCode;
 var
   LProjectFolder, LExpected: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
-  CreateSupportFilesForVSCode('sample_test', LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
+  CreateSupportFilesForVSCode(FBuilder, 'sample_test', LProjectFolder);
 
   LExpected := ConcatPaths([LProjectFolder, '.vscode', 'tasks.json']);
   AssertTrue(
@@ -119,8 +119,8 @@ procedure TTestCommandNew.TestCreateProjectFiles;
 var
   LProjectFolder, LExpected: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
-  CreateProjectFiles('sample_test', LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
+  CreateProjectFiles(FBuilder, 'sample_test', LProjectFolder);
 
   LExpected := ConcatPaths([LProjectFolder, 'sample_test.lpi']);
   AssertTrue(
@@ -137,8 +137,8 @@ procedure TTestCommandNew.TestInitializeBoss;
 var
   LProjectFolder, LExpected: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
-  InitializeBoss(LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
+  InitializeBoss(FBuilder, LProjectFolder);
   
   LExpected := ConcatPaths([LProjectFolder, 'boss.json']);
   AssertTrue(
@@ -150,8 +150,8 @@ procedure TTestCommandNew.TestChangeBossFileSourcePath;
 var
   LProjectFolder, LBossFile, LContent: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
-  InitializeBoss(LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
+  InitializeBoss(FBuilder, LProjectFolder);
   
   LBossFile := ConcatPaths([LProjectFolder, 'boss.json']);
   LContent := GetFileContent(LBossFile);
@@ -165,8 +165,8 @@ procedure TTestCommandNew.TestInitializeGit;
 var
   LProjectFolder, LExpected: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
-  InitializeGit(LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
+  InitializeGit(FBuilder, LProjectFolder);
 
   LExpected := ConcatPaths([LProjectFolder, '.git']);
   AssertTrue(
@@ -183,7 +183,7 @@ procedure TTestCommandNew.TestCreateProjectFolders;
 var
   LProjectFolder, LExpected: string;
 begin
-  CreateProjectFolders('sample_test', LProjectFolder);
+  CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
   
   AssertTrue(
     'Project folder "' + LProjectFolder + '" does not exists', 

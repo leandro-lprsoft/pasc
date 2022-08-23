@@ -30,7 +30,7 @@ begin
   try
     PascApp.Title := 'Object pascal CLI tool for use with vscode.';
     PascApp.CommandBuilder.UseShortDescriptions := True;
-    PascApp.CommandBuilder.ColorTheme := DarkColorTheme;
+    PascApp.CommandBuilder.ColorTheme := LightColorTheme;
 
     Command.Add.Registry(PascApp.CommandBuilder);
     Command.Build.Registry(PascApp.CommandBuilder);

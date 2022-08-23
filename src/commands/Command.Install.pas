@@ -75,7 +75,8 @@ uses
   FileUtil,
   Utils.Resources,
   Utils.Shell,
-  Utils.IO;
+  Utils.IO,
+  Utils.Output;
 
 procedure CreateFolder(ABuilder: ICommandBuilder; var AFolder: string);
 var
@@ -83,8 +84,9 @@ var
 begin
   LSubFolder := '.' + ChangeFileExt(ABuilder.ExeName, '');
   AFolder := ConcatPaths([GetUserDir, LSubFolder]);
-  ABuilder.OutputColor('creating destination folder ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor(AFolder + #13#10, ABuilder.ColorTheme.Title);
+
+  OutputInfo(ABuilder, 'creating', 'destination folder ' + AFolder);
+
   if not DirectoryExists(AFolder) then
   begin
     SetCurrentDir(GetUserDir);
@@ -94,9 +96,7 @@ end;
 
 procedure CopyApp(ABuilder: ICommandBuilder; const AFolder: string);
 begin
-  ABuilder.OutputColor('copying ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor(ApplicationName, ABuilder.ColorTheme.Value);
-  ABuilder.OutputColor(' to destination folder' + #13#10, ABuilder.ColorTheme.Other);
+  OutputInfo(ABuilder, 'copying', ApplicationName + ' to destination folder');
   if not SameText(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))])) then
     CopyFile(ParamStr(0), ConcatPaths([AFolder, ExtractFileName(ParamStr(0))]), [cffOverwriteFile]);  
 end;
@@ -105,25 +105,20 @@ procedure UpdateEnvironmentPathLinux(ABuilder: ICommandBuilder; const AFolder: s
 var
   LProfile, LContent: string;
 begin
-  ABuilder.OutputColor(
-    'updating environment path, this may require administration privileges '#13#10, 
-    ABuilder.ColorTheme.Other);
-
+  OutputInfo(ABuilder, 'updating', 'path environment variable, this may require administration privileges');
+  
   LProfile := ConcatPaths([GetUserDir, '.profile']);
   LContent := GetFileContent(LProfile);
 
-  ABuilder.OutputColor('changing file ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor('~/.profile '#13#10, ABuilder.ColorTheme.Title);
-  
+  OutputInfo(ABuilder, 'changing', 'file: ~/.profile ');
+    
   if not ContainsText(LContent, AFolder + ':$PATH') then 
   begin
     LContent := LContent + #13#10 + 'PATH="' + AFolder + ':$PATH"';
     SaveFileContent(LProfile, LContent);
   end;
 
-  ABuilder.OutputColor('running ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor('source ~/.profile ', ABuilder.ColorTheme.Title);
-  ABuilder.OutputColor('to make path changes to take effect '#13#10, ABuilder.ColorTheme.Other);
+  OutputInfo(ABuilder, 'running', 'source ~/.profile to make path changes to take effect');
     
   LContent := GetResource('update-path-sh'); 
   SaveFileContent(ConcatPaths([AFolder, 'update-path.sh']), LContent);
@@ -143,15 +138,15 @@ var
   I: Integer;
   LFound: Boolean = false;
 begin
-  WriteLn('updating environment path, this may require administration privileges ', ApplicationName);
+  OutputInfo(ABuilder, 'updating', 'path environment variable, this may require administration privileges');
 
   LFile := TStringList.Create;
   try
     LProfile := ConcatPaths(['/', 'etc', 'paths']);
     LFile.LoadFromFile(LProfile);
     
-    WriteLn('changing file /etc/paths ', ApplicationName);
-
+    OutputInfo(ABuilder, 'changing', 'file: /etc/paths to add pasc path ');
+    
     for I := 0 to LFile.Count -1 do 
       if ContainsText(LFile.Strings[I], AFolder) then 
       begin
@@ -164,9 +159,9 @@ begin
       LFile.Add(AFolder);
       LFile.SaveToFile(LProfile);
     end;
-
-    WriteLn('running shell script to make allow pasc to ben run on new path ', ApplicationName);
-
+  
+    OutputInfo(ABuilder, 'running', 'shell script to make allow pasc to ben run on new path');
+    
     LFile.Clear;
     LFile.AddText(GetResource('update-path-sh'));
     LFile.SaveToFile(ConcatPaths([AFolder, 'update-path.sh']));
@@ -186,39 +181,41 @@ procedure UpdateEnvironmentPathWindows(ABuilder: ICommandBuilder; const AFolder:
 var
   LName: string = 'update-path.ps1';
 begin
-  ABuilder.OutputColor(
-    'updating environment path, this may require administration privileges'#13#10, 
-    ABuilder.ColorTheme.Other);
-
+  OutputInfo(ABuilder, 'updating', 'environment path, this may require administration privileges ');
   SaveFileContent(ConcatPaths([AFolder, LName]), GetResource('update-path-ps1'));
 
-  ABuilder.OutputColor('running shell script file: ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor(LName + #13#10, ABuilder.ColorTheme.Title);
-
+  OutputInfo(ABuilder, 'script', 'running shell script file: ' + LName);
   ShellCommand('powershell', [ConcatPaths([AFolder, LName]), AFolder]);
 
-  ABuilder.OutputColor(
-    'please restart your terminal app to path variable take effect'#13#10, 
-    ABuilder.ColorTheme.Other);
+  OutputInfo(ABuilder, 'info', 'please restart your terminal app to path variable take effect');
 end;
 
 procedure InstallCommand(ABuilder: ICommandBuilder);
 var
   LAppFolder: string = '';
 begin
-  CreateFolder(ABuilder, LAppFolder);
-  CopyApp(ABuilder, LAppFolder);
-  SetCurrentDir(LAppFolder);
-  {$IF DEFINED(WINDOWS)}
-  UpdateEnvironmentPathWindows(ABuilder, LAppFolder);
-  {$ENDIF}
-  {$IF DEFINED(LINUX)}
-  UpdateEnvironmentPathLinux(ABuilder, LAppFolder);
-  {$ENDIF}
-  {$IF DEFINED(Darwin)}
-  UpdateEnvironmentPathMacos(ABuilder, LAppFolder);
-  {$ENDIF}
-  ABuilder.OutputColor('install complete.'#13#10, ABuilder.ColorTheme.Title);
+  try
+    OutputInfo(ABuilder, 'Starting', 'to install pasc on user''s home folder');
+    CreateFolder(ABuilder, LAppFolder);
+    CopyApp(ABuilder, LAppFolder);
+    SetCurrentDir(LAppFolder);
+    {$IF DEFINED(WINDOWS)}
+    UpdateEnvironmentPathWindows(ABuilder, LAppFolder);
+    {$ENDIF}
+    {$IF DEFINED(LINUX)}
+    UpdateEnvironmentPathLinux(ABuilder, LAppFolder);
+    {$ENDIF}
+    {$IF DEFINED(Darwin)}
+    UpdateEnvironmentPathMacos(ABuilder, LAppFolder);
+    {$ENDIF}
+    OutputInfo(ABuilder, 'install', 'complete');
+  except
+    on E: Exception do
+    begin
+      OutputError(ABuilder, 'error', E.Message);
+      raise;
+    end;
+  end;
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

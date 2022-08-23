@@ -9,15 +9,56 @@ Create a new project using pasc, open a terminal, navigate to your project path 
 
 @longCode(
   pasc new helloWorld
-  code .
+  code helloWorld
 )
 
-This command will create a subfolder named helloWorld and will create the project structure inside it.
+This command will create a subfolder named helloWorld and will create the project structure inside it. The second line calls vscode and opens the new folder that was created. Requires that vscode to be in the path.
 
-@section(1 SecSecond Checking the project structure)
+@section(1 SecSecond Checking the project folder structure)
+
+You will notice that a project strucuture was created similar to this on below:
+
+@longCode(
+.
+├───.vscode
+│   ├───launch.json
+│   └───tasks.json
+├───src
+├───.gitignore
+├───boss-lock.json
+├───boss.json
+├───helloWorld.lpi
+└───helloWorld.lpr
+)
+
+We have the project file and also a lazarus project file that makes easy to build the project. There are files to use vscode too with predefined tasks and a suggested launch entry to debug your app. Please check vscode requirements on @link(install).
+
+The folder was initialized as a git repository too and one suggested file as .gitignore based on pascal language.
+
+The boss dependency manager was also initialized, so to install new dependencies using it is possible using the command "boss install", for more information check https://github.com/HashLoad/boss. If you don't want to use boss just delete the filse boss-lock.json and boss.json from the root path of the project.
 
 @section(1 SecThird Type some code)
 
+If you ran the "code helloWorld" command, there should be a vscode instance with the project open. Activate vscode or just open the project folder in a new instance.
+
+Open the helloWorld.lpr project file and enter the following code:
+
+@longCode(
+  WriteLn('helloWorld');
+)
+
+If the prerequisites for using vscode are satisfied as described in @link(install), you should be able to use the build task (ctrl + shift + b, or the appropriate combination depending on the platform).
+
+The pasc tool doesn't compile the project it just creates tasks for it, and when it does it's just calling the Lazarus project build tool for that: lazbuild.
+
+You can verify that the application has been compiled successfully by simply running the following command from a vscode terminal:
+
+@longCode(
+  ./helloWorld
+)
+
 @section(1 SecFourth Using the vscode tasks)
 
-@section(1 SecFourth Advanced features)
+Some predefined tasks were created but only the build and launch for debug should work as long as the requirements for vscode operation are met.
+
+Testing and documentation tasks require the existence of test projects and scripts for documentation automation that can be added by pasc via the add --tests --docs command. See the @link(advanced) on how to add tests and documentation to the project.

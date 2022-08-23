@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container"><div class="navigation">
-<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
+<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><li><a href="advanced.html">Advanced features</a></li><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
 <div style="clear: both"></div>
 </li></ul></div><div class="content">
 <h1 class="externalitem">Install</h1>
@@ -51,7 +51,22 @@ Start-Process -FilePath &quot;<span class="pascal_float">.</span>/pasc&quot; -Ar
 
 <p>
 
-<p><h2 class=""><span id="SecFourth"></span>Test pasc</h2>
+<p><h4 class=""><span id="SecFourth"></span>Build it from the sources</h4>
+
+
+<p>You may clone the repo and build it. Open a terminal and choose a folder to clone the repo and type the following commands:
+
+<p></p>
+
+<pre class="longcode">
+git clone https:<span class="pascal_comment">//github.com/leandro-lprsoft/pasc.git</span>
+cd pasc
+lazbuild pasc.lpi --build-mode=release
+<span class="pascal_float">.</span>/pasc install</pre>
+
+<p>
+
+<p><h2 class=""><span id="SecFifth"></span>Test pasc</h2>
 
 
 <p>To see if pasc is working type the following:

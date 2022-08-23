@@ -27,7 +27,18 @@ Windows:
   Start-Process -FilePath "./pasc" -ArgumentList "install" -Wait 
 )
 
-@section(1 SecFourth Test pasc)
+@section(3 SecFourth Build it from the sources)
+
+You may clone the repo and build it. Open a terminal and choose a folder to clone the repo and type the following commands:
+
+@longCode(
+  git clone https://github.com/leandro-lprsoft/pasc.git
+  cd pasc
+  lazbuild pasc.lpi --build-mode=release
+  ./pasc install
+)
+
+@section(1 SecFifth Test pasc)
 
 To see if pasc is working type the following:
 

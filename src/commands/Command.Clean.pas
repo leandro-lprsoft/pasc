@@ -50,6 +50,7 @@ uses
   SysUtils,
   StrUtils,
   FileUtil,
+  Utils.Output,
   Command.Colors;
 
 const
@@ -70,10 +71,7 @@ begin
   if AnsweredAll then
     Exit;
   
-  ABuilder.OutputColor(' Are you sure? ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor('[c]ancel ', ABuilder.ColorTheme.Error);
-  ABuilder.OutputColor('[y]es, [a]ll: ', ABuilder.ColorTheme.Value);
-  ABuilder.OutputColor(': ', ABuilder.ColorTheme.Other);
+  OutputInfo(ABuilder, 'Confirmation', 'Are you sure? [c]ancel [y]es, [a]ll: ', False);
   LInvalidKey := True;
   while LInvalidKey do
   begin
@@ -92,9 +90,7 @@ begin
     LInvalidKey := not AnsiMatchText(LKey, ['a', 'y', 'c']);
 
     if LInvalidKey then 
-      ABuilder.OutputColor(
-        'Invalid input. Are you sure? [c]ancel, [y]es, [a]ll: ', 
-        ABuilder.ColorTheme.Other);
+      OutputInfo(ABuilder, 'Invalid key', 'Are you sure? [c]ancel, [y]es, [a]ll: ', False);
   end;    
 end;
 
@@ -102,19 +98,13 @@ procedure DeleteFolder(ABuilder: ICommandBuilder; const ACurrentDir, AFolder: st
 var
   LCurrentDir: string;
 begin
-  ABuilder.OutputColor(
-    'folder will be removed: ' + IncludeTrailingPathDelimiter(ACurrentDir), 
-    ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor(AFolder, ABuilder.ColorTheme.Value);
-
+  OutputInfo(ABuilder, 'folder', 'will be deleted: ' + IncludeTrailingPathDelimiter(ACurrentDir) + AFolder);
   CheckAnswer(ABuilder);
-  //WriteLn; //for linux/macos?
-
   LCurrentDir := ConcatPaths([ACurrentDir, AFolder]);
   if DeleteDirectory(LCurrentDir, True) then 
   begin
     RemoveDir(LCurrentDir);
-    ABuilder.OutputColor('...removed.'#13#10, ABuilder.ColorTheme.Other);
+    OutputError(ABuilder, 'folder', 'deleted');
   end;
 end;
 
@@ -145,17 +135,16 @@ procedure CleanCommand(ABuilder: ICommandBuilder);
 begin
   AnsweredAll := ABuilder.CheckOption('f');
 
-  ABuilder.OutputColor('Cleanning current path: ', ABuilder.ColorTheme.Other);
-  ABuilder.OutputColor(GetCurrentDir + #13#10, ABuilder.ColorTheme.Title);
-  
+  OutputInfo(ABuilder, 'Starting', 'to clean the current path: ' + GetCurrentDir);
   try
     CleanDirectory(ABuilder, GetCurrentDir);
+    OutputInfo(ABuilder, 'Cleanning', 'was finished');
   except 
     on E: Exception do
     begin
       if not SameText(E.Message, 'Cleaning aborted.') then
         raise;
-      ABuilder.OutputColor(E.Message + #13#10, ABuilder.ColorTheme.Error);
+      OutputError(ABuilder, 'error', E.MEssage);
     end;
   end;
 end;

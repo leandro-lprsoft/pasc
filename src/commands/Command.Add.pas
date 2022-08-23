@@ -59,14 +59,14 @@ uses
 
 procedure CreateTestProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 var
-  LFile: TStringList = nil;
-  LContent, LTestsDir, LTestProject: string;
+  LContent, LTestsDir, LTestProject, LProjectName: string;
 begin
   try
     OutputInfo(ABuilder, 'Starting', 'to add a test project to the current folder'); 
 
     LTestsDir := ConcatPaths([AProjectDir, 'tests']);
-    LTestProject := 'Test' + AProjectName;
+    LProjectName := AnsiProperCase(AProjectName, StdWordDelims);
+    LTestProject := 'Test' + LProjectName;
     SetCurrentDir(AProjectDir);
 
     OutputInfo(ABuilder, 'Creating', 'tests sub folder'); 
@@ -78,16 +78,17 @@ begin
 
     LContent := GetResource('fpcunitprojectlpr');
     LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
-    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
+    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + LProjectName, [rfReplaceAll]);
     SaveFileContent(ConcatPaths([LTestsDir, LTestProject + '.lpr']), LContent);
     
     LContent := GetResource('fpcunitprojectlpi');
     LContent := StringReplace(LContent, '{TESTPROJECTNAME}', LTestProject, [rfReplaceAll]);
+    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + LProjectName, [rfReplaceAll]);
     SaveFileContent(ConcatPaths([LTestsDir, LTestProject + '.lpi']), LContent);
     
     LContent := GetResource('testcase1pas');
-    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + AProjectName, [rfReplaceAll]);
-    SaveFileContent(ConcatPaths([LTestsDir, 'TestCase' + AProjectName + '.pas']), LContent);
+    LContent := StringReplace(LContent, '{TestCase1}', 'TestCase' + LProjectName, [rfReplaceAll]);
+    SaveFileContent(ConcatPaths([LTestsDir, 'TestCase' + LProjectName + '.pas']), LContent);
     
     OutputInfo(ABuilder, 'Done', 'test project added with success'); 
 

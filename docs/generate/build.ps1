@@ -52,6 +52,9 @@ function Set-NavigationItemOrder {
   $Content = $Content.Replace('<li><a href="quickstart.html">Quick start</a></li>', '')
   $Content = $Content.Replace($ItemAllUnits, '<li><a href="quickstart.html">Quick start</a></li>' + $ItemAllUnits)
 
+  $Content = $Content.Replace('<li><a href="advanced.html">Advanced features</a></li>', '')
+  $Content = $Content.Replace($ItemAllUnits, '<li><a href="advanced.html">Advanced features</a></li>' + $ItemAllUnits)
+
   $Content = $Content.Replace($ItemAllUnits, '<hr><li>Reference<ul style="margin-left: 10px;">' + $ItemAllUnits)
   $Content = $Content.Replace($ItemAllIdentifiers, $ItemAllIdentifiers + '</li></ul>')
 
@@ -74,6 +77,7 @@ $DocArgs =
   "--introduction=" + $BasePath + "docs\generate\introduction.txt " +
   "--additional="  + $BasePath + "docs\generate\install.txt " +
   "--additional="  + $BasePath + "docs\generate\quickstart.txt " +
+  "--additional="  + $BasePath + "docs\generate\advanced.txt " +
   $BasePath + "src\commands\*.pas " + 
   $BasePath + "src\utils\*.pas " + 
   $BasePath + "pasc.lpr "

@@ -34,27 +34,27 @@ LazarusResources.Add('tasksjson','TXT',[
   +','#13#10'        "isDefault": true'#13#10'      }'#13#10'    },'#13#10'    '
   +'{'#13#10'      "label": "lazbuild: tests build",'#13#10'      "type": "shel'
   +'l",'#13#10'      "command": "lazbuild",'#13#10'      "args": ["tests/Test{P'
-  +'ROJECTNAME}.lpi"],'#13#10'      ,'#13#10'      "problemMatcher": {'#13#10' '
-  +'       "owner": "external",'#13#10'        "fileLocation": ["absolute"],'#13
-  +#10'        "pattern": {'#13#10'           "regexp": "(([A-Za-z]):\\\\(?:[^\'
-  +'\/:*?\"<>|\\r\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.'
-  +'*(Fatal|Error|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",'#13#10'         '
-  +'  "file": 1,'#13#10'           "line": 3,'#13#10'           "column": 4,'#13
-  +#10'           "severity": 5,'#13#10'           "code": 6,'#13#10'          '
-  +' "message": 7'#13#10'        },'#13#10'        "severity": "info"'#13#10'  '
-  +'    },'#13#10'      "group": {'#13#10'        "kind": "build",'#13#10'     '
-  +'   "isDefault": false'#13#10'      }'#13#10'    },'#13#10'    {'#13#10'    '
-  +'  "label": "pasc: run tests",'#13#10'      "type": "shell",'#13#10'      "c'
-  +'ommand": "pasc",'#13#10'      "args": ["test"],'#13#10'      "group": {'#13
-  +#10'        "kind": "test",'#13#10'        "isDefault": true'#13#10'      },'
-  +#13#10'      "dependsOn": "lazbuild: tests build"'#13#10'    },'#13#10'    {'
-  +#13#10'      "label": "pasc: watch, build tests and run tests",'#13#10'     '
-  +' "type": "shell",'#13#10'      "command": "pasc",'#13#10'      "args": ["wa'
-  +'tch", "--build", "--test", "."],'#13#10'      "problemMatcher": []'#13#10' '
-  +'   },'#13#10'    {'#13#10'      "label": "pasdoc: build documentation",'#13
-  +#10'      "type": "shell",'#13#10'      "command": "./docs/generate/build.ps'
-  +'1",'#13#10'      "args": [],'#13#10'      "problemMatcher": []'#13#10'    }'
-  +#13#10'  ]'#13#10'}'
+  +'ROJECTNAME}.lpi"],'#13#10'      "problemMatcher": {'#13#10'        "owner":'
+  +' "external",'#13#10'        "fileLocation": ["absolute"],'#13#10'        "p'
+  +'attern": {'#13#10'           "regexp": "(([A-Za-z]):\\\\(?:[^\\/:*?\"<>|\\r'
+  +'\\n]+\\\\)*[^\\/\\s\\(:*?\"<>|\\r\\n]*)\\((\\d+),(\\d+)\\)\\s.*(Fatal|Error'
+  +'|Warning|Hint|Note):\\s\\((\\d+)\\)\\s(.*)$",'#13#10'           "file": 1,'
+  +#13#10'           "line": 3,'#13#10'           "column": 4,'#13#10'         '
+  +'  "severity": 5,'#13#10'           "code": 6,'#13#10'           "message": '
+  +'7'#13#10'        },'#13#10'        "severity": "info"'#13#10'      },'#13#10
+  +'      "group": {'#13#10'        "kind": "build",'#13#10'        "isDefault"'
+  +': false'#13#10'      }'#13#10'    },'#13#10'    {'#13#10'      "label": "pa'
+  +'sc: run tests",'#13#10'      "type": "shell",'#13#10'      "command": "pasc'
+  +'",'#13#10'      "args": ["test"],'#13#10'      "group": {'#13#10'        "k'
+  +'ind": "test",'#13#10'        "isDefault": true'#13#10'      },'#13#10'     '
+  +' "dependsOn": "lazbuild: tests build"'#13#10'    },'#13#10'    {'#13#10'   '
+  +'   "label": "pasc: watch, build tests and run tests",'#13#10'      "type": '
+  +'"shell",'#13#10'      "command": "pasc",'#13#10'      "args": ["watch", "--'
+  +'build", "--test", "."],'#13#10'      "problemMatcher": []'#13#10'    },'#13
+  +#10'    {'#13#10'      "label": "pasdoc: build documentation",'#13#10'      '
+  +'"type": "shell",'#13#10'      "command": "./docs/generate/build.ps1",'#13#10
+  +'      "args": [],'#13#10'      "problemMatcher": []'#13#10'    }'#13#10'  ]'
+  +#13#10'}'
 ]);
 LazarusResources.Add('projectlpi','TXT',[
   '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<CONFIG>'#13#10'  <ProjectOpti'
@@ -141,20 +141,20 @@ LazarusResources.Add('fpcunitprojectlpi','TXT',[
   +'ageName Value="FCL"/>'#13#10'      </Item>'#13#10'    </RequiredPackages>'
   +#13#10'    <Units>'#13#10'      <Unit>'#13#10'        <Filename Value="{TEST'
   +'PROJECTNAME}.lpr"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10' '
-  +'     </Unit>'#13#10'      <Unit>'#13#10'        <Filename Value="testcase1.'
-  +'pas"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10'        <UnitN'
-  +'ame Value="TestCase1"/>'#13#10'      </Unit>'#13#10'    </Units>'#13#10'  <'
-  +'/ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Value="11"/'
-  +'>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'      <Filen'
-  +'ame Value="{TESTPROJECTNAME}"/>'#13#10'    </Target>'#13#10'    <SearchPath'
-  +'s>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <OtherUn'
-  +'itFiles Value="../src"/>'#13#10'      <UnitOutputDirectory Value="lib\$(Tar'
-  +'getCPU)-$(TargetOS)"/>'#13#10'    </SearchPaths>'#13#10'    <Linking>'#13#10
-  +'      <Debugging>'#13#10'        <DebugInfoType Value="dsDwarf3"/>'#13#10' '
-  +'       <UseHeaptrc Value="True"/>'#13#10'      </Debugging>'#13#10'    </Li'
-  +'nking>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10'    <Excepti'
-  +'ons>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'#13#10'     '
-  +' </Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodetoolError"/>'
+  +'     </Unit>'#13#10'      <Unit>'#13#10'        <Filename Value="{TestCase1'
+  +'}.pas"/>'#13#10'        <IsPartOfProject Value="True"/>'#13#10'        <Uni'
+  +'tName Value="{TestCase1}"/>'#13#10'      </Unit>'#13#10'    </Units>'#13#10
+  +'  </ProjectOptions>'#13#10'  <CompilerOptions>'#13#10'    <Version Value="1'
+  +'1"/>'#13#10'    <PathDelim Value="\"/>'#13#10'    <Target>'#13#10'      <Fi'
+  +'lename Value="{TESTPROJECTNAME}"/>'#13#10'    </Target>'#13#10'    <SearchP'
+  +'aths>'#13#10'      <IncludeFiles Value="$(ProjOutDir)"/>'#13#10'      <Othe'
+  +'rUnitFiles Value="../src"/>'#13#10'      <UnitOutputDirectory Value="lib\$('
+  +'TargetCPU)-$(TargetOS)"/>'#13#10'    </SearchPaths>'#13#10'    <Linking>'#13
+  +#10'      <Debugging>'#13#10'        <DebugInfoType Value="dsDwarf3"/>'#13#10
+  +'        <UseHeaptrc Value="True"/>'#13#10'      </Debugging>'#13#10'    </L'
+  +'inking>'#13#10'  </CompilerOptions>'#13#10'  <Debugging>'#13#10'    <Except'
+  +'ions>'#13#10'      <Item>'#13#10'        <Name Value="EAbort"/>'#13#10'    '
+  +'  </Item>'#13#10'      <Item>'#13#10'        <Name Value="ECodetoolError"/>'
   +#13#10'      </Item>'#13#10'      <Item>'#13#10'        <Name Value="EFOpenE'
   +'rror"/>'#13#10'      </Item>'#13#10'    </Exceptions>'#13#10'  </Debugging>'
   +#13#10'</CONFIG>'#13#10

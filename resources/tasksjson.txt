@@ -32,7 +32,6 @@
       "type": "shell",
       "command": "lazbuild",
       "args": ["tests/Test{PROJECTNAME}.lpi"],
-      ,
       "problemMatcher": {
         "owner": "external",
         "fileLocation": ["absolute"],

@@ -1,0 +1,43 @@
+@title(Advanced features)
+@shorttitle(Advanced features)
+
+@section(1 SecFirst Adding tests)
+
+Use the project from the previous page @link(quickstart) as a base to try out the features of this page.
+
+To add a test project to the project, do the following: with the project folder open on vscode, open a terminal session and from the project root execute the following command:
+
+@longCode(
+  pasc add --tests
+)
+
+This command will add a test project by creating a subfolder named tests and adding a basic test project template with some example cases. We can see that our project structure has been modified a bit to something like this:
+
+@longCode(
+.
+├───.vscode
+│   ├───launch.json
+│   └───tasks.json
+├───src
+├───tests
+│   ├───TestHelloWorld.lpi
+│   ├───TestHelloWorld.lpr
+│   └───TestCaseHelloWorld.pas
+├───.gitignore
+├───boss-lock.json
+├───boss.json
+├───helloWorld.lpi
+└───helloWorld.lpr
+)
+
+Open TestCaseHelloWorld.pas file, there are three tests in this unit, one test that passes, one that fails and one that causes a memory leak. 
+
+These tests are like this to demonstrate how the pasc test report looks like. The idea behind a different report is to provide a quick identification of tests that failed for some reason. And this is done through the use of colors and alignment and with the consolidation of test information and possible memory leaks in a single report.
+
+Now our tests task can be run with a test project available, you can now run a vscode task "pasc: run tests", it depends on "lazbuild: build tests". You should see an output similar to this:
+
+
+
+@section(1 SecSecond Adding documentation)
+
+@section(1 SecThird Watching for changes)
