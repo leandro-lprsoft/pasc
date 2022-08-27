@@ -16,7 +16,6 @@ type
 
   TTestCommandWatch= class(TTestCase)
   private
-    FBuilder: ICommandBuilder;
     FExeName: string;
     FWorkingFolder: string;
     FCurrentDir: string;
@@ -28,6 +27,7 @@ type
     procedure TestCommandWatchRegistry;    
     procedure TestCommandWatchCheckIfWatcherCallbackIsCalled;
     procedure TestCommandWatchCheckIfShellExecuteCallbackIsCalled;
+    procedure TestCommandWatchCheckIfShellExecuteIsCalledWithSuite;
   end;
 
 implementation
@@ -38,6 +38,7 @@ uses
   MockCommandBuilder,
   Command.Clean,
   Command.Watch,
+  Command.Test,
   Utils.IO,
   Utils.Shell;
 
@@ -45,10 +46,36 @@ var
   Finished: LongInt = 0;
   Builder: ICommandBuilder;
 
-procedure RunWatchCommand;
+procedure RunWatchBasic;
+var
+  LBuilder: ICommandBuilder;
 begin
+  LBuilder := TCommandBuilder.Create(ExtractFileName(ParamStr(0)));
   try
-    WatchCommand(Builder);
+    MockSetup(LBuilder);
+    ShellExecute := @MockShell;
+    Command.Watch.Registry(LBuilder);
+    LBuilder.UseArguments(['watch', '.']);
+    LBuilder.Parse;
+    WatchCommand(LBuilder);
+  finally
+    InterLockedIncrement(Finished);
+  end;
+end;
+
+procedure RunWatchCommand;
+var
+  LBuilder: ICommandBuilder;
+begin
+  LBuilder := TCommandBuilder.Create(ExtractFileName(ParamStr(0)));
+  try
+    MockSetup(LBuilder);
+    ShellExecute := @MockShell;
+    Command.Watch.Registry(LBuilder);
+    Command.Test.Registry(LBuilder);
+    LBuilder.UseArguments(['watch', '--build', '--test=TTestCommandAdd', '.']);
+    LBuilder.Parse;
+    WatchCommand(LBuilder);
   finally
     InterLockedIncrement(Finished);
   end;
@@ -58,15 +85,15 @@ procedure TTestCommandWatch.SetUp;
 begin
   FCurrentDir := GetCurrentDir;
   FExeName := ExtractFileName(ParamStr(0));
-  FBuilder := TCommandBuilder.Create(FExeName);
-  MockSetup(FBuilder);
-  Command.Watch.Registry(FBuilder);
+  Builder := TCommandBuilder.Create(FExeName);
+  MockSetup(Builder);
+  Command.Watch.Registry(Builder);
 
   MockCaptureWatchExecute := '';
   MockShellCapture := '';
   CommandWatchTimeout := 3000;
   Finished := 0;
-  Builder := FBuilder;
+  Builder := Builder;
 
   FWorkingFolder := ConcatPaths([GetTempDir, ChangeFileExt(FExeName, '')]);
   
@@ -74,7 +101,7 @@ begin
     
   // clean old data
   if DirectoryExists(FWorkingFolder) then
-    DeleteFolder(FBuilder, GetTempDir, ChangeFileExt(FExeName, ''));
+    DeleteFolder(Builder, GetTempDir, ChangeFileExt(FExeName, ''));
 
   // create new working folder
   SetCurrentDir(GetTempDir);
@@ -93,7 +120,7 @@ end;
 
 procedure TTestCommandWatch.TestCommandWatchRegistry;
 begin
-  AssertEquals('watch', FBuilder.Commands[0].Name);
+  AssertEquals('watch', Builder.Commands[0].Name);
 end;
 
 procedure TTestCommandWatch.TestCommandWatchCheckIfWatcherCallbackIsCalled;
@@ -101,8 +128,8 @@ var
   LThread: TThread;
 begin
   // arrange
-  FBuilder.UseArguments(['watch', '.']);
-  FBuilder.Parse;
+  Builder.UseArguments(['watch', '.']);
+  Builder.Parse;
 
   // cannot call TestPasc again because it would produce recursive calls indenitely
   // so we need to change ShellCommand and check if it's being called.
@@ -111,7 +138,7 @@ begin
 
   SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'test content');
   
-  LThread := TThread.CreateAnonymousThread(RunWatchCommand);
+  LThread := TThread.CreateAnonymousThread(RunWatchBasic);
   LThread.FreeOnTerminate := True;
   LThread.Start;
 
@@ -122,6 +149,7 @@ begin
     Sleep(50);
       
   // assert
+  //AssertEquals('a', MockCaptureWatchExecute);
   AssertTrue(
     'Output should contain keyword: "test_for_watch.txt" ' + MockCaptureWatchExecute,
      ContainsText(MockCaptureWatchExecute, 'test_for_watch.txt'));
@@ -133,8 +161,8 @@ var
 begin
   // arrange
   CommandWatchTimeout := 1000;
-  FBuilder.UseArguments(['watch', '--build', '--test', '.']);
-  FBuilder.Parse;
+  Builder.UseArguments(['watch', '--build', '--test', '.']);
+  Builder.Parse;
   
   // cannot call TestPasc again because it would produce recursive calls indenitely
   // so we need to change ShellCommand and check if it's being called.
@@ -160,7 +188,43 @@ begin
      ContainsText(MockShellCapture, 'lazbuild'));
   AssertTrue(
     'Output should contain keyword: "test_for_watch.exe" - Check capture: ' + MockShellCapture,
-     ContainsText(MockShellCapture, 'test_for_watch.exe'));
+     ContainsText(MockShellCapture, 'test_for_watch.exe'));  
+end;
+
+procedure TTestCommandWatch.TestCommandWatchCheckIfShellExecuteIsCalledWithSuite;
+var
+  LThread: TThread;
+
+  LValue: string;
+begin
+  // arrange
+  CommandWatchTimeout := 1000;
+  Builder.UseArguments(['watch', '--test=TTestCommandAdd', '.']);
+  Builder.Parse;
+  
+  // cannot call TestPasc again because it would produce recursive calls indenitely
+  // so we need to change ShellCommand and check if it's being called.
+  ShellExecute := @MockShell;
+  RunWatcherCallback := @RunUserCommandAsRequested; // original callback
+
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.exe']), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.xml']), 'just for test');
+  
+  LThread := TThread.CreateAnonymousThread(RunWatchCommand);
+  LThread.FreeOnTerminate := True;
+  LThread.Start;
+
+  Sleep(50);
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.txt']), 'test content');
+
+  while Finished = 0 do
+    Sleep(50);
+      
+  // assert
+  AssertTrue(
+    'Output should contain keyword: "--suite=TTestCommandAdd" - Check capture: ' + MockShellCapture,
+     ContainsText(MockShellCapture, '--suite=TTestCommandAdd'));
 end;
 
 initialization

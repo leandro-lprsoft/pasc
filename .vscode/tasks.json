@@ -76,6 +76,13 @@
       "problemMatcher": []
     },
     {
+      "label": "pasc: watch, build and tests=specificsuite",
+      "type": "shell",
+      "command": "pasc",
+      "args": ["watch", "--build", "--test=TTestCommandWatch", "."],
+      "problemMatcher": []
+    },
+    {
       "label": "pasdoc: build documentation",
       "type": "shell",
       "command": "./docs/generate/build.ps1",

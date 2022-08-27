@@ -60,7 +60,7 @@ uses
 
 var
   Builder: ICommandBuilder;
-  ProjectFile: string;
+  ProjectFile, TestCaseSuite: string;
   IsTest, IsBuild, IsRun: Boolean;
 
 procedure OutputWatcherInfo(const ATitle, AText: string);
@@ -129,8 +129,21 @@ begin
   if IsTest then
   begin
     OutputWatcherInfo('Watcher', 'test started'#13#10);
-    Builder.UseArguments(['test']);
+    OutputWatcherInfo('TestCaseSuite', TestCaseSuite + #13#10);
+    if TestCaseSuite <> '' then
+    begin
+      Builder.UseArguments(['test', '-t=' + TestCaseSuite]);
+      OutputWatcherInfo('-t=' + TestCaseSuite, TestCaseSuite + #13#10);
+    end
+    else
+      Builder.UseArguments(['test']);
     Builder.Parse;
+
+    OutputWatcherInfo('-t=' + TestCaseSuite, TestCaseSuite + #13#10);
+
+    if Builder.CheckOption('t', TestCaseSuite) then
+      OutputWatcherInfo('--test-case=call', TestCaseSuite + #13#10);
+
     TestCommand(Builder);
   end;
 
@@ -157,8 +170,8 @@ begin
   OutputWatcherInfo('Watcher', 'started');
   OutputWatcherInfo('Path', GetCurrentDir);
 
-  ProjectFile := GetProjectFileName(ABuilder);
-  IsTest := Builder.CheckOption('test');
+  ProjectFile := GetProjectFileName(Builder);
+  IsTest := Builder.CheckOption('test', TestCaseSuite);
   IsBuild := Builder.CheckOption('build');
   IsRun := Builder.CheckOption('run');
   
@@ -200,7 +213,7 @@ begin
           'run main project', ['t'])
       .AddOption(
           't', 'test', 
-          'build test project and run it', ['r']);
+          'build test project and run it', ['r'], ocOptionalValue);
 end;
 
 initialization

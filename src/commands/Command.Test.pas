@@ -82,7 +82,7 @@ end;
 
 procedure TestCommand(ABuilder: ICommandBuilder);
 var
-  LExeFile, LExeOnly, LXmlFile: string;
+  LExeFile, LExeOnly, LXmlFile, LTestCase: string;
   LReport: TTestReport;
   LLeak: TLeakReport;
 begin
@@ -91,7 +91,11 @@ begin
     Exit;
   LExeOnly := ExtractFileName(LExeFile);
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
-  ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
+  LTestCase := '';
+  if ABuilder.CheckOption('test-case', LTestCase) then
+    ShellExecute(LExeFile, ['--suite=' + LTestCase, '--file=' + LXmlFile])
+  else
+    ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
 
   LReport := TTestReport.New(ABuilder, ExtractFilePath(LExeFile));
   try
@@ -110,7 +114,6 @@ begin
   except
     LLeak.Free;
   end;
-
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);
@@ -132,9 +135,16 @@ begin
       'information with details about the possible memory leaks in a format that vscode can '#13#10 + 
       'provide easy navigation through the code. '#13#10 +
       ''#13#10 +
-      'Ex: ' + ABuilder.ExeName + ' test',
+      'Ex: ' + ABuilder.ExeName + ' test'#13#10 +
+      'Ex: ' + ABuilder.ExeName + ' test=TTestCaseSuite',
       @TestCommand,
-      [ccNoParameters]);
+      [ccNoParameters])
+      .AddOption(
+        't',
+        'test-case',
+        'run only the specified test case or test suite.',
+        [],
+        ocOptionalValue);
 end;
 
 end.

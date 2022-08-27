@@ -137,6 +137,8 @@ begin
     .AddCommand(
       'build',
       'build the project in current directory or one provided as an argument.'#13#10 +
+      ABuilder.ExeName + 'is not able to compile the project by itself, it is just '#13#10 +
+      'calling lazbuild to do it. This command exists only to enable the watch command.'#13#10 +
       'Ex: ' + ABuilder.ExeName + ' build'#13#10 +
       'Ex: ' + ABuilder.ExeName + ' build sample1.lpr',
       @BuildCommand,

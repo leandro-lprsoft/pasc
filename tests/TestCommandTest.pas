@@ -27,6 +27,7 @@ type
   published
     procedure TestCommandTestRegistry;    
     procedure TestCommandTestBasic;
+    procedure TestCommandTestSpecificSuite;
     procedure TestGetTestExecutable;
   end;
 
@@ -85,6 +86,26 @@ end;
 procedure TTestCommandTest.TestGetTestExecutable;
 begin
   AssertEquals(ParamStr(0), GetTestExecutable(FBuilder));
+end;
+
+procedure TTestCommandTest.TestCommandTestSpecificSuite;
+begin
+  // arrange
+  FBuilder.UseArguments(['test', '-t=TTestCommandTest']);
+  FBuilder.Parse;
+
+  // cannot call TestPasc again because it would produce recursive calls indenitely
+  // so we need to change ShellCommand and check if it's being called.
+  ShellExecute := @MockShell;
+  TestCommand(FBuilder);
+    
+  // assert
+  AssertTrue(
+    'Output should contain keyword: "Starting" ',
+    ContainsText(MockOutputCaptured, 'Starting'));
+  AssertTrue(
+    'Should call the test app: "--suite=TTestCommandTest" ',
+    ContainsText(MockShellCapture, '--suite=TTestCommandTest'));  
 end;
 
 initialization

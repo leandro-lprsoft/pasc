@@ -259,7 +259,7 @@ begin
     end;
 
     ReadXMLFile(LXml, AFileName);
-
+    
     LTestSuiteList := LXml.DocumentElement.GetElementsByTagName('TestSuite');
     Executable := ATestApp;
     TestSuiteCount := LTestSuiteList.Count;
@@ -273,7 +273,7 @@ begin
       if I = 0 then
         TotalTime := GetString(LTestSuite, 'ElapsedTime');
 
-      if GetString(LTestSuite, 'Name') = '' then
+      if (GetString(LTestSuite, 'Name') = '') or (SameText(GetString(LTestSuite, 'Name'), 'SuiteList')) then
         continue;
 
       if (LTestSuite.HasAttributes) and (SameText(String(LTestSuite.Attributes[0].NodeName), 'name')) then

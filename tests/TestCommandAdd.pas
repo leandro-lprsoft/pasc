@@ -39,7 +39,9 @@ uses
   StrUtils,
   MockCommandBuilder,
   Command.Build,
-  Utils.IO;
+  Command.Clean,
+  Utils.IO,
+  Utils.Shell;
 
 procedure TTestCommandAdd.SetUp;
 begin
@@ -50,11 +52,22 @@ begin
   Command.Add.Registry(FBuilder);
 
   FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
+  AnsweredAll := True;
+
+  // clean old data
+  if DirectoryExists(FWorkingFolder) then
+    DeleteFolder(FBuilder, GetTempDir, '.' + ChangeFileExt(FExeName, ''));
+
+  // create new working folder
+  SetCurrentDir(GetTempDir);
+  CreateDir('.' + ChangeFileExt(FExeName, ''));
+  SetCurrentDir(FWorkingFolder);
 end;
 
 procedure TTestCommandAdd.TearDown;
 begin
   SetCurrentDir(FCurrentDir);
+  AnsweredAll := False;
 end;
 
 procedure TTestCommandAdd.TestCommandAddRegistry;
@@ -93,7 +106,10 @@ begin
   SaveFileContent(ConcatPaths([FWorkingFolder, 'myproject.lpr']), 'program myproject;');
   
   // act
+  //FBuilder.Output(FWorkingFolder);
   AddCommand(FBuilder);
+  
+  //AssertEquals('a', MockCommandCapture);
 
   // assert
   AssertTrue(
