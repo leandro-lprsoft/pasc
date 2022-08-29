@@ -20,7 +20,7 @@
       "request": "launch",
       "name": "Debug Pascal program",
       "program": "${workspaceFolder}\\tests\\TestPasc.exe",
-      "parameters": ["--suite=TestCommandWatchCheckIfShellExecuteIsCalledWithSuite"],
+      "parameters": ["--suite=TestShellCommand"],
       "fpdserver": {
         "executable": "c:/temp/fpdserver-x86_64.exe"
       },

@@ -11,7 +11,7 @@ uses
   rtti, 
   typinfo,
   Command.Interfaces,
-  Utils.Shell;
+  Utils.Interfaces;
 
   procedure MockSetup(ABuilder: ICommandBuilder);
   procedure MockCommand(ABuilder: ICommandBuilder);
@@ -19,7 +19,7 @@ uses
   procedure MockOutput(const AMessage: string);
   procedure MockOutputColor(const AMessage: string; const AColor: byte);
   function MockShell(const AProgram: string; AParams: TArray<string>): string;
-  function MockWatchExecute(const AContent: string): Boolean;
+  function MockWatchExecute(const AContent: string; const AEvent: TWatcherEvent): Boolean;
 
 var
   MockCommandCapture, MockInputLnResult, MockOutputCaptured, MockShellCapture, 
@@ -76,12 +76,12 @@ begin
   Result := MockShellCapture;
 end;
 
-function MockWatchExecute(const AContent: string): Boolean;
+function MockWatchExecute(const AContent: string; const AEvent: TWatcherEvent): Boolean;
 begin
   MockCaptureWatchExecute := 
     IfThen(MockCaptureWatchExecute <> '', MockCaptureWatchExecute + #13#10, '') + 
     AContent;
-  Result := not SameText(AContent, 'first run');
+  Result := not (AEvent = weFirstRun);
 end;
 
 end.

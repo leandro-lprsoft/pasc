@@ -8,17 +8,27 @@ interface
 
 type
 
+  TWatcherEvent = (
+    weFirstRun,     /// The first run of the application
+    weFileChanged,  /// The file has changed
+    weTimeout,      /// The file has been deleted
+    weNoChange      /// No changes were detected
+  );
+
   /// <summary>A procedure that will be called after a change. The file name that triggered 
   /// this action will be passed as a parameter. If function returns true, watcher stops
   /// running. </summary>
-  TWatcherRunCallback = function (const AFile: string): boolean;
+  /// <param name="AFile">The file that triggered the event. It will be empty for first 
+  /// run and no change.</param>
+  /// <param name="AEvent">The event that triggered this procedure.</param>
+  TWatcherRunCallback = function (const AFile: string; const AEvent: TWatcherEvent): boolean;
 
   /// <summary>Enum type to identify the type of item to be ignored by the Watcher. </summary>
   TIgnoreKind = (
     ikStartsText, /// itens of any kind that starts with the text specified
-    ikFolder, /// ignore folders with the specified name
-    ikFile, /// ignore files with the specified name
-    ikExtension /// ignore files with the specified extension
+    ikFolder,     /// ignore folders with the specified name
+    ikFile,       /// ignore files with the specified name
+    ikExtension   /// ignore files with the specified extension
     );
 
   /// <summary>Interface that represents an object to monitor a path, with methods to configure

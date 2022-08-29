@@ -33,7 +33,8 @@ uses
   /// so that it executes it. It is prepared to run the project build and tests as long as 
   /// there is a respective executable. . </summary>
   /// <param name="AFile"> Filename that triggered the action change. </param>  
-  function RunUserCommandAsRequested(const AFile: string): Boolean;
+  /// <param name="AEvent">The event that triggered this procedure.</param>
+  function RunUserCommandAsRequested(const AFile: string; const AEvent: TWatcherEvent): Boolean;
 
 var
   /// <summary> Allows to define another function to process the changes detected by the 
@@ -60,6 +61,7 @@ uses
 
 var
   Builder: ICommandBuilder;
+  Console: TConsoleWatcher;
   ProjectFile, TestCaseSuite: string;
   IsTest, IsBuild, IsRun: Boolean;
 
@@ -73,6 +75,12 @@ procedure OutputWatcherError(const ATitle, AError: string);
 begin
   Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
   Builder.OutputColor(AError + #13#10, Builder.ColorTheme.Error);
+end;
+
+procedure OutputWatcherDebug(const ATitle, AText: string);
+begin
+  Builder.OutputColor(PadLeft(ATitle + ' ', 13), Builder.ColorTheme.Title);
+  Builder.OutputColor(AText + #13#10, Builder.ColorTheme.Value);
 end;
 
 function GetProjectFileName(ABuilder: ICommandBuilder): string;
@@ -99,13 +107,50 @@ begin
   Result := LProjectFile;
 end;
 
-function RunUserCommandAsRequested(const AFile: string): Boolean;
+function RunUserCommandAsRequested(const AFile: string; const AEvent: TWatcherEvent): Boolean;
 var
   LStart: QWord;
   LExt: string = {$IFDEF UNIX}''{$ELSE}'.exe'{$ENDIF};
+
+  procedure OutputMessage;
+  var
+    LMessage: string;
+  begin
+    if (not Assigned(Console)) or (not Console.IsRunning) then exit;
+    
+    LMessage := Console.GetMessage;
+    if LMessage <> '' then
+      Builder.OutputColor(LMessage+#13#10, Builder.ColorTheme.Text);
+  end;
+
 begin
-  OutputWatcherInfo('Event', AFile);
   LStart := GetTickCount64;
+
+  if AEvent = weNoChange then
+  begin
+    OutputMessage;
+    exit;
+  end;
+
+  if AEvent = weTimeout then
+  begin
+    OutputWatcherError('Watcher', AFile + #13#10);
+    exit;
+  end;
+
+  if AEvent in [weFirstRun, weFileChanged] then
+  begin
+    if Assigned(Console) then
+    begin
+      OutputWatcherInfo('', '');
+      OutputWatcherDebug('Watcher', 'killing task that is running'#13#10);
+      Console.Stop;
+      Console.Terminate;
+      FreeAndNil(Console);
+    end;
+  end;
+
+  OutputWatcherInfo('Event', AFile);
   
   if IsBuild then
   begin
@@ -130,28 +175,26 @@ begin
   begin
     OutputWatcherInfo('Watcher', 'test started'#13#10);
     OutputWatcherInfo('TestCaseSuite', TestCaseSuite + #13#10);
+    
     if TestCaseSuite <> '' then
-    begin
-      Builder.UseArguments(['test', '-t=' + TestCaseSuite]);
-      OutputWatcherInfo('-t=' + TestCaseSuite, TestCaseSuite + #13#10);
-    end
+      Builder.UseArguments(['test', '-t=' + TestCaseSuite])
     else
       Builder.UseArguments(['test']);
+
     Builder.Parse;
-
-    OutputWatcherInfo('-t=' + TestCaseSuite, TestCaseSuite + #13#10);
-
-    if Builder.CheckOption('t', TestCaseSuite) then
-      OutputWatcherInfo('--test-case=call', TestCaseSuite + #13#10);
-
     TestCommand(Builder);
   end;
 
   if IsRun then
   begin
     OutputWatcherInfo('Watcher', 'running ' + ChangeFileExt(ProjectFile, LExt) + #13#10);
-    Builder.Output(ShellCommand(ChangeFileExt(ProjectFile, LExt), []));
-    OutputWatcherInfo('', '');
+
+    if AEvent in [weFirstRun, weFileChanged] then
+    begin
+      Console := TConsoleWatcher.Create(ChangeFileExt(ProjectFile, LExt), []);
+      Console.Start;
+      OutputMessage;
+    end;
   end;
 
   OutputWatcherInfo(
@@ -185,8 +228,8 @@ begin
       .Ignore(ikFolder, ['lib', 'backup'])
       .Ignore(ikExtension, ['.exe', '', '.dll', '.so', '.trc', '.xml', '.res'])
       .Timeout(CommandWatchTimeout)
-      .Run(RunWatcherCallback);
-  LPathWatcher.Start;
+      .Run(RunWatcherCallback)
+      .Start;
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);
@@ -213,7 +256,8 @@ begin
           'run main project', ['t'])
       .AddOption(
           't', 'test', 
-          'build test project and run it', ['r'], ocOptionalValue);
+          'build test project and run it'#13#10 + 
+          '?: accept a test name to run it only', ['r'], ocOptionalValue);
 end;
 
 initialization

@@ -33,7 +33,7 @@ procedure TTestUtilsShell.TestShellCommand;
 var
   LActual: string;
 begin
-  LActual := ShellCommand('pwd', []);
+  LActual := StringReplace(ShellCommand('pwd', []), #13#10, '', [rfReplaceAll]);
   AssertEquals(GetCurrentDir, LActual);
 end;
 

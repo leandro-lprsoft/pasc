@@ -331,7 +331,7 @@ begin
   // build initial file list
   BuildFileList(FPath, nil, True, LChangeMessage);
 
-  if FWatcherRun('first run') then
+  if FWatcherRun('first run', weFirstRun) then
     exit(Self);
   
   LStart := GetTickCount64;
@@ -340,14 +340,16 @@ begin
     BuildFileList(FPath, nil, False, LChangeMessage);
 
     if LChangeMessage <> '' then
-      if FWatcherRun(LChangeMessage) then
+      if FWatcherRun(LChangeMessage, weFileChanged) then
         break;
     
     if (GetTickCount64 - LStart) >= FTimeout then
     begin
-      FWatcherRun('timeout exceeded');
+      FWatcherRun('timeout exceeded', weTimeout);
       break;
     end;
+
+    FWatcherRun('', weNoChange);
 
     Sleep(75);
   end;
