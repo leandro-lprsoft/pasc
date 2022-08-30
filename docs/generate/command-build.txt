@@ -1,0 +1,13 @@
+@title(Build)
+@shorttitle(Build)
+
+@section(1 SecFirst Description)
+
+Command that builds ...
+
+Example:
+@longCode(
+  pasc build .
+)
+
+Output:

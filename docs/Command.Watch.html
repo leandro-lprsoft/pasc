@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container"><div class="navigation">
-<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><li><a href="advanced.html">Advanced features</a></li><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
+<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><li><a href="advanced.html">Advanced features</a></li><hr><li>Commands<ul style="margin-left: 10px;"><li><a href="command-add.html">Add</a></li><li><a href="command-build.html">Build</a></li><li><a href="command-clean.html">Clean</a></li><li><a href="command-help.html">Help</a></li><li><a href="command-install.html">Install</a></li><li><a href="command-new.html">New</a></li><li><a href="command-test.html">Test</a></li><li><a href="command-version.html">Version</a></li><li><a href="command-watch.html">Watch</a></li></li></ul><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
 <div style="clear: both"></div>
 </li></ul></div><div class="content">
 <h1 class="unit">Unit Command.Watch</h1>
@@ -30,7 +30,7 @@
 <td class="itemcode"><code>procedure <strong><a href="Command.Watch.html#Registry">Registry</a></strong>(ABuilder: ICommandBuilder);</code></td>
 </tr>
 <tr class="list">
-<td class="itemcode"><code>function <strong><a href="Command.Watch.html#RunUserCommandAsRequested">RunUserCommandAsRequested</a></strong>(const AFile: string): Boolean;</code></td>
+<td class="itemcode"><code>function <strong><a href="Command.Watch.html#RunUserCommandAsRequested">RunUserCommandAsRequested</a></strong>(const AFile: string; const AEvent: <a href="Utils.Interfaces.html#TWatcherEvent">TWatcherEvent</a>): Boolean;</code></td>
 </tr>
 </table>
 <span id="PasDoc-Variables"></span><h3 class="summary">Variables</h3>
@@ -82,17 +82,21 @@
 </table>
 <table class="detail wide_list">
 <tr class="list">
-<td class="itemcode"><span id="RunUserCommandAsRequested"></span><code>function <strong>RunUserCommandAsRequested</strong>(const AFile: string): Boolean;</code></td>
+<td class="itemcode"><span id="RunUserCommandAsRequested"></span><code>function <strong>RunUserCommandAsRequested</strong>(const AFile: string; const AEvent: <a href="Utils.Interfaces.html#TWatcherEvent">TWatcherEvent</a>): Boolean;</code></td>
 </tr>
 <tr><td colspan="1">
 <p>
  Execute the command requested by the user, it will be passed to IPathWatcher so that it executes it. It is prepared to run the project build and tests as long as there is a respective executable. . </p>
 <p>
- </p>
+ 
+
+<p></p>
 <h6 class="description_section">Parameters</h6>
 <dl class="parameters">
 <dt>AFile</dt>
 <dd>Filename that triggered the action change.</dd>
+<dt>AEvent</dt>
+<dd>The event that triggered this procedure.</dd>
 </dl>
 </td></tr>
 </table>

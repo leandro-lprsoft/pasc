@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container"><div class="navigation">
-<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><li><a href="advanced.html">Advanced features</a></li><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
+<h2><a href="introduction.html">pasc</a></h2><ul><li><a href="install.html">Install</a></li><li><a href="quickstart.html">Quick start</a></li><li><a href="advanced.html">Advanced features</a></li><hr><li>Commands<ul style="margin-left: 10px;"><li><a href="command-add.html">Add</a></li><li><a href="command-build.html">Build</a></li><li><a href="command-clean.html">Clean</a></li><li><a href="command-help.html">Help</a></li><li><a href="command-install.html">Install</a></li><li><a href="command-new.html">New</a></li><li><a href="command-test.html">Test</a></li><li><a href="command-version.html">Version</a></li><li><a href="command-watch.html">Watch</a></li></li></ul><hr><li>Reference<ul style="margin-left: 10px;"><li><a href="AllUnits.html">Units</a></li><li><a href="ClassHierarchy.html">Class Hierarchy</a></li><li><a href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li><a href="AllTypes.html">Types</a></li><li><a href="AllVariables.html">Variables</a></li><li><a href="AllConstants.html">Constants</a></li><li><a href="AllFunctions.html">Functions and Procedures</a></li><li><a href="AllIdentifiers.html">Identifiers</a></li></li></ul><li><form class="search-form" action="tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input" pattern=".{3,}" title="At least 3 characters" required><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></div></form>
 <div style="clear: both"></div>
 </li></ul></div><div class="content">
 <h1 class="allitems">All Identifiers</h1>
@@ -106,126 +106,146 @@
 <td class="itemdesc"><p>Interface that represents an object to monitor a path, with methods to configure parameters and callback in addition to initializing the watch itself. </p></td>
 </tr>
 <tr class="list">
+<td class="itemname"><a class="bold" href="Utils.Shell.html#MAX_BUFFER">MAX_BUFFER</a></td>
+<td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
+<td class="itemdesc"><p> Buffer size for reading the output in chunks </p></td>
+</tr>
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.New.html#NewCommand">NewCommand</a></td>
 <td class="itemunit"><a class="bold" href="Command.New.html">Command.New</a></td>
 <td class="itemdesc"><p> This command creates a freepascal/lazarus project respecting a previously organized folder structure so that it is easier to operate the project in vscode, with git previously initialized and ready to work with boss dependency manager. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Output.html#OutputError">OutputError</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Output.html">Utils.Output</a></td>
 <td class="itemdesc"><p> Outputs a error message in console with color from CommandBuilder theme color. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.Output.html#OutputInfo">OutputInfo</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Output.html">Utils.Output</a></td>
 <td class="itemdesc"><p> Outputs a text in console with color from CommandBuilder theme color. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Command.Add.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Add.html">Command.Add</a></td>
 <td class="itemdesc"><p> Registry a add command using the command builder from pascli. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.Build.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Build.html">Command.Build</a></td>
 <td class="itemdesc"><p> Registry a build command using the command builder from pascli, also sets. options and usage help info. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Command.Clean.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Clean.html">Command.Clean</a></td>
 <td class="itemdesc"><p> Registry a clean command using the command builder from pascli, also sets. options and usage help info. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.Install.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Install.html">Command.Install</a></td>
 <td class="itemdesc"><p> Registry a install command using the command builder from pascli, also sets. options and usage help info. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Command.New.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.New.html">Command.New</a></td>
 <td class="itemdesc"><p> Registry a new command using the command builder from pascli. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.Test.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Test.html">Command.Test</a></td>
 <td class="itemdesc"><p> Registry a test command using the command builder from pascli. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Command.Watch.html#Registry">Registry</a></td>
 <td class="itemunit"><a class="bold" href="Command.Watch.html">Command.Watch</a></td>
 <td class="itemdesc"><p> Registry a watch command using the command builder from pascli. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.Watch.html#RunUserCommandAsRequested">RunUserCommandAsRequested</a></td>
 <td class="itemunit"><a class="bold" href="Command.Watch.html">Command.Watch</a></td>
 <td class="itemdesc"><p> Execute the command requested by the user, it will be passed to IPathWatcher so that it executes it. It is prepared to run the project build and tests as long as there is a respective executable. . </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Command.Watch.html#RunWatcherCallback">RunWatcherCallback</a></td>
 <td class="itemunit"><a class="bold" href="Command.Watch.html">Command.Watch</a></td>
 <td class="itemdesc"><p> Allows to define another function to process the changes detected by the Watcher. The main purpose is to use this variable to easily implement unit tests. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.IO.html#SaveFileContent">SaveFileContent</a></td>
 <td class="itemunit"><a class="bold" href="Utils.IO.html">Utils.IO</a></td>
 <td class="itemdesc"><p> Save AContent string in the provided file name. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Shell.html#ShellCommand">ShellCommand</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
 <td class="itemdesc"><p> executes a program and returns the output as funciton result and also provide a execution status through AStatus out parameter </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.Shell.html#ShellExecute">ShellExecute</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
 <td class="itemdesc"><p>&nbsp;</p></td>
 </tr>
+<tr class="list">
+<td class="itemname"><a class="bold" href="Utils.Shell.html#TConsoleBuffer">TConsoleBuffer</a></td>
+<td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
+<td class="itemdesc"><p> Specific array type for console buffer for reading the output in chunks </p></td>
+</tr>
 <tr class="list2">
+<td class="itemname"><a class="bold" href="Utils.Shell.TConsoleWatcher.html">TConsoleWatcher</a></td>
+<td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
+<td class="itemdesc"><p> This class aims to run an application that can run indefinitely. This execution takes place through a specific thread, allowing the main application to perform other tasks in the meantime. It is possible to interrupt its execution at any time through the Stop method. It is also possible to obtain the output generated by the application using the GetMessage command. </p></td>
+</tr>
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Watcher.html#TDictFile">TDictFile</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Watcher.html">Utils.Watcher</a></td>
 <td class="itemdesc"><p>&nbsp;</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Command.Test.html#TestCommand">TestCommand</a></td>
 <td class="itemunit"><a class="bold" href="Command.Test.html">Command.Test</a></td>
 <td class="itemdesc"><p> This command recursively searches for a previously compiled test project from the current folder and runs it. At the end of the execution, an xml file with the same name as the test project is expected to be read. From this reading, a result is generated with the objective of highlighting the tests that failed, formatting the name of the source code file with a line and column in a format that vscode is able to understand and providing the developer with a link for quick navigation through the code.
 
 <p>If a memory leak trace file named heap.trc is found, the command also outputs information with details about the possible memory leaks in a format that vscode can provide easy navigation through the code. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Interfaces.html#TIgnoreKind">TIgnoreKind</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Interfaces.html">Utils.Interfaces</a></td>
 <td class="itemdesc"><p>Enum type to identify the type of item to be ignored by the Watcher. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.Leak.TLeakItem.html">TLeakItem</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Leak.html">Utils.Leak</a></td>
 <td class="itemdesc"><p> Class that represents a single point in code with the possible memory leak. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Leak.TLeakReport.html">TLeakReport</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Leak.html">Utils.Leak</a></td>
 <td class="itemdesc"><p>&lt;sumary&gt; This class aims to interpret the memory leak trace file and produce a simpler report summarizing enough information to locate the problem at its source. )</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.Watcher.TPathWatcher.html">TPathWatcher</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Watcher.html">Utils.Watcher</a></td>
 <td class="itemdesc"><p>&nbsp;</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Shell.html#TShellCommandFunc">TShellCommandFunc</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Shell.html">Utils.Shell</a></td>
 <td class="itemdesc"><p> function type to execute programs or commands. See ShellCommand function for more info. </p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="Utils.Tests.TTestCaseItem.html">TTestCaseItem</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Tests.html">Utils.Tests</a></td>
 <td class="itemdesc"><p> Class that represents a single test case report data. </p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Tests.TTestReport.html">TTestReport</a></td>
 <td class="itemunit"><a class="bold" href="Utils.Tests.html">Utils.Tests</a></td>
 <td class="itemdesc"><p>&lt;sumary&gt; This class aims to interpret the fpcunit test xml file and produce a simpler report summarizing all tests cases and also providing their location on source code. )</p></td>
+</tr>
+<tr class="list2">
+<td class="itemname"><a class="bold" href="Utils.Interfaces.html#TWatcherEvent">TWatcherEvent</a></td>
+<td class="itemunit"><a class="bold" href="Utils.Interfaces.html">Utils.Interfaces</a></td>
+<td class="itemdesc"><p>&nbsp;</p></td>
 </tr>
 <tr class="list">
 <td class="itemname"><a class="bold" href="Utils.Interfaces.html#TWatcherRunCallback">TWatcherRunCallback</a></td>

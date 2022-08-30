@@ -1,0 +1,13 @@
+@title(Clean)
+@shorttitle(Clean)
+
+@section(1 SecFirst Description)
+
+Command that cleans ...
+
+Example:
+@longCode(
+  pasc clean
+)
+
+Output:

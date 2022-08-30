@@ -1,0 +1,13 @@
+@title(Test)
+@shorttitle(Test)
+
+@section(1 SecFirst Description)
+
+Command that class the test project and display the results ...
+
+Example:
+@longCode(
+  pasc test
+)
+
+Output:

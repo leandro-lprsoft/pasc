@@ -1,0 +1,13 @@
+@title(Help)
+@shorttitle(Help)
+
+@section(1 SecFirst Description)
+
+Command that helps ...
+
+Example:
+@longCode(
+  pasc help
+)
+
+Output:

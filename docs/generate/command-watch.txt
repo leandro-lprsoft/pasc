@@ -1,0 +1,13 @@
+@title(Watch)
+@shorttitle(Watch)
+
+@section(1 SecFirst Description)
+
+Command that watches the directory for changes and executes ...
+
+Example:
+@longCode(
+  pasc watch run .
+)
+
+Output:

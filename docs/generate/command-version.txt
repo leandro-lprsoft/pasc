@@ -1,0 +1,13 @@
+@title(Version)
+@shorttitle(Version)
+
+@section(1 SecFirst Description)
+
+Command that shows version of pasc ...
+
+Example:
+@longCode(
+  pasc version
+)
+
+Output:

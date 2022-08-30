@@ -1,0 +1,13 @@
+@title(Install)
+@shorttitle(Install)
+
+@section(1 SecFirst Description)
+
+Command that installs ...
+
+Example:
+@longCode(
+  pasc install
+)
+
+Output:

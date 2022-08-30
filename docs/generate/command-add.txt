@@ -1,0 +1,13 @@
+@title(Add)
+@shorttitle(Add)
+
+@section(1 SecFirst Description)
+
+Command that adds ...
+
+Example:
+@longCode(
+  pasc add --tests
+)
+
+Output:
