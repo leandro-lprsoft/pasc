@@ -1,0 +1,80 @@
+#****************************************************************
+# help functions 
+#****************************************************************
+function Exit-Script {
+    Exit
+  }
+  
+  function Test-CommandExists
+  {
+    param ($command)
+    $oldPreference = $ErrorActionPreference
+    $ErrorActionPreference = "stop"
+    try {
+      if (Get-Command $command) {
+        RETURN $true
+      }
+    } catch {
+      RETURN $false
+    } finally {
+      $ErrorActionPreference=$oldPreference
+    }
+  }
+
+  function Build-TargetPath {
+    Write-Host "[INFO ] Check if target path exists..."
+    if (Test-Path -Path "releases") {
+      Write-Host "[INFO ] path 'releases' already exists."
+    } else {
+      Write-Host "[INFO ] creating path 'releases' ..."
+      New-Item -Path "releases" -ItemType Directory
+    }
+    Write-Host "[INFO ] Done."
+  }
+
+  function Build-Project {
+    param (
+        [Parameter()]
+        [string]$ProjectName,
+     
+        [Parameter()]
+        [string]$TargetOS,
+
+        [Parameter()]
+        [string]$TargetCPU
+    )
+
+    if (Test-CommandExists "lazbuild") {
+        Write-Host "[INFO ] lazbuild found."
+      } else {
+        Write-Host "[ERROR] lazbuild not found."
+        Exit-Script
+    }
+
+    $ArgList = "--os=" + $TargetOS + " --cpu=" + $TargetCPU + " " + $ProjectName
+    if ($TargetOS -eq "darwin" && $TargetCPU -eq "aarch64") {
+        $ArgList = $ArgList + " --ws=cocoa"
+    }
+    Write-Host "[INFO ] $ArgList" 
+
+    Start-Process -FilePath "lazbuild" -ArgumentList $ArgList -Wait
+
+    $CurrentPath = Get-Location
+    $ReleasePath = Join-Path -Path $CurrentPath -ChildPath "releases"
+    
+    $Executable = Join-Path -Path $CurrentPath -ChildPath "pasc"
+    if ($TargetOS -eq "win64") {
+        $Executable = Join-Path -Path $CurrentPath -ChildPath "pasc.exe"
+    } 
+    $ZipFile = "pasc-" + $TargetCPU + "-" + $TargetOS + ".zip"
+    $Archive = Join-Path -Path $ReleasePath -ChildPath $ZipFile
+    Compress-Archive -Path $Executable -CompressionLevel Fastest -DestinationPath $Archive -Force
+  }
+
+  Build-TargetPath
+
+  #Build-Project -ProjectName "pasc.lpi" -TargetOS "win64" -TargetCPU "x86_64"
+  #Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "x86_64"
+  #Build-Project -ProjectName "pasc.lpi" -TargetOS "darwin" -TargetCPU "x86_64"
+  #Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "aarch64"
+  Build-Project -ProjectName "pasc.lpi" -TargetOS "darwin" -TargetCPU "aarch64"

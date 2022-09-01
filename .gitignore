@@ -19,6 +19,7 @@ fp.dsk
 **/lib/
 **/backup/
 **/modules/
+**/releases/
 
 # End of https://www.toptal.com/developers/gitignore/api/freepascal
 
