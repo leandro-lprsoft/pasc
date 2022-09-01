@@ -73,8 +73,8 @@ function Exit-Script {
 
   Build-TargetPath
 
-  #Build-Project -ProjectName "pasc.lpi" -TargetOS "win64" -TargetCPU "x86_64"
-  #Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "x86_64"
-  #Build-Project -ProjectName "pasc.lpi" -TargetOS "darwin" -TargetCPU "x86_64"
-  #Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "aarch64"
+  Build-Project -ProjectName "pasc.lpi" -TargetOS "win64" -TargetCPU "x86_64"
+  Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "x86_64"
+  Build-Project -ProjectName "pasc.lpi" -TargetOS "darwin" -TargetCPU "x86_64"
+  Build-Project -ProjectName "pasc.lpi" -TargetOS "linux" -TargetCPU "aarch64"
   Build-Project -ProjectName "pasc.lpi" -TargetOS "darwin" -TargetCPU "aarch64"
