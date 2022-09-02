@@ -7,6 +7,7 @@ interface
 uses
   Classes, 
   SysUtils, 
+  StrUtils,
   fpcunit,
   testregistry,
   Utils.Shell;
@@ -20,6 +21,7 @@ type
     procedure Setup; override;
   published
     procedure TestShellCommand;
+    procedure TestShellCommandNotExists;
   end;
 
 implementation
@@ -35,6 +37,14 @@ var
 begin
   LActual := StringReplace(ShellCommand('pwd', []), #13#10, '', [rfReplaceAll]);
   AssertEquals(GetCurrentDir, LActual);
+end;
+
+procedure TTestUtilsShell.TestShellCommandNotExists;
+var
+  LActual: string;
+begin
+  LActual := StringReplace(ShellCommand('not_exists_command', []), #13#10, '', [rfReplaceAll]);
+  AssertTrue('Should return an error message: "Error when executing', ContainsText(LActual, 'Error when executing'));
 end;
 
 initialization

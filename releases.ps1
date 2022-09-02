@@ -52,9 +52,11 @@ function Exit-Script {
     }
 
     $ArgList = "--os=" + $TargetOS + " --cpu=" + $TargetCPU + " " + $ProjectName
-    if ($TargetOS -eq "darwin" && $TargetCPU -eq "aarch64") {
+    if (($TargetOS -eq "darwin") -and ($TargetCPU -eq "aarch64")) {
         $ArgList = $ArgList + " --ws=cocoa"
     }
+    $ArgList = $ArgList + " --build-mode=release"
+
     Write-Host "[INFO ] $ArgList" 
 
     Start-Process -FilePath "lazbuild" -ArgumentList $ArgList -Wait

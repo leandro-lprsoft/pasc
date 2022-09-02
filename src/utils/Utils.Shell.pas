@@ -46,6 +46,11 @@ type
     /// <param name="ABuffer"> Buffer with content in bytes that was obtained from program output.</param>
     procedure ReadData(const ABytesRead: LongInt; ABuffer: TConsoleBuffer);
 
+    /// <summary> Update FMessage field with contents of AMessage parameters, if there is a content already,
+    /// new content is appended to current content. </summary>
+    /// <param name="AMessage"> New content to be appended to FMessage field. </param>
+    function SetMessage(const AMessage: string): string;
+
   public
 
     /// <summary> Class constructor that initialize the thread as suspended, initialize some
@@ -119,8 +124,17 @@ begin
   FIsRunning := True;
   while (not Terminated) and (FIsRunning) do
   begin
-    RunCommand(FProgram, FParams);
-    Sleep(50);
+    try
+      RunCommand(FProgram, FParams);
+      Sleep(50);
+    except
+      on E: Exception do
+      begin
+        SetMessage(E.Message);
+        Stop;
+        raise;
+      end;
+    end;
   end;
 end;
 
@@ -148,15 +162,7 @@ begin
     LString.LoadFromStream(LStream);
     LString.TrailingLineBreak := False;
 
-    // callback call
-    FLock.Enter;
-    try
-      if FMessage <> '' then
-        FMessage := FMessage + #13#10;
-      FMessage := FMessage + LString.Text;
-    finally
-      FLock.Leave;
-    end;
+    SetMessage(LString.Text);
   finally
     FreeAndNil(LStream);      
     FreeAndNil(LString);
@@ -193,7 +199,10 @@ begin
   except
     on E: Exception do
     begin
-      raise;
+      raise Exception.Create(
+        'Error when executing: "' + AProgram + 
+        '" Message: "' + E.Message + '". ' +
+        'Check if the command exists and if it is in the path.');
     end;
   end;
 end;
@@ -204,6 +213,18 @@ begin
   try
     Result := FMessage;
     FMessage := '';
+  finally
+    FLock.Leave;
+  end;
+end;
+
+function TConsoleWatcher.SetMessage(const AMessage: string): string;
+begin
+  FLock.Enter;
+  try
+    if FMessage <> '' then
+      FMessage := FMessage + #13#10;
+    FMessage := FMessage + AMessage;
   finally
     FLock.Leave;
   end;
@@ -243,53 +264,6 @@ begin
   finally
     LConsoleWatcher.Free;
   end;
-
-// var
-//   LProcess: TProcess = nil;
-//   LStream: TStream = nil;
-//   LString: TStringList = nil;
-//   LBytesRead: LongInt;
-//   LBuffer: array [1..MAX_BUFFER] of Byte;
-//   LParam: string;
-// begin
-//   Result := '';
-//   try
-//     LProcess := TProcess.Create(nil);
-//     LProcess.Executable := AProgram;
-
-//     for LParam in AParams do
-//       LProcess.Parameters.Add(LParam);
-
-//     LProcess.Options := [poUsePipes, poStdErrToOutPut];
-//     LProcess.Execute;
-
-//     LStream := TMemoryStream.Create;
-
-//     repeat
-//       LBytesRead := LProcess.Output.Read(LBuffer, MAX_BUFFER);
-//       LStream.Write(LBuffer, LBytesRead);
-//     until LBytesRead = 0;
-    
-//     LStream.Position := 0; 
-//     LString := TStringList.Create;
-//     LString.LoadFromStream(LStream);
-//     LString.TrailingLineBreak := False;
-
-//     Result := LString.Text;
-
-//     FreeAndNil(LProcess);
-//     FreeAndNil(LStream);      
-//     FreeAndNil(LString);
-
-//   except
-//     on E: Exception do
-//     begin
-//       FreeAndNil(LProcess);
-//       FreeAndNil(LStream);      
-//       FreeAndNil(LString);
-//       raise;
-//     end;
-//   end;
 end;
 
 end.

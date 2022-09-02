@@ -83,11 +83,26 @@ implementation
 uses
   Classes,
   SysUtils,
+  StrUtils,
   Command.Colors,
   Utils.Shell,
   Utils.Resources,
   Utils.IO,
   Utils.Output;
+
+procedure GuardShellCommand(ABuilder: ICommandBuilder; const ATitle, AOutput: string; const ACommandIsOptional: Boolean = false);
+begin
+  if not ContainsText(AOutput, 'Error when executing') then 
+  begin
+    OutputInfo(ABuilder, ATitle, AOutput);
+    Exit;
+  end;
+
+  if ACommandIsOptional then
+    OutputInfo(ABuilder, 'Warning', AOutput)
+  else
+    raise Exception.Create(AOutput);
+end;
 
 procedure CreateProjectFolders(ABuilder: ICommandBuilder; const AProjectName: string; out AProjectDir: string);
 begin
@@ -115,7 +130,7 @@ var
 begin
   SetCurrentDir(AProjectDir);
   LGitOutput := ShellCommand('git', ['init']);
-  OutputInfo(ABuilder, 'git', LGitOutput);
+  GuardShellCommand(ABuilder, 'git', LGitOutput, True);
   SaveFileContent(ConcatPaths([AProjectDir, '.gitignore']), GetResource('gitignore'));
 end;
 
@@ -124,9 +139,13 @@ var
   LFile, LContent: string;
 begin
   LFile := ConcatPaths([AProjectDir, 'boss.json']);
-  LContent := GetFileContent(LFile);
-  LContent := StringReplace(LContent, '"mainsrc": "./"', '"mainsrc": "src/"', [rfReplaceAll]);
-  SaveFileContent(LFile, LContent);
+  if FileExists(LFile) then
+  begin
+    OutputInfo(ABuilder, 'boss', 'adjusting "mainsrc" boss file attribute');
+    LContent := GetFileContent(LFile);
+    LContent := StringReplace(LContent, '"mainsrc": "./"', '"mainsrc": "src/"', [rfReplaceAll]);
+    SaveFileContent(LFile, LContent);
+  end;
 end;
 
 procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
@@ -136,7 +155,7 @@ begin
   SetCurrentDir(AProjectDir);
   OutputInfo(ABuilder, 'boss', 'Initializing boss dependency manager');
   LOutput := ShellCommand('boss', ['init', '--quiet']);
-  OutputInfo(ABuilder, 'boss', 'adjusting "mainsrc" boss file attribute');
+  GuardShellCommand(ABuilder, 'boss', LOutput, True);
   ChangeBossFileSourcePath(ABuilder, AProjectDir);
 end;
 

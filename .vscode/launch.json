@@ -5,24 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug - Tests",
-      "type": "gdb",
-      "request": "launch",
-      "windows": { "target": "./tests/TestPasc.exe" },
-      "linux": { "target": "./tests/TestPasc" },
-      "osx": { "target": "./tests/TestPasc" },
-      "arguments": "--suite=TestCommandWatchCheckIfShellExecuteIsCalledWithSuite",
-      "cwd": "${workspaceRoot}",
-      "preLaunchTask": "build tests"
-    },
-    {
       "type": "fpDebug",
       "request": "launch",
       "name": "Debug Pascal program",
-      "program": "${workspaceFolder}\\tests\\TestPasc.exe",
-      "parameters": ["--suite=TestShellCommand"],
+      "program": "${workspaceFolder}/tests/TestPasc${command:executableExtension}",
+      "parameters": ["--suite=TestShellCommandNotExists"],
       "fpdserver": {
-        "executable": "c:/temp/fpdserver-x86_64.exe"
+        "executable": "${extensionInstallFolder:cnoc.fpdebug}/bin/fpdserver-x86_64.exe"
       },
       "preLaunchTask": "pasc: tests build"
     }

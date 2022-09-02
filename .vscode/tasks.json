@@ -79,7 +79,7 @@
       "label": "pasc: watch, build and tests=specificsuite",
       "type": "shell",
       "command": "pasc",
-      "args": ["watch", "--build", "--test=TTestCommandWatch", "."],
+      "args": ["watch", "--build", "--test=TTestUtilsShell", "."],
       "problemMatcher": []
     },
     {
