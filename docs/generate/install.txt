@@ -25,6 +25,11 @@ You may clone the repo and build it. Open a terminal and choose a folder to clon
 
 @note(
 You may need to run the command with elevation of privilege for MacOS or Linux.
+
+Pasc may not be accessible after install on Linux, you may need to run the following command:
+@longCode(source ~/.profile)
+
+Close and open your terminal to the command take effect.
 )
 
 @section(1 SecFifth Test pasc)
