@@ -52,6 +52,36 @@ pasc test --test-<span class="pascal_keyword">case</span>=TTestUtilsShell</pre>
 
 <p>We can see a shorter output with tests results only for the selected class.
 
+<p><h4 class=""><span id="SecFirst_tests_a"></span>Leak report</h4>
+
+
+<p>The leak report, when there is an item, displays information about the source of the resource that caused the leak, indicating the code line and the respective code file, if you are using vscode, you can &quot;ctrl click&quot; or &quot;cmd click&quot; to navigate to the line of code in question. This possibility is demonstrated through examples in the <a class="normal" href="quickstart.html">quick start</a> section.
+
+<p>In order for information about memory leaks to be extracted from the execution of the test project executable, some requirements must be met (They are provided automatically by the add &ndash;tests command):
+
+<p><strong>1.</strong> The .lpi project configuration file is marked with the option to use the HeapTrace unit.
+
+<p><strong>2.</strong> A code has been added that defines the output of trace information for the heap.trc file that will be generated in the &quot;tests&quot; folder after the tests are finished. It is based on this file that <strong>pasc</strong> generates the output of possible leaks. Check the procedure that was added to the test project:
+
+<p></p>
+
+<pre class="longcode">
+<span class="pascal_keyword">procedure</span> InitializeHeapFileName;
+<span class="pascal_keyword">var</span>
+  HeapFileName: <span class="pascal_keyword">string</span>;
+<span class="pascal_keyword">begin</span>
+  <span class="pascal_compiler_comment">{$IF DECLARED(UseHeapTrace)}</span>
+  HeapFileName := ConcatPaths([ExtractFilePath(ParamStr(<span class="pascal_numeric">0</span>)), <span class="pascal_string">'heap.trc'</span>]);
+  <span class="pascal_keyword">if</span> FileExists(HeapFileName) <span class="pascal_keyword">then</span>
+    DeleteFile(HeapFileName);
+  SetHeapTraceOutput(HeapFileName);
+  <span class="pascal_compiler_comment">{$ENDIF}</span>
+<span class="pascal_keyword">end</span>;</pre>
+
+<p>
+
+<p><dl class="tag note"><dt><strong>Note</strong></dt><dd> For some reason, some platforms supported by FreePascal are able to indicate the source code line/file of the leak, but others can only say that a leak has occurred. As of the time of writing this documentation, for platforms aarch64/darwin and aarch64/linux are not displaying the leak source line of code/file. </dd></dl>
+
 <p><h2 class=""><span id="SecSecond"></span>Tasks</h2>
 
 

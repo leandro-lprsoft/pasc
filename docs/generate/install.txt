@@ -23,6 +23,10 @@ You may clone the repo and build it. Open a terminal and choose a folder to clon
   ./pasc install
 )
 
+@note(
+You may need to run the command with elevation of privilege for MacOS or Linux.
+)
+
 @section(1 SecFifth Test pasc)
 
 To see if pasc is working type the following:

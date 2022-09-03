@@ -30,6 +30,34 @@ Check the output for pasc TTestUtilsShell class as an example:
 
 We can see a shorter output with tests results only for the selected class.
 
+@section(3 SecFirst_tests_a Leak report)
+
+The leak report, when there is an item, displays information about the source of the resource that caused the leak, indicating the code line and the respective code file, if you are using vscode, you can "ctrl click" or "cmd click" to navigate to the line of code in question. This possibility is demonstrated through examples in the @link(quickstart quick start) section.
+
+In order for information about memory leaks to be extracted from the execution of the test project executable, some requirements must be met (They are provided automatically by the add --tests command):
+
+@bold(1.) The .lpi project configuration file is marked with the option to use the HeapTrace unit.
+
+@bold(2.) A code has been added that defines the output of trace information for the heap.trc file that will be generated in the "tests" folder after the tests are finished. It is based on this file that @bold(pasc) generates the output of possible leaks. Check the procedure that was added to the test project: 
+
+@longCode(
+procedure InitializeHeapFileName;
+var
+  HeapFileName: string;
+begin
+  {$IF DECLARED(UseHeapTrace)}
+  HeapFileName := ConcatPaths([ExtractFilePath(ParamStr(0)), 'heap.trc']);
+  if FileExists(HeapFileName) then
+    DeleteFile(HeapFileName);
+  SetHeapTraceOutput(HeapFileName);
+  {$ENDIF}
+end;
+)
+
+@note(
+For some reason, some platforms supported by FreePascal are able to indicate the source code line/file of the leak, but others can only say that a leak has occurred. As of the time of writing this documentation, for platforms aarch64/darwin and aarch64/linux are not displaying the leak source line of code/file.
+)
+
 @section(1 SecSecond Tasks)
 
 It's worth mentioning the vscode tasks configured to run the test project, as well as the entry in the launch.json file that allows debugging the test project targeting a specific test.
