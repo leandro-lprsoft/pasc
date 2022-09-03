@@ -1,7 +1,8 @@
 # create a single resource file pasc.lrs
 # should run every time resource files change
 StartDir=$PWD
-CurrentDir=$StartDir"/resources"
+ResourceDir="/resources"
+CurrentDir="${StartDir}${ResourceDir}"
 echo $StartDir
 echo $CurrentDir
 cd $CurrentDir

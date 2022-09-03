@@ -174,7 +174,6 @@ begin
   if IsTest then
   begin
     OutputWatcherInfo('Watcher', 'test started'#13#10);
-    OutputWatcherInfo('TestCaseSuite', TestCaseSuite + #13#10);
     
     if TestCaseSuite <> '' then
       Builder.UseArguments(['test', '-t=' + TestCaseSuite])
