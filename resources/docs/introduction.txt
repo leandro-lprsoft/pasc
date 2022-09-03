@@ -6,3 +6,5 @@
 This is the documentation overview of the application or library feel free to change it.
 
 Check pasdoc documentation on the web: https://pasdoc.github.io/
+
+@table( @rowHead( @cell(Next @link(quickstart Quick start)) ) )

@@ -1,0 +1,20 @@
+@title(Help)
+@shorttitle(Help)
+
+@section(1 SecFirst Description)
+
+The help command is called by default when no argument, parameter is passed to pasc. The first information displayed is the tool version, followed by a general usage description.
+
+The general purpose description displays a tool usage syntax from the command line, a short description of the tool and a list of commands if any. In addition to this usage, it is possible to obtain a detailed description of a specific command by passing it as an argument to the help command.
+
+Example:
+@longCode(
+  pasc help
+)
+
+Example to get help for new command:
+@longCode(
+  pasc help new
+)
+
+@table( @rowHead( @cell(Next @link(commandinstall Install Command)) ) )

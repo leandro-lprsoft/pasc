@@ -1,117 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-  <!-- Generated using FPCUnit on 2022-09-02 14:02:37-->
+  <!-- Generated using FPCUnit on 2022-09-02 21:36:07-->
   <TestListing>
-    <TestSuite Name="" ElapsedTime="00:00:04.642" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="74" NumberOfIgnoredTests="0">
-      <TestSuite Name="TTestUtilsIO" ElapsedTime="00:00:00.004" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
-        <Test Name="TestGetFileContent" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestGetJsonFileContentWithOutComments" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestSaveFileContent" Result="OK" ElapsedTime="00:00:00.002"/>
-        <Test Name="TestFindInCodeFile" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestFindFile" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestFindProjectFile" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestFindSourceFile" Result="OK" ElapsedTime="00:00:00.002"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsLeak" ElapsedTime="00:00:00.079" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="12" NumberOfIgnoredTests="0">
-        <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestAddRelativePath" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCreateLeakItem" Result="OK" ElapsedTime="00:00:00.029"/>
-        <Test Name="TestGetNextStringOf" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestGetNextStringOfEmpty" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakSimple" Result="OK" ElapsedTime="00:00:00.016"/>
-        <Test Name="TestParseContentLeakNone" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseContentLeakIncompleteInfo" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestOutputNoLeak" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestOutputMissingLeak" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestOutputLeakSimple" Result="OK" ElapsedTime="00:00:00.034"/>
-        <Test Name="TestOutputLeakIncomplete" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsOutput" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
-        <Test Name="TestUtilsOutputInfo" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestUtilsOutputError" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsResources" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="1" NumberOfIgnoredTests="0">
-        <Test Name="TestGetResource" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsShell" ElapsedTime="00:00:00.141" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
-        <Test Name="TestShellCommand" Result="OK" ElapsedTime="00:00:00.075"/>
-        <Test Name="TestShellCommandNotExists" Result="OK" ElapsedTime="00:00:00.066"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsTests" ElapsedTime="00:00:00.062" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
-        <Test Name="TestAddItem" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseXml" Result="OK" ElapsedTime="00:00:00.012"/>
-        <Test Name="TestParseXmlInvalid" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseXmlNoTests" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestParseXmlError" Result="OK" ElapsedTime="00:00:00.027"/>
-        <Test Name="TestOutputStructure" Result="OK" ElapsedTime="00:00:00.012"/>
-        <Test Name="TestOutputItemsMatchesSummary" Result="OK" ElapsedTime="00:00:00.011"/>
-      </TestSuite>
-      <TestSuite Name="TTestUtilsWatcher" ElapsedTime="00:00:00.726" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="6" NumberOfIgnoredTests="0">
-        <Test Name="TestBasicWatch" Result="OK" ElapsedTime="00:00:00.125"/>
-        <Test Name="TestIgnoreStartText" Result="OK" ElapsedTime="00:00:00.123"/>
-        <Test Name="TestIgnoreFolder" Result="OK" ElapsedTime="00:00:00.117"/>
-        <Test Name="TestIgnoreFile" Result="OK" ElapsedTime="00:00:00.126"/>
-        <Test Name="TestIgnoreExtension" Result="OK" ElapsedTime="00:00:00.125"/>
-        <Test Name="TestTimeout" Result="OK" ElapsedTime="00:00:00.110"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandAdd" ElapsedTime="00:00:00.032" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
-        <Test Name="TestCommandAddRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCommandAddBasic" Result="OK" ElapsedTime="00:00:00.007"/>
-        <Test Name="TestCommandAddDocs" Result="OK" ElapsedTime="00:00:00.009"/>
-        <Test Name="TestCommandAddNoOptions" Result="OK" ElapsedTime="00:00:00.016"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandBuild" ElapsedTime="00:00:00.000" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="3" NumberOfIgnoredTests="0">
-        <Test Name="TestCommandBuildRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCommandBuildBasic" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestFindProject" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandClean" ElapsedTime="00:00:00.015" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
-        <Test Name="TestCheckAnswer" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCheckAnswerAll" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCheckAnswerCancel" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestDeleteFolder" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCleanForce" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCleanMockInput" Result="OK" ElapsedTime="00:00:00.015"/>
-        <Test Name="TestCleanCommandRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandInstall" ElapsedTime="00:00:01.131" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="7" NumberOfIgnoredTests="0">
-        <Test Name="TestInstallCommandRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCreateFolder" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCopyApp" Result="OK" ElapsedTime="00:00:00.031"/>
-        <Test Name="TestUpdateEnvironmentPathLinux" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestUpdateEnvironmentPathMacos" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestUpdateEnvironmentPathWindows" Result="OK" ElapsedTime="00:00:00.613"/>
-        <Test Name="TestInstallCommandMain" Result="OK" ElapsedTime="00:00:00.487"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandNew" ElapsedTime="00:00:02.181" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="8" NumberOfIgnoredTests="0">
-        <Test Name="TestNewCommandRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestNewCommandBasic" Result="OK" ElapsedTime="00:00:01.697"/>
-        <Test Name="TestCreateSupportFilesForVSCode" Result="OK" ElapsedTime="00:00:00.015"/>
-        <Test Name="TestCreateProjectFiles" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestInitializeBoss" Result="OK" ElapsedTime="00:00:00.172"/>
-        <Test Name="TestChangeBossFileSourcePath" Result="OK" ElapsedTime="00:00:00.172"/>
-        <Test Name="TestInitializeGit" Result="OK" ElapsedTime="00:00:00.125"/>
-        <Test Name="TestCreateProjectFolders" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandTest" ElapsedTime="00:00:00.015" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
-        <Test Name="TestCommandTestRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCommandTestBasic" Result="OK" ElapsedTime="00:00:00.015"/>
-        <Test Name="TestCommandTestSpecificSuite" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestGetTestExecutable" Result="OK" ElapsedTime="00:00:00.000"/>
-      </TestSuite>
-      <TestSuite Name="TTestCommandWatch" ElapsedTime="00:00:00.256" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="4" NumberOfIgnoredTests="0">
-        <Test Name="TestCommandWatchRegistry" Result="OK" ElapsedTime="00:00:00.000"/>
-        <Test Name="TestCommandWatchCheckIfWatcherCallbackIsCalled" Result="OK" ElapsedTime="00:00:00.130"/>
-        <Test Name="TestCommandWatchCheckIfShellExecuteCallbackIsCalled" Result="OK" ElapsedTime="00:00:00.063"/>
-        <Test Name="TestCommandWatchCheckIfShellExecuteIsCalledWithSuite" Result="OK" ElapsedTime="00:00:00.063"/>
+    <TestSuite Name="SuiteList" ElapsedTime="00:00:00.140" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
+      <TestSuite Name="TTestUtilsShell" ElapsedTime="00:00:00.140" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfIgnoredTests="0">
+        <Test Name="TestShellCommand" Result="OK" ElapsedTime="00:00:00.078"/>
+        <Test Name="TestShellCommandNotExists" Result="OK" ElapsedTime="00:00:00.062"/>
       </TestSuite>
     </TestSuite>
   </TestListing>
   <Title>pasc console test runner</Title>
-  <NumberOfRunTests>74</NumberOfRunTests>
+  <NumberOfRunTests>2</NumberOfRunTests>
   <NumberOfErrors>0</NumberOfErrors>
   <NumberOfFailures>0</NumberOfFailures>
   <NumberOfIgnoredTests>0</NumberOfIgnoredTests>
-  <TotalElapsedTime>00:00:04.642</TotalElapsedTime>
-  <DateTimeRan>2022-09-02 14:02:42</DateTimeRan>
+  <TotalElapsedTime>00:00:00.140</TotalElapsedTime>
+  <DateTimeRan>2022-09-02 21:36:07</DateTimeRan>
 </TestResults>

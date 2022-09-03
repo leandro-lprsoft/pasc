@@ -1,0 +1,24 @@
+@title(Clean)
+@shorttitle(Clean)
+
+@section(1 SecFirst Description)
+
+This command only deletes the lib and backup subfolders found recursively from the current directory. The user is asked for confirmation for each folder found to be removed, to avoid this question the option --force can be passed as an argument.
+
+Sometimes it is important to clean the lib directory to eliminate the build cache of some units of the project helping to execute a clean build for the next run.
+
+@note(
+There may be a need for more thorough cleaning that the Lazarus IDE provides from the Run/Clean up and Build menu.
+)
+
+Example:
+@longCode(
+  pasc clean
+)
+
+Example to clean without asking for confirmation:
+@longCode(
+  pasc clean --force
+)
+
+@table( @rowHead( @cell(Next @link(commandhelp Help Command)) ) )

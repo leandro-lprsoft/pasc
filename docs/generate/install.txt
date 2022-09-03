@@ -5,27 +5,12 @@ Pasc is a standalone executable application and it is simple to install.
 
 @section(3 SecSecond Manual installation)
 
-Use the following link to download a zip file, extract its contents to a folder of preference, open a terminal and from this folder type the following:
+From the @html(<a href="https://github.com/leandro-lprsoft/pasc/releases">releases</a>) page download a "pasc-...zip" file according to your platform. Extract its contents and run the following command:
 @longCode(
   ./pasc install
 )
 
-It will install itself on user's home folder creating a subfolder named .pasc and adding it to the path to make pasc visible when using the terminal app. It may be necessary to restart the terminal app for the changes take effect. Type pasc from the terminal app to check if it is working.
-
-@section(3 SecThird Using a script to download and install)
-
-Copy the script above and run it on a terminal:
-
-Linux, MacOS:
-@longCode(
-  curl -s http://server/path/script.sh | bash -s
-)
-
-Windows:
-@longCode(
-  Invoke-WebRequest -Uri "https://github.com/.../pasc.exe" -OutFile "./pasc.exe"
-  Start-Process -FilePath "./pasc" -ArgumentList "install" -Wait 
-)
+@bold(Pasc) will install itself on user's home folder creating a subfolder named .pasc and adding it to the path to make pasc visible when using the terminal app. It may be necessary to restart the terminal app for the changes take effect. Type pasc from the terminal app to check if it is working.
 
 @section(3 SecFourth Build it from the sources)
 
@@ -60,3 +45,5 @@ and debug support files for use with vscode and create a project based
 on a simple free pascal template.
 Ex: pasc new <project name>  
 )
+
+@table( @rowHead( @cell(Next @link(quickstart Quick start)) ) )

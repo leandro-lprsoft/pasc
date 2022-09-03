@@ -1,0 +1,15 @@
+@title(Build)
+@shorttitle(Build)
+
+@section(1 SecFirst Description)
+
+This command just calls lazbuild to perform the build, if you want to compile the project manually, we recommend using the lazbuild tool or the fpc compiler itself for that.
+
+The reason behind the existence of this command along with pasc is only for the implementation of the watch command.
+
+Example:
+@longCode(
+  pasc build HelloWorld.lpi
+)
+
+@table( @rowHead( @cell(Next @link(commandclean Clean Command)) ) )

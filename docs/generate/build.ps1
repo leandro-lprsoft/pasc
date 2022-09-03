@@ -57,22 +57,21 @@ function Set-NavigationMenuOrder {
 
   $Content = Set-NavigationItemOrder $Content '<li><a href="install.html">Install</a></li>' $ItemAllUnits
   $Content = Set-NavigationItemOrder $Content '<li><a href="quickstart.html">Quick start</a></li>' $ItemAllUnits
-  $Content = Set-NavigationItemOrder $Content '<li><a href="advanced.html">Advanced features</a></li>' $ItemAllUnits
   
   $Content = $Content.Replace($ItemAllUnits, '<hr><li>Reference<ul style="margin-left: 10px;">' + $ItemAllUnits)
   $Content = $Content.Replace($ItemAllIdentifiers, $ItemAllIdentifiers + '</li></ul>')
 
   $Content = $Content.Replace('<hr><li>Reference', '<hr><li>Commands<ul style="margin-left: 10px;"></li></ul><hr><li>Reference')
 
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-add.html">Add</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-build.html">Build</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-clean.html">Clean</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-help.html">Help</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-install.html">Install</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-new.html">New</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-test.html">Test</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-version.html">Version</a></li>' $ItemMenuRef
-  $Content = Set-NavigationItemOrder $Content '<li><a href="command-watch.html">Watch</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandadd.html">Add</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandbuild.html">Build</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandclean.html">Clean</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandhelp.html">Help</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandinstall.html">Install</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandnew.html">New</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandtest.html">Test</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandversion.html">Version</a></li>' $ItemMenuRef
+  $Content = Set-NavigationItemOrder $Content '<li><a href="commandwatch.html">Watch</a></li>' $ItemMenuRef
 
   Set-Content -Path $file -Value $Content
 }
@@ -93,16 +92,15 @@ $DocArgs =
   "--introduction=" + $BasePath + "docs\generate\introduction.txt " +
   "--additional="  + $BasePath + "docs\generate\install.txt " +
   "--additional="  + $BasePath + "docs\generate\quickstart.txt " +
-  "--additional="  + $BasePath + "docs\generate\advanced.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-add.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-build.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-clean.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-help.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-install.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-new.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-test.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-version.txt " +
-  "--additional="  + $BasePath + "docs\generate\command-watch.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandadd.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandbuild.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandclean.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandhelp.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandinstall.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandnew.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandtest.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandversion.txt " +
+  "--additional="  + $BasePath + "docs\generate\commandwatch.txt " +
   $BasePath + "src\commands\*.pas " + 
   $BasePath + "src\utils\*.pas " + 
   $BasePath + "pasc.lpr "

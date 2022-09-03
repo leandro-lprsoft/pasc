@@ -28,7 +28,7 @@
       }
     },
     {
-      "label": "lazbuild: tests build",
+      "label": "lazbuild: build tests",
       "type": "shell",
       "command": "lazbuild",
       "args": ["tests/Test{PROJECTNAME}.lpi"],
@@ -60,7 +60,7 @@
         "kind": "test",
         "isDefault": true
       },
-      "dependsOn": "lazbuild: tests build"
+      "dependsOn": "lazbuild: build tests"
     },
     {
       "label": "pasc: watch, build tests and run tests",

@@ -1,0 +1,15 @@
+@title(Install)
+@shorttitle(Install)
+
+@section(1 SecFirst Description)
+
+Installs pasc in the user's home folder, for that it creates a subfolder called .pasc and copies the executable itself to that folder. Also, add the new folder to the path environment variable so that you can call pasc from any folder.
+
+@note(It is recommended to restart our terminal session for the addition to the path to take effect. For MacOS you need to use elevation before running this command.)
+
+Example:
+@longCode(
+  ./pasc install
+)
+
+@table( @rowHead( @cell(Next @link(commandnew New Command)) ) )

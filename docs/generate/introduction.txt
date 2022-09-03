@@ -40,3 +40,5 @@ To work with the project using vscode you will going to need the following requi
 @section(1 SecFourth License)
 
 pasc is free and open-source software licensed under the MIT License.
+
+@table( @rowHead( @cell(Next @link(install Install)) ) )

@@ -1,0 +1,68 @@
+@title(New)
+@shorttitle(New)
+
+@section(1 SecFirst Description)
+
+The new command was discussed in the @link(quickstart Quick start) section, here we will comment on the details of its operation.
+
+Example:
+@longCode(
+  pasc new myproject
+)
+
+This command aims to quickly create a FreePascal/Lazarus project surrounded by add-ons that can contribute to a better direction of the project in terms of organization and tools used during development, implementation/test execution, versioning, dependency management and documentation. For this, the created project contains the following items:
+
+@section(3 SecFirst_a Folder structure)
+
+Creates a project folder structure starting with the folder with the project name itself, the user does not need to create a folder for the project. Requires that the folder does not exist for the command to run.
+
+You will notice that a project strucuture was created similar to this on below:
+
+@longCode(
+.
+├───.vscode
+│   ├───launch.json
+│   └───tasks.json
+├───src
+├───.gitignore
+├───boss-lock.json
+├───boss.json
+├───myproject.lpi
+└───myproject.lpr
+)
+
+@section(3 SecFirst_b Project template)
+
+Creates FreePascal/Lazarus project files based on a simple template. The .lpr code refers to a simple console program while the .lpi project file allows it to be working in the Lazarus IDE. The project can also be opened in vscode as long as the prerequisites defined in @link(introduction Overview) are installed.
+
+@section(3 SecFirst_c vscode files)
+
+Creates support files to work with vscode, leaving it preconfigured for build, debug, tests and watch. The following items are covered:
+
+@unorderedList(
+  @item(lazbuild: build => task to build the main project)
+  @item(lazbuild: build tests => task to build the unit tests project@bold(*))
+  @item(pasc: run tests => task to build the unit tests project@bold(*) and also run the tests using pasc to display the results)
+  @item(pasc: watch, build tests and run tests => task to start pasc watch@bold(**) command)
+  @item(pascdoc: build documentation => task to start pascdoc@bold(***) to build documentation)
+  @item(Debug => launch command for debug the main project using fpDebug extension)
+  @item(Debug Tests => launch command for debug a specific test using fpDebug extension)
+)
+
+@bold(*) only works if a test project exists in tests subfolder.
+
+@bold(**) check @link(commandwatch Watch) command for more information.
+
+@bold(***) only works if the command pasc add --docs was executed for the project
+
+@section(3 SecFirst_d Git)
+
+Initialize the project folder as git repository with a standard .gitignore file for pascal projects. Requires git to work, if it is not present just a warning is printed by pasc.
+
+@section(3 SecFirst_e Boss)
+
+It initializes the boss in the project folder allowing it to install dependencies easily, it also allows the project to be a new dependency so that others who have the boss can install it easily, but this is not mandatory. To learn more about: follow the @html(<a href="https://github.com/HashLoad/boss">boss</a>) link.
+
+
+
+@table( @rowHead( @cell(Next @link(commandtest Test Command)) ) )

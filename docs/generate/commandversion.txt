@@ -3,11 +3,11 @@
 
 @section(1 SecFirst Description)
 
-Command that shows version of pasc ...
+This command displays the version of pasc.
 
 Example:
 @longCode(
   pasc version
 )
 
-Output:
+@table( @rowHead( @cell(Next @link(commandwatch Watch Command)) ) )

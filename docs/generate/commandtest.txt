@@ -1,0 +1,49 @@
+@title(Test)
+@shorttitle(Test)
+
+@section(1 SecFirst Description)
+
+The purpose of this command is to display an aligned and colored output to make it easier to follow the test results. For it to work, there must be a previously compiled test project in a subfolder called "tests". This project needs to be of type fpcunit framework. If the project was created with the command @bold(new) from @bold(pasc), and if the test project was created with the command @bold(add --tests) from @bold(pasc), then these requirements must already be met.
+
+This command accepts a "--test-case" option that can be given the name of a test class (suite) or the name of a specific method so that it is possible to reduce the focus of what is currently being tested.
+
+Example:Another important feature is the output about possible memory leaks reported by the project at the end of its execution.
+
+@longCode(
+  pasc test
+)
+
+Check the output for pasc as an example:
+
+@image(docs/generate/command_test_1_gray.jpg)
+
+In the example above, we can see the execution time for each test, we can see an OK in green and the name of the test. We can see an example of a test that fails in section @link(commandadd Add Command), and also a memory leak too.
+
+Example for a single suite:
+@longCode(
+  pasc test --test-case=TTestUtilsShell
+)
+
+Check the output for pasc TTestUtilsShell class as an example:
+
+@image(docs/generate/command_test_2_gray.jpg)
+
+We can see a shorter output with tests results only for the selected class.
+
+@section(1 SecSecond Tasks)
+
+It's worth mentioning the vscode tasks configured to run the test project, as well as the entry in the launch.json file that allows debugging the test project targeting a specific test.
+
+@section(3 SecSecond_a pasc: run tests)
+
+This task calls @bold(pasc test) as shell, but it depends on task @bold(lazbuild: build tests), so every time you run it the test project is built to provide a updated result.
+
+@section(3 SecSecond_b Debug tests)
+
+This an entry on launch.json file, you can choose this debug item as the start point for debug, this allows to debug an specific test case.
+
+@section(3 SecSecond_c Watch command)
+
+Test command is also used by another command called watch that will be covered in the @link(commandwatch watch) section.
+
+@table( @rowHead( @cell(Next @link(commandversion Version Command)) ) )
