@@ -103,7 +103,7 @@ end;
 
 procedure UpdateEnvironmentPathLinux(ABuilder: ICommandBuilder; const AFolder: string);
 var
-  LProfile, LContent: string;
+  LProfile, LContent, LExport: string;
 begin
   OutputInfo(ABuilder, 'updating', 'path environment variable, this may require administration privileges');
   
@@ -111,10 +111,11 @@ begin
   LContent := GetFileContent(LProfile);
 
   OutputInfo(ABuilder, 'changing', 'file: ~/.profile ');
-    
-  if not ContainsText(LContent, AFolder + ':$PATH') then 
+
+  LExport := 'export PATH=$PATH:$HOME/.pasc';
+  if not ContainsText(LContent, LExport) then 
   begin
-    LContent := LContent + #13#10 + 'PATH="' + AFolder + ':$PATH"';
+    LContent := LContent + #13#10 + LExport;
     SaveFileContent(LProfile, LContent);
   end;
 
