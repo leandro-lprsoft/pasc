@@ -224,7 +224,7 @@ begin
       .New
       .Path(GetCurrentDir)
       .Ignore(ikStartsText, ['.'])
-      .Ignore(ikFolder, ['lib', 'backup'])
+      .Ignore(ikFolder, ['lib', 'backup', 'docs'])
       .Ignore(ikExtension, ['.exe', '', '.dll', '.so', '.trc', '.xml', '.res'])
       .Timeout(CommandWatchTimeout)
       .Run(RunWatcherCallback)
