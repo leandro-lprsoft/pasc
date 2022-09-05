@@ -49,7 +49,7 @@ type
     /// <summary> Update FMessage field with contents of AMessage parameters, if there is a content already,
     /// new content is appended to current content. </summary>
     /// <param name="AMessage"> New content to be appended to FMessage field. </param>
-    function SetMessage(const AMessage: string): string;
+    procedure SetMessage(const AMessage: string);
 
   public
 
@@ -218,7 +218,7 @@ begin
   end;
 end;
 
-function TConsoleWatcher.SetMessage(const AMessage: string): string;
+procedure TConsoleWatcher.SetMessage(const AMessage: string);
 begin
   FLock.Enter;
   try
@@ -246,14 +246,14 @@ begin
   LConsoleWatcher := TConsoleWatcher.Create(AProgram, AParams);
   try
     LConsoleWatcher.Start;
-    Sleep(50);
+    Sleep(0);
 
     LResult := '';
     LMessage := '';
     while LConsoleWatcher.IsRunning do
     begin
       GetOutput;
-      Sleep(50);
+      Sleep(0);
     end;
 
     GetOutput;

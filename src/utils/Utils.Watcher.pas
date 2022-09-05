@@ -267,16 +267,12 @@ begin
     FindClose(LSearch);
   
     if (LFirst) and (AChangeMessage = '') and (Assigned(FCurrentFile)) and (not AJustBuild) then
-    begin
       if ANew.Count < FCurrentFile.Count then 
-      begin
         AChangeMessage := 'delete';
-      end;
-    end;
 
     if (LFirst) then
     begin
-      if FCurrentFile.Count = 0 then
+      if (FCurrentFile.Count = 0) or (AChangeMessage = 'delete') then
       begin
         FreeAndNil(FCurrentFile);
         FCurrentFile := ANew;

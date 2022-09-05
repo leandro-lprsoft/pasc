@@ -116,11 +116,11 @@ var
   var
     LMessage: string;
   begin
-    if (not Assigned(Console)) or (not Console.IsRunning) then exit;
+    if (not Assigned(Console)) then exit;
     
     LMessage := Console.GetMessage;
     if LMessage <> '' then
-      Builder.OutputColor(LMessage+#13#10, Builder.ColorTheme.Text);
+      Builder.OutputColor(LMessage+#13#10, Builder.ColorTheme.Other);
   end;
 
 begin
