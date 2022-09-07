@@ -19,6 +19,26 @@ You may clone the repo and build it. Open a terminal and choose a folder to clon
 @longCode(
   git clone https://github.com/leandro-lprsoft/pasc.git
   cd pasc
+)
+
+Now you need to install project dependencies. If you have boss installed use the following command:
+
+@longCode(
+  boss update
+)
+
+If you don't have boss installed you need to download them manually using the following commands:
+
+@longCode(
+  mkdir modules
+  cd modules
+  git clone https://github.com/leandro-lprsoft/pascli.git
+  cd ..
+)
+
+Now you can build the project:
+
+@longCode(
   lazbuild pasc.lpi --build-mode=release
   ./pasc install
 )

@@ -40,7 +40,36 @@
 
 <pre class="longcode">
 git clone https:<span class="pascal_comment">//github.com/leandro-lprsoft/pasc.git</span>
-cd pasc
+cd pasc</pre>
+
+<p>
+
+<p>Now you need to install project dependencies. If you have boss installed use the following command:
+
+<p></p>
+
+<pre class="longcode">
+boss update</pre>
+
+<p>
+
+<p>If you don't have boss installed you need to download them manually using the following commands:
+
+<p></p>
+
+<pre class="longcode">
+mkdir modules
+cd modules
+git clone https:<span class="pascal_comment">//github.com/leandro-lprsoft/pascli.git</span>
+cd </pre>
+
+<p>
+
+<p>Now you can build the project:
+
+<p></p>
+
+<pre class="longcode">
 lazbuild pasc.lpi --build-mode=release
 <span class="pascal_float">.</span>/pasc install</pre>
 
