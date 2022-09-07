@@ -33,10 +33,9 @@ If you don't have boss installed you need to download them manually using the fo
   mkdir modules
   cd modules
   git clone https://github.com/leandro-lprsoft/pascli.git
-  cd ..
 )
 
-Now you can build the project:
+Now you can build it from the project folder:
 
 @longCode(
   lazbuild pasc.lpi --build-mode=release
