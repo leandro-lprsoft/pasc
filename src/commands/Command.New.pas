@@ -94,7 +94,8 @@ procedure GuardShellCommand(ABuilder: ICommandBuilder; const ATitle, AOutput: st
 begin
   if not ContainsText(AOutput, 'Error when executing') then 
   begin
-    OutputInfo(ABuilder, ATitle, AOutput);
+    if AOutput <> '' then
+      OutputInfo(ABuilder, ATitle, AOutput);
     Exit;
   end;
 

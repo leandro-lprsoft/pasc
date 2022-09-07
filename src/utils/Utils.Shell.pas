@@ -29,7 +29,7 @@ type
     FProgram: string;
     FParams: TArray<string>;
     FIsRunning: boolean;
-    FStarted: boolean;
+    FExecuted: boolean;
     FMessage: string;
     FProcess: TProcess;
     FLock: TCriticalSection;
@@ -81,6 +81,9 @@ type
 
     /// <summary>Indicates that the thread is still running waiting for the program to finish.</summary>
     property IsRunning: Boolean read FIsRunning;
+
+    /// <summary>Indicates that the command was executed.</summary>
+    property Executed: Boolean read FExecuted;
   end;
 
   /// <summary> function type to execute programs or commands. See ShellCommand function
@@ -108,7 +111,7 @@ begin
   FProgram := AProgram;
   FParams := AParams;
   FIsRunning := False;
-  FStarted := False;
+  FExecuted := False;
   FMessage := '';
 end;
 
@@ -126,10 +129,12 @@ begin
   begin
     try
       RunCommand(FProgram, FParams);
-      Sleep(50);
+      FExecuted := True;
+      Sleep(10);
     except
       on E: Exception do
       begin
+        FExecuted := True;
         SetMessage(E.Message);
         Stop;
         raise;
@@ -233,30 +238,33 @@ end;
 function ShellCommand(const AProgram: string; AParams: TArray<string>): string;
 var
   LConsoleWatcher: TConsoleWatcher = nil;
-  LMessage, LResult: string;
+  LResult: string;
 
-  procedure GetOutput;
+  procedure GetOutput(AConsoleWatcher: TConsoleWatcher; out AResult: string);
+  var
+    LMessage: string;
   begin
-    LMessage := LConsoleWatcher.GetMessage;
+    LMessage := AConsoleWatcher.GetMessage;
     if LMessage <> '' then
-      LResult := LResult + LMessage;
+      AResult := AResult + LMessage;
   end;
 
 begin
   LConsoleWatcher := TConsoleWatcher.Create(AProgram, AParams);
   try
     LConsoleWatcher.Start;
-    Sleep(0);
+
+    while not LConsoleWatcher.Executed do
+      Sleep(10);
 
     LResult := '';
-    LMessage := '';
     while LConsoleWatcher.IsRunning do
     begin
-      GetOutput;
-      Sleep(0);
+      GetOutput(LConsoleWatcher, LResult);
+      Sleep(10);
     end;
 
-    GetOutput;
+    GetOutput(LConsoleWatcher, LResult);
     Result := LResult;
     
     LConsoleWatcher.Stop;
