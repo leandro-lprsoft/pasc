@@ -27,7 +27,7 @@
           "executable": "${extensionInstallFolder:cnoc.fpdebug}/bin/fpdserver-x86_64.exe"
         }
       },
-      "preLaunchTask": "lazbuild: tests build"
+      "preLaunchTask": "lazbuild: build tests"
     }
   ]
 }

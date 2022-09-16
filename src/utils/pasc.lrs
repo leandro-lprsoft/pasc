@@ -24,7 +24,7 @@ LazarusResources.Add('launchjson','TXT',[
   +'TestThatPasses"],'#13#10'      "windows" : {'#13#10'        "fpdserver": {'
   +#13#10'          "executable": "${extensionInstallFolder:cnoc.fpdebug}/bin/f'
   +'pdserver-x86_64.exe"'#13#10'        }'#13#10'      },'#13#10'      "preLaun'
-  +'chTask": "lazbuild: tests build"'#13#10'    }'#13#10'  ]'#13#10'}'
+  +'chTask": "lazbuild: build tests"'#13#10'    }'#13#10'  ]'#13#10'}'
 ]);
 LazarusResources.Add('tasksjson','TXT',[
   '{'#13#10'  // See https://go.microsoft.com/fwlink/?LinkId=733558'#13#10'  //'
