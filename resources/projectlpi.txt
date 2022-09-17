@@ -92,7 +92,7 @@
     <Linking>
       <Debugging>
         <DebugInfoType Value="dsDwarf3"/>
-        <UseHeaptrc Value="True"/>
+        <UseHeaptrc Value="False"/>
       </Debugging>
     </Linking>
   </CompilerOptions>

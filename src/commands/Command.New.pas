@@ -95,12 +95,13 @@ begin
   if not ContainsText(AOutput, 'Error when executing') then 
   begin
     if AOutput <> '' then
-      OutputInfo(ABuilder, ATitle, AOutput);
+      OutputInfo(ABuilder, ATitle, AOutput, False);
     Exit;
   end;
 
   if ACommandIsOptional then
-    OutputInfo(ABuilder, 'Warning', AOutput)
+    if AOutput <> '' then
+      OutputInfo(ABuilder, 'Warning', AOutput)
   else
     raise Exception.Create(AOutput);
 end;

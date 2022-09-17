@@ -1,7 +1,6 @@
 program {PROJECTNAME};
 
 {$MODE DELPHI}{$H+}
-
 {$R *.res}
 
 begin
