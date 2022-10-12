@@ -93,14 +93,28 @@ type
   /// <summary> executes a program and returns the output as funciton result and also provide a execution status
   /// through AStatus out parameter </summary>
   /// <param name="AProgram"> Program name or command to be executed. </param>
-  /// <param name="AParams"> Array of argumentos to be passed to the 
+  /// <param name="AParams"> Array of arguments to be passed to the 
   /// program or command being called </param>
   function ShellCommand(const AProgram: string; AParams: TArray<string>): string;
+
+  /// <summary> Process a raw string and returns an array of strings with the parameters
+  /// that were separated by spaces, and consider as single parameter a string between
+  /// double quotes. </summary>
+  ///
+  /// Ex:
+  /// MyArray :=  GetParametersFrom('hello "that is my message"'); returns an array with two elements:
+  /// ['hello', 'that is my message']
+  ///
+  /// <param name="AParams"> String parameters separeted by spaces and double quotes. </param>
+  function GetParametersFrom(const AParams: string): TArray<string>;
 
 var
   ShellExecute: TShellCommandFunc = @ShellCommand;
 
 implementation
+
+uses
+  StrUtils;
 
 constructor TConsoleWatcher.Create(const AProgram: string; AParams: TArray<string>);
 begin
@@ -272,6 +286,29 @@ begin
   finally
     LConsoleWatcher.Free;
   end;
+end;
+
+function GetParametersFrom(const AParams: string): TArray<string>;
+var
+  LParams: TStringList = nil;
+  LParam: string;
+  LResult: TArray<string> = [];
+begin
+  LParams := TStringList.Create;
+  try
+    LParams.Delimiter := ' ';
+    LParams.StrictDelimiter := True;
+    LParams.DelimitedText := StringReplace(AParams, '''', '"', [rfReplaceAll]);
+    LParams.Text := StringReplace(LParams.Text, '"', '', [rfReplaceAll]);
+
+    for LParam in LParams do
+      LResult := LResult + 
+        [IfThen(ContainsText(LParam, ' '), '"' + LParam + '"', LParam)];
+
+  finally
+    LParams.Free;
+  end;
+  Result := LResult;
 end;
 
 end.

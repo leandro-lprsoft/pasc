@@ -37,6 +37,9 @@
 <tr class="list">
 <td class="itemcode"><code>function <strong><a href="Utils.Shell.html#ShellCommand">ShellCommand</a></strong>(const AProgram: string; AParams: TArray&lt;string&gt;): string;</code></td>
 </tr>
+<tr class="list2">
+<td class="itemcode"><code>function <strong><a href="Utils.Shell.html#GetParametersFrom">GetParametersFrom</a></strong>(const AParams: string): TArray&lt;string&gt;;</code></td>
+</tr>
 </table>
 <span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
 <table class="summary wide_list">
@@ -77,7 +80,27 @@
 <dt>AProgram</dt>
 <dd>Program name or command to be executed.</dd>
 <dt>AParams</dt>
-<dd>Array of argumentos to be passed to the program or command being called</dd>
+<dd>Array of arguments to be passed to the program or command being called</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="GetParametersFrom"></span><code>function <strong>GetParametersFrom</strong>(const AParams: string): TArray&lt;string&gt;;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+ Process a raw string and returns an array of strings with the parameters that were separated by spaces, and consider as single parameter a string between double quotes. </p>
+<p>
+
+
+<p>Ex: MyArray := GetParametersFrom('hello &quot;that is my message&quot;'); returns an array with two elements: ['hello', 'that is my message']
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AParams</dt>
+<dd>String parameters separeted by spaces and double quotes.</dd>
 </dl>
 </td></tr>
 </table>

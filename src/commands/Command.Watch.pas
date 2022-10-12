@@ -62,7 +62,7 @@ uses
 var
   Builder: ICommandBuilder;
   Console: TConsoleWatcher;
-  ProjectFile, TestCaseSuite: string;
+  ProjectFile, TestCaseSuite, RunRawParams: string;
   IsTest, IsBuild, IsRun: Boolean;
 
 procedure OutputWatcherInfo(const ATitle, AText: string);
@@ -186,11 +186,14 @@ begin
 
   if IsRun then
   begin
-    OutputWatcherInfo('Watcher', 'running ' + ChangeFileExt(ProjectFile, LExt) + #13#10);
+    OutputWatcherInfo('Watcher', 'running ' + ChangeFileExt(ProjectFile, LExt) + ' ' + RunRawParams + #13#10);
+    OutputWatcherInfo('Debug', 'length ' + Length(GetParametersFrom(RunRawParams)).ToString);
+    OutputWatcherInfo('Debug', 'param[0] ' + GetParametersFrom(RunRawParams)[0]);
+    OutputWatcherInfo('Debug', 'param[1] ' + GetParametersFrom(RunRawParams)[1]);
 
     if AEvent in [weFirstRun, weFileChanged] then
     begin
-      Console := TConsoleWatcher.Create(ChangeFileExt(ProjectFile, LExt), []);
+      Console := TConsoleWatcher.Create(ChangeFileExt(ProjectFile, LExt), GetParametersFrom(RunRawParams));
       Console.Start;
       OutputMessage;
     end;
@@ -215,7 +218,7 @@ begin
   ProjectFile := GetProjectFileName(Builder);
   IsTest := Builder.CheckOption('test', TestCaseSuite);
   IsBuild := Builder.CheckOption('build');
-  IsRun := Builder.CheckOption('run');
+  IsRun := Builder.CheckOption('run', RunRawParams);
   
   OutputWatcherInfo('Project', ProjectFile);
   
@@ -236,8 +239,8 @@ begin
   ABuilder
     .AddCommand(
       'watch',
-      'monitor current path for changes and execute selected commands'#13#10 +
-      'a project file can be provided, if you don''t want to specify '#13#10 +
+      'Monitor current path for changes and execute selected commands.'#13#10 +
+      'A project file can be provided, if you don''t want to specify '#13#10 +
       'a file just pass a . as an argument. In this case, pasc looks '#13#10 +
       'for a project in the current folder. If the --test option is '#13#10 +
       'used, pasc will look for a test project based on fpcunit. '#13#10 +
@@ -252,11 +255,12 @@ begin
           'build the main project', [])
       .AddOption(
           'r', 'run', 
-          'run main project', ['t'])
+          'run main project'#13#10 + 
+          '?: accepts parameters to be passed to the application being executed', ['t'], ocOptionalValue)
       .AddOption(
           't', 'test', 
           'build test project and run it'#13#10 + 
-          '?: accept a test name to run it only', ['r'], ocOptionalValue);
+          '?: accepts a test name to run it only', ['r'], ocOptionalValue);
 end;
 
 initialization
