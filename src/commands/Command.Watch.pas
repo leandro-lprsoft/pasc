@@ -187,10 +187,6 @@ begin
   if IsRun then
   begin
     OutputWatcherInfo('Watcher', 'running ' + ChangeFileExt(ProjectFile, LExt) + ' ' + RunRawParams + #13#10);
-    OutputWatcherInfo('Debug', 'length ' + Length(GetParametersFrom(RunRawParams)).ToString);
-    OutputWatcherInfo('Debug', 'param[0] ' + GetParametersFrom(RunRawParams)[0]);
-    OutputWatcherInfo('Debug', 'param[1] ' + GetParametersFrom(RunRawParams)[1]);
-
     if AEvent in [weFirstRun, weFileChanged] then
     begin
       Console := TConsoleWatcher.Create(ChangeFileExt(ProjectFile, LExt), GetParametersFrom(RunRawParams));
