@@ -154,6 +154,8 @@ begin
   InitializeBoss(FBuilder, LProjectFolder);
   
   LBossFile := ConcatPaths([LProjectFolder, 'boss.json']);
+  LContent := '';
+  if FileExists(LBossFile) then
   LContent := GetFileContent(LBossFile);
 
   AssertTrue(

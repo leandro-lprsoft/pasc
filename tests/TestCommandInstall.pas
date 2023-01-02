@@ -117,7 +117,7 @@ begin
   CreateFolder(FBuilder, LCreatedFolder);
   UpdateEnvironmentPathLinux(FBuilder, FAppFolder);
   LOutput := GetPathVariable;
-  AssertTrue('should contain app folder in path', ContainsText(LOutput, FAppFolder));
+  AssertTrue('should contain app folder: ' + FAppFolder + ' in path env variable: ' + LOutput, ContainsText(LOutput, FAppFolder));
   {$ENDIF}
 end;
 

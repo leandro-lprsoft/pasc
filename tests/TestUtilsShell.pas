@@ -35,9 +35,10 @@ end;
 
 procedure TTestUtilsShell.TestShellCommand;
 var
-  LActual: string;
+  LActual, LExpected: string;
 begin
   LActual := StringReplace(ShellCommand('pwd', []), #13#10, '', [rfReplaceAll]);
+  LExpected := GetCurrentDir;
   AssertEquals(GetCurrentDir, LActual);
 end;
 

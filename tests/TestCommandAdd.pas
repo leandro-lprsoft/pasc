@@ -38,10 +38,8 @@ uses
   Resources,
   StrUtils,
   MockCommandBuilder,
-  Command.Build,
   Command.Clean,
-  Utils.IO,
-  Utils.Shell;
+  Utils.IO;
 
 procedure TTestCommandAdd.SetUp;
 begin

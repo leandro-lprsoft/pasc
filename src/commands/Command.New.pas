@@ -156,7 +156,7 @@ var
 begin
   SetCurrentDir(AProjectDir);
   OutputInfo(ABuilder, 'boss', 'Initializing boss dependency manager');
-  LOutput := ShellCommand('boss', ['init', '--quiet']);
+  LOutput := ShellCommand('boss', ['init', '--quiet']);  
   GuardShellCommand(ABuilder, 'boss', LOutput, True);
   ChangeBossFileSourcePath(ABuilder, AProjectDir);
 end;

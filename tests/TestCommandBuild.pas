@@ -37,7 +37,6 @@ uses
   StrUtils,
   MockCommandBuilder,
   Command.Build,
-  Utils.IO,
   Utils.Shell;
 
 procedure TTestCommandBuild.SetUp;

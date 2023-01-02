@@ -47,6 +47,7 @@ implementation
 uses
   Classes,
   SysUtils,
+  Utils.Interfaces,
   Utils.Tests,
   Utils.Leak,
   Utils.Shell,
@@ -84,7 +85,7 @@ procedure TestCommand(ABuilder: ICommandBuilder);
 var
   LExeFile, LExeOnly, LXmlFile, LTestCase: string;
   LReport: TTestReport;
-  LLeak: TLeakReport;
+  LLeak: ILeakReport;
 begin
   LExeFile := GetTestExecutable(ABuilder);
   if LExeFile.IsEmpty then
@@ -107,13 +108,9 @@ begin
   end;
 
   LLeak := TLeakReport.New(ABuilder, ExtractFilePath(LExeFile));
-  try
-    LLeak.Executable := LExeOnly;
-    LLeak.ParseHeapTrace('');
-    LLeak.Output;
-  except
-    LLeak.Free;
-  end;
+  LLeak.Executable := LExeOnly;
+  LLeak.ParseHeapTrace('');
+  LLeak.Output;
 end;
 
 procedure Registry(ABuilder: ICommandBuilder);

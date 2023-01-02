@@ -20,6 +20,7 @@ type
     FExeName: string;
     FWorkingFolder: string;
     FCurrentDir: string;
+    FExecutable: string;
 
   protected
     procedure SetUp; override;
@@ -46,10 +47,11 @@ begin
   FCurrentDir := GetCurrentDir;
   FExeName := ExtractFileName(ParamStr(0));
   FBuilder := TCommandBuilder.Create(FExeName);
+  FExecutable := 'test_for_watch'{$IFDEF WINDOWS} + '.exe'{$ENDIF};
   MockSetup(FBuilder);
   Command.Test.Registry(FBuilder);
-
   FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
+  SetCurrentDir(FWorkingFolder);
 end;
 
 procedure TTestCommandTest.TearDown;
@@ -71,6 +73,10 @@ begin
   // cannot call TestPasc again because it would produce recursive calls indenitely
   // so we need to change ShellCommand and check if it's being called.
   ShellExecute := @MockShell;
+
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
+  SaveFileContent(ConcatPaths([FWorkingFolder, FExecutable]), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.xml']), '<xml></xml>');
   
   TestCommand(FBuilder);
     
@@ -84,8 +90,12 @@ begin
 end;
 
 procedure TTestCommandTest.TestGetTestExecutable;
+var
+  LExpected, LActual: string;
 begin
-  AssertEquals(ParamStr(0), GetTestExecutable(FBuilder));
+  LExpected := ConcatPaths([FWorkingFolder, FExecutable]);
+  LActual := GetTestExecutable(FBuilder);
+  AssertEquals(LExpected, LActual);
 end;
 
 procedure TTestCommandTest.TestCommandTestSpecificSuite;
@@ -93,6 +103,10 @@ begin
   // arrange
   FBuilder.UseArguments(['test', '-t=TTestCommandTest']);
   FBuilder.Parse;
+
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
+  SaveFileContent(ConcatPaths([FWorkingFolder, FExecutable]), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.xml']), '<xml></xml>');  
 
   // cannot call TestPasc again because it would produce recursive calls indenitely
   // so we need to change ShellCommand and check if it's being called.

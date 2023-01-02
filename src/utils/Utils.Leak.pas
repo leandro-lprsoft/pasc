@@ -10,20 +10,27 @@ interface
 uses
   Classes,
   SysUtils,
+  Utils.Interfaces,
   Command.Interfaces;
 
 type
   /// <summary> Class that represents a single point in code with the possible memory leak.
   /// </summary>
-  TLeakItem = class
+  TLeakItem = class(TInterfacedObject, ILeakItem)
   private
     FStatus: string;
     FSize: string;
     FSource: string;
+    function GetStatus: string;
+    procedure SetStatus(const AValue: string);
+    function GetSize: string;
+    procedure SetSize(const AValue: string);
+    function GetSource: string;
+    procedure SetSource(const AValue: string);
   public
     /// <summary> Returns an instance of the class with the status and memory leak size filled.
     /// </summary>
-    class function New(const AStatus, ASize: string): TLeakItem;
+    class function New(const AStatus, ASize: string): ILeakItem;
 
     /// <summary> Item status. Currently it can only be Leak.</summary>
     property Status: string read FStatus write FStatus;
@@ -39,7 +46,7 @@ type
   /// <sumary> This class aims to interpret the memory leak trace file and produce 
   /// a simpler report summarizing enough information to locate the problem at its source.
   /// </summary>
-  TLeakReport = class
+  TLeakReport = class(TInterfacedObject, ILeakReport)
   private
     FBuilder: ICommandBuilder;
 
@@ -48,8 +55,12 @@ type
     FHeapDataIsMissing: Boolean;
     FTotalLeakSize: Integer;
     FTotalLeakInfo: string;
-    FLeakData: TArray<TLeakItem>;
-   
+    FLeakData: TArray<ILeakItem>;
+    function GetLeakData: TArray<ILeakItem>;
+    function GetExecutable: string;
+    procedure SetExecutable(const AValue: string);
+    function GetProjectSource: string;
+    procedure SetProjectSource(const AValue: string);
   public
     /// <summary> Class constructor that initializes arrays and control variables. 
     /// Check factory method new as the best option.
@@ -66,10 +77,13 @@ type
     /// used to generate the output to the console considering the theme settings.</param>
     /// <param Name="AProjectSource"> The path to the source code, needed to find the files
     /// corresponding to the source code reported in the memory leak trace file. </param>
-    class function New(ABuider: ICommandBuilder; const AProjectSource: string): TLeakReport;
+    class function New(ABuider: ICommandBuilder; const AProjectSource: string): ILeakReport;
+
+    /// <summary> Set the command builder used to produce the report </summary>
+    procedure SetCommandBuilder(ABuilder: ICommandBuilder);
 
     /// <summary> Adds a new memory leak item to the report.</summary>
-    function AddItem(AItem: TLeakItem): TLeakItem;
+    function AddItem(AItem: ILeakItem): ILeakItem;
 
     /// <summary> Scans the contents of the AContent variable to summarize the details 
     /// of a memory leak reported in the trace file. If a memory leak is found then it
@@ -98,7 +112,7 @@ type
     /// <param name="AContent"> Accepts the contents of the memory leak trace file. 
     /// If an empty string is passed, the method will try to locate the heap.trc file 
     /// in the test project's executable directory. </param>
-    function ParseHeapTrace(const AContent: string): TLeakReport;    
+    function ParseHeapTrace(const AContent: string): ILeakReport;    
 
     /// <summary> Test project excutable name. </summary> 
     property Executable: string read FExecutable write FExecutable;
@@ -108,7 +122,7 @@ type
 
     /// <summary> Array of TLeakItem that is generated after calling ParseHeapTrace method.
     /// </summary> 
-    property LeakData: TArray<TLeakItem> read FLeakData write FLeakData;
+    property LeakData: TArray<ILeakItem> read GetLeakData;
   end;
 
 implementation
@@ -127,26 +141,28 @@ begin
 end;
 
 destructor TLeakReport.Destroy;
-var
-  LItem: TLeakItem;
 begin
-  for LItem in FLeakData do
-    LItem.Free;
-  SetLength(FLeakData, 0);
+  //SetLength(FLeakData, 0);
   inherited Destroy;
 end;
 
-class function TLeakReport.New(ABuider: ICommandBuilder; const AProjectSource: string): TLeakReport;
+class function TLeakReport.New(ABuider: ICommandBuilder; const AProjectSource: string): ILeakReport;
 begin
   Result := Self.Create;
   Result.ProjectSource := AProjectSource;
-  Result.FBuilder := ABuider;
+  Result.SetCommandBuilder(ABuider);
 end;
 
-function TLeakReport.AddItem(AItem: TLeakItem): TLeakItem;
+procedure TLeakReport.SetCommandBuilder(ABuilder: ICommandBuilder);
 begin
-  SetLength(FLeakData, Length(FLeakData) + 1);
-  FLeakData[Length(FLeakData) - 1] := AItem;
+  FBuilder := ABuilder;
+end;
+
+function TLeakReport.AddItem(AItem: ILeakItem): ILeakItem;
+begin
+  //SetLength(FLeakData, Length(FLeakData) + 1);
+  //FLeakData[Length(FLeakData) - 1] := AItem;
+  FLeakData := FLeakData + [AItem];
   Result := AItem;
 end;
 
@@ -167,7 +183,7 @@ end;
 procedure TLeakReport.CreateLeakItem(AContent: TStringList; AStart: Integer);
 var
   LText, LDetail: string;
-  LItem: TLeakItem;
+  LItem: ILeakItem;
   I: Integer;
 begin
   LText := AContent.Strings[AStart];
@@ -192,11 +208,11 @@ begin
       GetNextStringOf(LText, 'line') + ':1' + #13#10;
 
   end;
-  LItem.FSource := IfThen(LDetail = '', 'no details found in heap trace file.'#13#10, LDetail);
+  LItem.Source := IfThen(LDetail = '', 'no details found in heap trace file.'#13#10, LDetail);
   AddItem(LItem);
 end;
 
-function TLeakReport.ParseHeapTrace(const AContent: string): TLeakReport;
+function TLeakReport.ParseHeapTrace(const AContent: string): ILeakReport;
 var
   I: Integer;
   LContent: TStringList;
@@ -232,7 +248,7 @@ end;
 
 procedure TLeakReport.Output;
 var
-  LItem: TLeakItem;
+  LItem: ILeakItem;
   LSourceItem, LOutputItem: string;
   LIndex: Integer;
 begin
@@ -289,13 +305,6 @@ begin
   FBuilder.Output('');
 end;
 
-class function TLeakItem.New(const AStatus, ASize: string): TLeakItem;
-begin
-  Result := Self.Create;
-  Result.Status := AStatus;
-  Result.Size := ASize;
-end;
-
 function TLeakReport.AddRelativePath(const AFile: string): string;
 var
   LRelativePath: string;
@@ -316,6 +325,68 @@ begin
   end;
 
   Result := LRelativePath;
+end;
+
+function TLeakReport.GetLeakData: TArray<ILeakItem>;
+begin
+  Result := FLeakData;
+end;
+
+function TLeakReport.GetExecutable: string;
+begin
+  Result := FExecutable;  
+end;
+
+procedure TLeakReport.SetExecutable(const AValue: string);
+begin
+  FExecutable := AValue;
+end;
+
+function TLeakReport.GetProjectSource: string;
+begin
+  Result := FProjectSource;  
+end;
+
+procedure TLeakReport.SetProjectSource(const AValue: string);
+begin
+  FProjectSource := AValue;
+end;
+
+class function TLeakItem.New(const AStatus, ASize: string): ILeakItem;
+begin
+  Result := Self.Create;
+  Result.Status := AStatus;
+  Result.Size := ASize;
+end;
+
+function TLeakItem.GetStatus: string;
+begin
+  Result := FStatus;
+end;
+
+procedure TLeakItem.SetStatus(const AValue: string);
+begin
+  FStatus := AValue;
+end;
+
+function TLeakItem.GetSize: string;
+begin
+  Result := FSize;
+end;
+
+procedure TLeakItem.SetSize(const AValue: string);
+begin
+  FSize := AValue;
+end;
+
+function TLeakItem.GetSource: string;
+begin
+  Result := FSource;
+end;
+
+procedure TLeakItem.SetSource(const AValue: string);
+begin
+  FSource := AValue;
 end;
 
 end.

@@ -11,6 +11,8 @@ uses
   testregistry,
   Command.Interfaces,
   Command.Builder,
+  Utils.Interfaces,
+
   Utils.Leak;
 
 type
@@ -18,7 +20,7 @@ type
   TTestUtilsLeak = class(TTestCase)
   private
     FBuilder: ICommandBuilder;
-    FLeakReport: TLeakReport;
+    FLeakReport: ILeakReport;
   protected
     procedure SetUp; override;
     procedure TearDown; override;
@@ -67,12 +69,11 @@ end;
 
 procedure TTestUtilsLeak.TearDown;
 begin
-  FLeakReport.Free;
 end;
 
 procedure TTestUtilsLeak.TestAddItem;
 var
-  LItem: TLeakItem;
+  LItem: ILeakItem;
 begin
   LItem := TLeakItem.New('Leak', '8');
   LItem.Source := 'source';

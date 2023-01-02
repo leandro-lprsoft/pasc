@@ -112,7 +112,8 @@ begin
 
   OutputInfo(ABuilder, 'changing', 'file: ~/.profile ');
 
-  LExport := 'export PATH=$PATH:$HOME/.pasc';
+  // adequar para a pasta passada como parâmetro
+  LExport := 'export PATH=$PATH:' + AFolder;
   if not ContainsText(LContent, LExport) then 
   begin
     LContent := LContent + #13#10 + LExport;

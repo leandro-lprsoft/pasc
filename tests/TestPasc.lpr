@@ -3,6 +3,9 @@ program TestPasc;
 {$mode objfpc}{$H+}
 
 uses
+  {$IFDEF LINUX}
+  cthreads,
+  {$ENDIF}
   Classes, 
   SysUtils,
   consoletestrunner, 

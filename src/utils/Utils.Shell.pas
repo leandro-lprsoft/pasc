@@ -162,9 +162,13 @@ begin
   FIsRunning := False;
   if (not FIsRunning) and (Assigned(FProcess)) then
   begin
+    try
+      if FProcess.Running then
     FProcess.Terminate(0);
+    finally
     FreeAndNil(FProcess);
   end;
+end;
 end;
 
 procedure TConsoleWatcher.ReadData(const ABytesRead: LongInt; ABuffer: TConsoleBuffer);
@@ -218,7 +222,9 @@ begin
   except
     on E: Exception do
     begin
-      raise Exception.Create(
+      FIsRunning := False;
+      FExecuted := True;
+      SetMessage(
         'Error when executing: "' + AProgram + 
         '" Message: "' + E.Message + '". ' +
         'Check if the command exists and if it is in the path.');

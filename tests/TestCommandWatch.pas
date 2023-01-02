@@ -158,6 +158,7 @@ end;
 procedure TTestCommandWatch.TestCommandWatchCheckIfShellExecuteCallbackIsCalled;
 var
   LThread: TThread;
+  LExecutable: string = 'test_for_watch.exe';
 begin
   // arrange
   CommandWatchTimeout := 1000;
@@ -169,8 +170,12 @@ begin
   ShellExecute := @MockShell;
   RunWatcherCallback := @RunUserCommandAsRequested; // original callback
 
+  {$IFDEF LINUX}
+  LExecutable := 'test_for_watch';
+  {$ENDIF}
+
   SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
-  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.exe']), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, LExecutable]), 'just for test');
   
   LThread := TThread.CreateAnonymousThread(RunWatchCommand);
   LThread.FreeOnTerminate := True;
@@ -184,17 +189,21 @@ begin
       
   // assert
   AssertTrue(
-    'Output should contain keyword: "lazbuild" - Check capture: ' + MockShellCapture,
+    'Output should contain keyword: "lazbuild" ' + #13#10 +
+    ' - Check capture: ' + MockShellCapture + #13#10 + 
+    ' - Check Console: ' + MockOutputCaptured,
      ContainsText(MockShellCapture, 'lazbuild'));
   AssertTrue(
-    'Output should contain keyword: "test_for_watch.exe" - Check capture: ' + MockShellCapture,
-     ContainsText(MockShellCapture, 'test_for_watch.exe'));  
+    'Output should contain keyword: "' + LExecutable + ' " '#13#10 +
+    ' - Check capture: ' + MockShellCapture + #13#10 + 
+    ' - Check Console: ' + MockOutputCaptured,
+     ContainsText(MockShellCapture, LExecutable + ' '));  
 end;
 
 procedure TTestCommandWatch.TestCommandWatchCheckIfShellExecuteIsCalledWithSuite;
 var
   LThread: TThread;
-
+  LExecutable: string = 'test_for_watch.exe';
   LValue: string;
 begin
   // arrange
@@ -207,8 +216,12 @@ begin
   ShellExecute := @MockShell;
   RunWatcherCallback := @RunUserCommandAsRequested; // original callback
 
+  {$IFDEF LINUX}
+  LExecutable := 'test_for_watch';
+  {$ENDIF}
+
   SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
-  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.exe']), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, LExecutable]), 'just for test');
   SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.xml']), 'just for test');
   
   LThread := TThread.CreateAnonymousThread(RunWatchCommand);
