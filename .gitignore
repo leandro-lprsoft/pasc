@@ -25,3 +25,5 @@ fp.dsk
 
 *.app
 pasc
+link*.res
+*.DS_Store

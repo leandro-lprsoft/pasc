@@ -51,6 +51,13 @@ function Exit-Script {
         Exit-Script
     }
 
+    Write-Host "[INFO ] env:path => $env:path"
+    if ($null -eq $env:path)
+    {
+      Write-Host "[INFO ] Adjusting path variable"
+      $env:path = $env:PATH
+    }
+
     $ArgList = "--os=" + $TargetOS + " --cpu=" + $TargetCPU + " " + $ProjectName
     if ($TargetOS -eq "darwin") {
         $ArgList = $ArgList + " --ws=cocoa"
@@ -59,7 +66,12 @@ function Exit-Script {
 
     Write-Host "[INFO ] $ArgList" 
 
-    Start-Process -FilePath "lazbuild" -ArgumentList $ArgList -Wait
+    $LazBuild = "lazbuid"
+    if ($TargetOS -eq "darwin") {
+        $LazBuild = "/Applications/Lazarus/lazbuild"
+    }
+    
+    Start-Process -FilePath $LazBuild -ArgumentList $ArgList -Wait
 
     $CurrentPath = Get-Location
     $ReleasePath = Join-Path -Path $CurrentPath -ChildPath "releases"

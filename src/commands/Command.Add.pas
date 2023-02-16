@@ -65,7 +65,7 @@ begin
     OutputInfo(ABuilder, 'Starting', 'to add a test project to the current folder'); 
 
     LTestsDir := ConcatPaths([AProjectDir, 'tests']);
-    LProjectName := AnsiProperCase(AProjectName, StdWordDelims);
+    LProjectName := AProjectName;
     LTestProject := 'Test' + LProjectName;
     SetCurrentDir(AProjectDir);
 
