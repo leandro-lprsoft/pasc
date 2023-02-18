@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [windows-2019]
+        operating-system: [ubuntu-latest]
         lazarus-versions: [2.2.2]
     steps:
     - uses: actions/checkout@v2
@@ -47,3 +47,6 @@ jobs:
       run: lazbuild "tests/TestPasc.lpi"
     - name: Run the Unit Tests Application
       run: tests/TestPasc "--all" "--format=plain"
+      
+    - name: Build the Main Application
+      run: lazbuild "pasc.lpi" --build-mode=Release --os=win64  
