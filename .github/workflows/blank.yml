@@ -27,7 +27,7 @@ jobs:
       run: |
         curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-linux-amd64.zip
         unzip boss-linux-amd64.zip
-        chmod x+ ./linux-amd64/boss
+        chmod +x ./linux-amd64/boss
         echo "$GITHUB_WORKSPACE/linux-amd64" >> $GITHUB_PATH
 
     - name: Download and extract BOSS (Windows)
