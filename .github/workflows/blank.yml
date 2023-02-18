@@ -51,7 +51,7 @@ jobs:
     
     - name: Build the Unit Tests Application (linux-x64)
       run: lazbuild "tests/TestPasc.lpi"
-    - run: cp testst/TestPasc ~/artifacts/linux/TestPasc
+    - run: cp tests/TestPasc ~/artifacts/linux/TestPasc
     
     - name: Run the Unit Tests Application
       run: tests/TestPasc "--all" "--format=plain"
@@ -62,7 +62,7 @@ jobs:
     
     - name: Build the Unit Tests Application (win64)
       run: lazbuild "tests/TestPasc.lpi" -B --os=win64
-    - run: cp testst/TestPasc.exe ~/artifacts/windows/TestPasc.exe
+    - run: cp tests/TestPasc.exe ~/artifacts/windows/TestPasc.exe
     
     - name: Build the Main Application (macos)
       run: lazbuild "pasc.lpi" --build-mode=Release -B --os=darwin
@@ -70,4 +70,4 @@ jobs:
     
     - name: Build the Unit Tests Application (win64)
       run: lazbuild "tests/TestPasc.lpi" -B --os=darwin
-    - run: cp testst/TestPasc ~/artifacts/macos/TestPasc
+    - run: cp tests/TestPasc ~/artifacts/macos/TestPasc
