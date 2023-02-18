@@ -47,6 +47,3 @@ jobs:
       run: lazbuild "tests/TestPasc.lpi"
     - name: Run the Unit Tests Application
       run: tests/TestPasc "--all" "--format=plain"
-      
-    - name: Build the Main Application
-      run: lazbuild "pasc.lpi" --build-mode=Release --os=win64  
