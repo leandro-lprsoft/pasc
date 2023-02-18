@@ -23,7 +23,7 @@ jobs:
         with-cache: true
 
     - name: Download and extract BOSS (Linux)
-      if: ${{ matrix.operating-system == 'linux-latest' }}
+      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
       run: |
         curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-linux-amd64.zip
         unzip boss-linux-amd64.zip
