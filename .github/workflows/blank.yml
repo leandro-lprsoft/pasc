@@ -39,35 +39,12 @@ jobs:
 
     - name: BOSS Update packages
       run: boss update
-      
-    - run: mkdir -p ~/artifacts
-    - run: mkdir -p ~/artifacts/linux
-    - run: mkdir -p ~/artifacts/windows
-    - run: mkdir -p ~/artifacts/macos
     
-    - name: Build the Main Application (linux-x64)
+    - name: Build the Main Application 
       run: lazbuild "pasc.lpi" --build-mode=Release
-    - run: cp ./pasc ~/artifacts/linux/pasc
     
-    - name: Build the Unit Tests Application (linux-x64)
+    - name: Build the Unit Tests Application 
       run: lazbuild "tests/TestPasc.lpi"
-    - run: cp tests/TestPasc ~/artifacts/linux/TestPasc
     
     - name: Run the Unit Tests Application
       run: tests/TestPasc "--all" "--format=plain"
-      
-    - name: Build the Main Application (win64)
-      run: lazbuild "pasc.lpi" --build-mode=Release -B --os=win64
-    - run: cp ./pasc.exe ~/artifacts/windows/pasc.exe
-    
-    - name: Build the Unit Tests Application (win64)
-      run: lazbuild "tests/TestPasc.lpi" -B --os=win64
-    - run: cp tests/TestPasc.exe ~/artifacts/windows/TestPasc.exe
-    
-    - name: Build the Main Application (macos)
-      run: lazbuild "pasc.lpi" --build-mode=Release -B --os=darwin
-    - run: cp ./pasc ~/artifacts/macos/pasc
-    
-    - name: Build the Unit Tests Application (win64)
-      run: lazbuild "tests/TestPasc.lpi" -B --os=darwin
-    - run: cp tests/TestPasc ~/artifacts/macos/TestPasc
