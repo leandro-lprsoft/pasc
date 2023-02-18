@@ -1,0 +1,48 @@
+name: build
+
+on:  
+  push:
+    paths-ignore:
+    - "README.md"
+    - "docs/**"
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        lazarus-versions: [2.2.2]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: gcarreno/setup-lazarus@v3.2
+      with:
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        with-cache: true
+
+    - name: Download and extract BOSS (Linux)
+      if: ${{ matrix.operating-system == 'linux-latest' }}
+      run: |
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-linux-amd64.zip
+        unzip boss-linux-amd64.zip
+        cp ./linux-amd64/boss ./boss
+
+    - name: Download and extract BOSS (Windows)
+      if: ${{ matrix.operating-system == 'windows-latest' }}
+      run: |
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-windows-amd64.zip
+        unzip boss-windows-amd64.zip
+        cp ./windows-amd64/boss.exe ./boss.exe
+
+    - name: BOSS Update packages
+      run: ./boss update
+
+    - name: Build the Main Application
+      run: lazbuild "pasc.lpi" --build-mode=Release
+    
+    - name: Build the Unit Tests Application
+      run: lazbuild "tests/TestPasc.lpi"
+    - name: Run the Unit Tests Application
+      run: tests/TestPasc "--all" "--format=plain"
