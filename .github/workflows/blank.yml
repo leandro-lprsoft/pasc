@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-latest]
+        operating-system: [windows-2019]
         lazarus-versions: [2.2.2]
     steps:
     - uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
         echo "$GITHUB_WORKSPACE/linux-amd64" >> $GITHUB_PATH
 
     - name: Download and extract BOSS (Windows)
-      if: ${{ matrix.operating-system == 'windows-latest' }}
+      if: ${{ matrix.operating-system == 'windows-2019' }}
       run: |
         curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-windows-amd64.zip
         unzip boss-windows-amd64.zip
