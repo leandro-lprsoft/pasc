@@ -50,8 +50,8 @@ jobs:
     - name: Building & testing (MacOs)
       run: |
         echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
         cp ./pasc ./bin/macos/pasc
         echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin
+        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin --widgetset=cocoa
         cp ./tests/TestPasc ./bin/macos/tests/TestPasc
