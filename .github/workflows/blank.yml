@@ -19,10 +19,10 @@ jobs:
 
     - name: Creating output folders
       run: |
-      mkdir bin
-      mkdir bin/linux
-      mkdir bin/windows
-      mkdir bin/macos
+        mkdir bin
+        mkdir bin/linux
+        mkdir bin/windows
+        mkdir bin/macos
         
     - name: Building & testing (Linux)
       run: |
