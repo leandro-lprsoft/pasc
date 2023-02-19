@@ -90,9 +90,16 @@ jobs:
         name: binarios
         path: bin/
 
-    - name: Running tests (linux)
-      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+    - if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+      name: Running tests (linux)
       run: |
         cp ./bin/linux/tests/TestPasc ./tests/TestPasc
+        echo "running tests"
+        ./tests/TestPasc "--all" "--format=plain"
+
+    - if: ${{ matrix.operating-system == 'windows-latest' }}
+      name: Running tests (windows)
+      run: |
+        cp ./bin/windows/tests/TestPasc.exe ./tests/TestPasc.exe
         echo "running tests"
         ./tests/TestPasc "--all" "--format=plain"
