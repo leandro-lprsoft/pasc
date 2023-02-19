@@ -26,12 +26,14 @@ jobs:
         mkdir bin/windows/tests
         mkdir bin/macos
         mkdir bin/macos/tests
+        mkdir assets
         
     - name: Building & testing (Linux)
       run: |
         echo "building main application..."
         ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release
         cp ./pasc ./bin/linux/pasc
+        zip ./assets/pasc-linux-amd64.zip ./pasc
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B 
         cp ./tests/TestPasc ./bin/linux/tests/TestPasc
@@ -43,6 +45,7 @@ jobs:
         echo "building main application..."
         ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
         cp ./pasc.exe ./bin/windows/pasc.exe
+        zip ./assets/pasc-windows-amd64.zip ./pasc.exe
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=Win64 --cpu=x86_64
         cp ./tests/TestPasc.exe ./bin/windows/tests/TestPasc.exe
@@ -52,6 +55,7 @@ jobs:
         echo "building main application..."
         ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
         cp ./pasc ./bin/macos/pasc
+        zip ./assets/pasc-macos-amd64.zip ./pasc
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin --widgetset=cocoa
         cp ./tests/TestPasc ./bin/macos/tests/TestPasc
@@ -60,6 +64,11 @@ jobs:
       with:
         name: binarios
         path: bin/
+        
+    - uses: actions/upload-artifact@v3
+      with:
+        name: assets
+        path: assets/
   
   testing:
     runs-on: ${{ matrix.operating-system }}
