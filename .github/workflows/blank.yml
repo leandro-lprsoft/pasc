@@ -9,7 +9,7 @@ on:
     - main
 
 jobs:
-  cross-build on self-hosted:
+  cross-build-self-hosted:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
