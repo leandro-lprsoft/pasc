@@ -3,8 +3,6 @@ name: "generate-release"
 
 on:
   push:
-    branches:
-      - "main"
     tags:
       - "v*"
 
@@ -47,6 +45,7 @@ jobs:
   generate-release:
     name: "Generate release"
     runs-on: "ubuntu-latest"
+    needs: cross-build-self-hosted
 
     steps:
       - uses: actions/download-artifact@v3
