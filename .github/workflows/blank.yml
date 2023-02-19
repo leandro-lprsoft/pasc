@@ -32,4 +32,4 @@ jobs:
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
         cp ./tests/TestPasc ./bin/linux/TestPasc
-        ./bin/tests/TestPasc "--all" "--format=plain"
+        ./bin/linux/TestPasc "--all" "--format=plain"
