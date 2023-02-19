@@ -52,9 +52,6 @@ jobs:
           name: assets
           path: assets/
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: ncipollo/release-action@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          files: |
-            assets/*.zip
+          artifacts: "assets/*.zip"
