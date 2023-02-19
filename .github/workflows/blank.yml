@@ -66,7 +66,7 @@ jobs:
     needs: cross-build-self-hosted
     strategy:
       matrix:
-        operating-system: [ubuntu-latest]
+        operating-system: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v2
 
