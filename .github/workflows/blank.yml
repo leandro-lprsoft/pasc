@@ -30,10 +30,10 @@ jobs:
     - name: Building & testing (Linux)
       run: |
         echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" --build-mode=Release
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release
         cp ./pasc ./bin/linux/pasc
         echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
+        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B 
         cp ./tests/TestPasc ./bin/linux/tests/TestPasc
         echo "running tests and change the current folder"
         ./tests/TestPasc "--all" "--format=plain"
@@ -41,17 +41,17 @@ jobs:
     - name: Building & testing (Windows)
       run: |
         echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" --build-mode=Release --os=Win64 --cpu=x86_64
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
         cp ./pasc.exe ./bin/windows/pasc.exe
         echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" --os=Win64 --cpu=x86_64
+        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=Win64 --cpu=x86_64
         cp ./tests/TestPasc.exe ./bin/windows/tests/TestPasc.exe
 
     - name: Building & testing (MacOs)
       run: |
         echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" --build-mode=Release --os=darwin
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin
         cp ./pasc ./bin/macos/pasc
         echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" --os=darwin
+        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin
         cp ./tests/TestPasc ./bin/macos/tests/TestPasc
