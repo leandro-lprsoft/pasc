@@ -37,4 +37,6 @@ jobs:
         cp ./tests/TestPasc ./bin/linux/tests/TestPasc
         cp ./tests/TestPasc.lpr ./bin/linux/tests/TestPasc.lpr
         cp -r ./tests/xml ./bin/linux/tests/xml
+        echo "running tests and change the current folder"
+        cd ./bin/linux/tests
         ./bin/linux/tests/TestPasc "--all" "--format=plain"
