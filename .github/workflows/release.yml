@@ -1,0 +1,62 @@
+---
+name: "generate-release"
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+
+jobs:
+  cross-build-self-hosted:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: BOSS Update packages
+      run: boss update
+
+    - name: Creating output folders
+      run: |
+        mkdir assets
+                
+    - name: Building (Linux)
+      run: |
+        echo "building main application..."
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release
+        zip ./assets/pasc-linux-amd64.zip ./pasc
+        
+    - name: Building (Windows)
+      run: |
+        echo "building main application..."
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
+        zip ./assets/pasc-windows-amd64.zip ./pasc.exe
+
+    - name: Building (MacOs)
+      run: |
+        echo "building main application..."
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
+        zip ./assets/pasc-macos-amd64.zip ./pasc
+        
+    - uses: actions/upload-artifact@v3
+      with:
+        name: assets
+        path: assets/
+
+  generate-release:
+    name: "Generate release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: assets
+          path: assets/
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            assets/*.zip
