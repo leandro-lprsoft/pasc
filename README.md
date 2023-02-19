@@ -17,7 +17,7 @@ Take a look of how pasc works in vscode integrated terminal, you can see also a 
 ![pasc on vscode](./docs/generate/pasc_help_light.jpg#gh-light-mode-only)
 
 ## releases
-v_1_1_0
+v1.1.0
 
 ## License
 
