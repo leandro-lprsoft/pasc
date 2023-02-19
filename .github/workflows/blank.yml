@@ -33,4 +33,4 @@ jobs:
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
         cp ./tests/TestPasc ./bin/linux/TestPasc
         cp ./tests/TestPasc.lpr ./bin/linux/TestPasc.lpr
-        ./bin/tests/TestPasc "--all" "--format=plain"
+        ./bin/linux/TestPasc "--all" "--format=plain"
