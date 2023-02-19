@@ -69,6 +69,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Download and extract BOSS (Linux)
+      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+      run: |
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-linux-amd64.zip
+        unzip boss-linux-amd64.zip
+        chmod +x ./linux-amd64/boss
+        echo "$GITHUB_WORKSPACE/linux-amd64" >> $GITHUB_PATH
+
+    - name: Download and extract BOSS (Windows)
+      if: ${{ matrix.operating-system == 'windows-latest' }}
+      run: |
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-windows-amd64.zip
+        unzip boss-windows-amd64.zip
+        echo (Join-Path $env:GITHUB_WORKSPACE "windows-amd64") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
     - uses: actions/download-artifact@v3
       with:
         name: binarios
