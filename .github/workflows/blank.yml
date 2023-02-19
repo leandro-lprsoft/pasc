@@ -16,12 +16,20 @@ jobs:
 
     - name: BOSS Update packages
       run: boss update
+
+    - name: Creating output folders
+      run: |
+        mkdir bin
+        mkdir bin/linux
+        mkdir bin/windows
+        mkdir bin/macos
         
-    - name: Build the Main Application 
-      run: ~/laz-222/lazarus/lazbuild "pasc.lpi" --build-mode=Release
-    
-    - name: Build the Unit Tests Application 
-      run: ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
-    
-    - name: Run the Unit Tests Application
-      run: tests/TestPasc "--all" "--format=plain"
+    - name: Building & testing (Linux)
+      run: |
+        echo "building main application..."
+        ~/laz-222/lazarus/lazbuild "pasc.lpi" --build-mode=Release
+        cp ./pasc ./bin/linux/pasc
+        echo "building tests"
+        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
+        cp ./tests/TestPasc ./bin/linux/TestPasc
+        ./bin/tests/TestPasc "--all" "--format=plain"
