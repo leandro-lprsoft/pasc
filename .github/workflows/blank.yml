@@ -21,8 +21,11 @@ jobs:
       run: |
         mkdir bin
         mkdir bin/linux
+        mkdir bin/linux/tests
         mkdir bin/windows
+        mkdir bin/windows/tests
         mkdir bin/macos
+        mkdir bin/macos/tests
         
     - name: Building & testing (Linux)
       run: |
@@ -31,7 +34,7 @@ jobs:
         cp ./pasc ./bin/linux/pasc
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
-        cp ./tests/TestPasc ./bin/linux/TestPasc
-        cp ./tests/TestPasc.lpr ./bin/linux/TestPasc.lpr
-        cp -r ./tests/xml ./bin/linux/xml
-        ./bin/linux/TestPasc "--all" "--format=plain"
+        cp ./tests/TestPasc ./bin/linux/tests/TestPasc
+        cp ./tests/TestPasc.lpr ./bin/linux/tests/TestPasc.lpr
+        cp -r ./tests/xml ./bin/linux/tests/xml
+        ./bin/linux/tests/TestPasc "--all" "--format=plain"
