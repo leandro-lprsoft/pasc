@@ -34,10 +34,5 @@ jobs:
         cp ./pasc ./bin/linux/pasc
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi"
-        cp ./tests/TestPasc ./bin/linux/tests/TestPasc
-        cp ./tests/TestPasc.lpr ./bin/linux/tests/TestPasc.lpr
-        cp -r ./tests/xml ./bin/linux/tests/xml
-        cp -r ./.vscode ./bin/linux/tests/.vscode
         echo "running tests and change the current folder"
-        cd ./bin/linux/tests
-        ./TestPasc "--all" "--format=plain"
+        ./tests/TestPasc "--all" "--format=plain"
