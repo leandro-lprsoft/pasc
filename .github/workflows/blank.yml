@@ -9,7 +9,7 @@ on:
     - main
 
 jobs:
-  build:
+  cross-build on self-hosted:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
         echo "running tests and change the current folder"
         ./tests/TestPasc "--all" "--format=plain"
 
-    - name: Building & testing (Windows)
+    - name: Building (Windows)
       run: |
         echo "building main application..."
         ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
@@ -47,7 +47,7 @@ jobs:
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=Win64 --cpu=x86_64
         cp ./tests/TestPasc.exe ./bin/windows/tests/TestPasc.exe
 
-    - name: Building & testing (MacOs)
+    - name: Building (MacOs)
       run: |
         echo "building main application..."
         ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
@@ -55,3 +55,8 @@ jobs:
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin --widgetset=cocoa
         cp ./tests/TestPasc ./bin/macos/tests/TestPasc
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: binarios
+        path: bin/
