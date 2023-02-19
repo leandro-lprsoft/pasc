@@ -1,9 +1,10 @@
 ---
 name: "generate-release"
 
-on:
-  release:
-    types: [created]
+on: 
+  push:
+    tags:
+    - '*'
 
 jobs:
   cross-build-self-hosted:
