@@ -63,6 +63,7 @@ jobs:
   
   testing:
     runs-on: ${{ matrix.operating-system }}
+    needs: cross-build-self-hosted
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
