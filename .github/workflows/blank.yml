@@ -35,7 +35,7 @@ jobs:
         echo "building tests"
         ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B 
         cp ./tests/TestPasc ./bin/linux/tests/TestPasc
-        echo "running tests and change the current folder"
+        echo "running tests"
         ./tests/TestPasc "--all" "--format=plain"
 
     - name: Building (Windows)
@@ -60,3 +60,23 @@ jobs:
       with:
         name: binarios
         path: bin/
+  
+  testing:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: binarios
+        path: bin/
+
+    - name: Running tests (linux)
+      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+      run: |
+        cp ./bin/linux/tests/TestPasc ./tests/TestPasc
+        echo "running tests"
+        ./tests/TestPasc "--all" "--format=plain"
