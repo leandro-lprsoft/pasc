@@ -16,6 +16,9 @@ Take a look of how pasc works in vscode integrated terminal, you can see also a 
 ![pasc on vscode](./docs/generate/pasc_help_dark.jpg#gh-dark-mode-only)
 ![pasc on vscode](./docs/generate/pasc_help_light.jpg#gh-light-mode-only)
 
+## releases
+v_1_1_0
+
 ## License
 
 `pasc` is free and open-source software licensed under the [MIT License](https://github.com/leandro-lprsoft/pasc/blob/master/LICENSE). 
