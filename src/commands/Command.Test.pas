@@ -83,9 +83,10 @@ end;
 
 procedure TestCommand(ABuilder: ICommandBuilder);
 var
-  LExeFile, LExeOnly, LXmlFile, LTestCase: string;
+  LExeFile, LExeOnly, LXmlFile, LTestCase, LOutput: string;
   LReport: TTestReport;
   LLeak: ILeakReport;
+  LExitCode: Integer = 0;
 begin
   LExeFile := GetTestExecutable(ABuilder);
   if LExeFile.IsEmpty then
@@ -94,9 +95,17 @@ begin
   LXmlFile := ChangeFileExt(LExeFile, '.xml');
   LTestCase := '';
   if ABuilder.CheckOption('test-case', LTestCase) then
-    ShellExecute(LExeFile, ['--suite=' + LTestCase, '--file=' + LXmlFile])
+    LOutput := ShellExecute(LExeFile, ['--suite=' + LTestCase, '--file=' + LXmlFile], LExitCode)
   else
-    ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile]);
+    LOutput := ShellExecute(LExeFile, ['-a', '--file=' + LXmlFile], LExitCode);
+
+  if LExitCode > 10 then
+  begin
+    ABuilder.Output('Test execution failed with exit code ' + IntToStr(LExitCode));
+    ABuilder.Output('Output from test execution:' + #13#10 + LOutput);
+    ExitCode := LExitCode;
+    Exit;
+  end;
 
   LReport := TTestReport.New(ABuilder, ExtractFilePath(LExeFile));
   try

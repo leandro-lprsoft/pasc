@@ -104,6 +104,7 @@ end;
 procedure UpdateEnvironmentPathLinux(ABuilder: ICommandBuilder; const AFolder: string);
 var
   LProfile, LContent, LExport: string;
+  LExitCode: Integer = 0;
 begin
   OutputInfo(ABuilder, 'updating', 'path environment variable, this may require administration privileges');
   
@@ -125,10 +126,17 @@ begin
   LContent := GetResource('update-path-sh'); 
   SaveFileContent(ConcatPaths([AFolder, 'update-path.sh']), LContent);
 
-  LContent := ShellCommand('bash', [
+  LContent := ShellCommand(
+    'bash', 
+    [
       ConcatPaths([AFolder, 'update-path.sh']), 
       ConcatPaths([AFolder, ABuilder.ExeName])
-    ]);
+    ],
+    LExitCode);
+  ExitCode := LExitCode;
+  if LExitCode <> 0 then
+    OutputError(ABuilder, 'error', 'failed to update path environment variable: exit code ' + IntToStr(LExitCode));
+
   if LContent <> '' then
     ABuilder.OutputColor(LContent + #13#10, ABuilder.ColorTheme.Other);
 end;
@@ -138,6 +146,7 @@ var
   LFile: TStringList = nil;
   LProfile, LContent: string;
   I: Integer;
+  LExitCode: Integer = 0;
   LFound: Boolean = false;
 begin
   OutputInfo(ABuilder, 'updating', 'path environment variable, this may require administration privileges');
@@ -168,10 +177,16 @@ begin
     LFile.AddText(GetResource('update-path-sh'));
     LFile.SaveToFile(ConcatPaths([AFolder, 'update-path.sh']));
 
-    LContent := ShellCommand('bash', [
-      ConcatPaths([AFolder, 'update-path.sh']), 
-      ConcatPaths([AFolder, ABuilder.ExeName])
-    ]);
+    LContent := ShellCommand(
+      'bash', 
+      [
+        ConcatPaths([AFolder, 'update-path.sh']), 
+        ConcatPaths([AFolder, ABuilder.ExeName])
+      ],
+      LExitCode);
+    if LExitCode <> 0 then
+      OutputError(ABuilder, 'error', 'failed to update path environment variable: exit code ' + IntToStr(LExitCode));
+
     WriteLn(LContent);
 
   finally
@@ -182,12 +197,15 @@ end;
 procedure UpdateEnvironmentPathWindows(ABuilder: ICommandBuilder; const AFolder: string);
 var
   LName: string = 'update-path.ps1';
+  LExitCode: Integer = 0;
 begin
   OutputInfo(ABuilder, 'updating', 'environment path, this may require administration privileges ');
   SaveFileContent(ConcatPaths([AFolder, LName]), GetResource('update-path-ps1'));
 
   OutputInfo(ABuilder, 'script', 'running shell script file: ' + LName);
-  ShellCommand('powershell', [ConcatPaths([AFolder, LName]), AFolder]);
+  ShellCommand('powershell', [ConcatPaths([AFolder, LName]), AFolder], LExitCode);
+  if LExitCode <> 0 then
+    OutputError(ABuilder, 'error', 'failed to update path environment variable: exit code ' + IntToStr(LExitCode));
 
   OutputInfo(ABuilder, 'info', 'please restart your terminal app to path variable take effect');
 end;

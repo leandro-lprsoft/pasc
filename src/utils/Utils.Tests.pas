@@ -246,7 +246,7 @@ var
   LTestSuite, LTestCase: TDOMNode;
   I, J, K: Integer;
   LItem: TTestCaseItem;
-  LSourceInfo: string;
+  LSourceInfo, LCurrentMessage: string;
 begin
   Result := Self;
   try
@@ -302,11 +302,12 @@ begin
             
             GetCodeFileForTestSuite(ProjectSource, LItem.TestSuite + '.' + LItem.TestCase, LSourceInfo);
             LItem.Error := LSourceInfo;
-            
+            LCurrentMessage := '';
             for K := 0 to LTestCase.ChildNodes.Count - 1 do
-              LItem.Error := LItem.Error + 
-                IfThen(LItem.Error = '', '', #13#10) + 
-                String(LTestCase.ChildNodes[K].TextContent);
+              if AnsiMatchText(String(LTestCase.ChildNodes[K].NodeName), ['Message', 'ExceptionClass']) then
+                LItem.Error := LItem.Error + 
+                  IfThen(LItem.Error = '', '', #13#10) + 
+                  String(LTestCase.ChildNodes[K].TextContent);
           end;
         end;
       end;

@@ -43,6 +43,7 @@ uses
   Classes,
   SysUtils,
   StrUtils,
+  Math,
   Command.Colors,
   Utils.Shell;
 
@@ -75,6 +76,7 @@ procedure BuildCommand(ABuilder: ICommandBuilder);
 var
   LProjectFile: string = '';
   LOutput, LBuildMode: string;
+  LExitCode: Integer = 0;
 begin
   if Length(ABuilder.GetParsedArguments) > 0 then
   begin
@@ -101,10 +103,12 @@ begin
   end;
   
   try
-    LOutput := ShellExecute('lazbuild', ['-v']);
+    LOutput := ShellExecute('lazbuild', ['-v'], LExitCode);
+    ExitCode := LExitCode;
   except
     on E: Exception do
     begin
+      ExitCode := IfThen(LExitCode = 0, 1, LExitCode);
       ABuilder.OutputColor('lazbuild does not exist or its path is not configure to be in PATH environment.',
       ABuilder.ColorTheme.Error);
       exit;      
@@ -116,13 +120,15 @@ begin
     LBuildMode := IfThen(ABuilder.CheckOption('d'), '--build-mode=Debug', '');
     LBuildMode := IfThen(ABuilder.CheckOption('r'), '--build-mode=Release', '');
 
-    LOutput := ShellExecute('lazbuild', [LProjectFile, LBuildMode]);
+    LOutput := ShellExecute('lazbuild', [LProjectFile, LBuildMode], LExitCode);
     if ContainsText(LOutput, 'Error: ') then
       ABuilder.State := 'Error during build was detected.';
     ABuilder.OutputColor(LOutput + #13#10, ABuilder.ColorTheme.Other);
+    ExitCode := LExitCode;
   except
     on E: Exception do
     begin
+      ExitCode := IfThen(LExitCode = 0, 1, LExitCode);
       ABuilder.OutputColor('error trying to build the project file.',
       ABuilder.ColorTheme.Error);
       exit;      

@@ -170,7 +170,7 @@ begin
   ShellExecute := @MockShell;
   RunWatcherCallback := @RunUserCommandAsRequested; // original callback
 
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   LExecutable := 'test_for_watch';
   {$ENDIF}
 
@@ -216,7 +216,7 @@ begin
   ShellExecute := @MockShell;
   RunWatcherCallback := @RunUserCommandAsRequested; // original callback
 
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   LExecutable := 'test_for_watch';
   {$ENDIF}
 

@@ -16,6 +16,9 @@ const
   /// <summary> Buffer size for reading the output in chunks </summary>
   MAX_BUFFER = 2048; 
 
+  /// <summary> Exeception message when the program to be executed is not found. </summary>
+  EC_EXCEPTION_RUN_COMMAND = 101;
+
 type
   /// <summary> Specific array type for console buffer for reading the output in chunks </summary>
   TConsoleBuffer = array [1..MAX_BUFFER] of Byte;
@@ -33,6 +36,7 @@ type
     FMessage: string;
     FProcess: TProcess;
     FLock: TCriticalSection;
+    FExitCode: Integer;
 
     /// <summary> Execute a command and wait until read all the information from the output </summary>
     /// <param name="AProgram"> Program name or command to be executed. </param>
@@ -84,18 +88,22 @@ type
 
     /// <summary>Indicates that the command was executed.</summary>
     property Executed: Boolean read FExecuted;
+
+    /// <summary>Returns the exit code from the executed program.</summary>
+    property ExitCode: Integer read FExitCode;    
   end;
 
   /// <summary> function type to execute programs or commands. See ShellCommand function
   /// for more info. </summary>
-  TShellCommandFunc = function (const AProgram: string; AParams: TArray<string>): string;
+  TShellCommandFunc = function (const AProgram: string; AParams: TArray<string>; out AExitCode: Integer): string;
 
   /// <summary> executes a program and returns the output as funciton result and also provide a execution status
   /// through AStatus out parameter </summary>
   /// <param name="AProgram"> Program name or command to be executed. </param>
   /// <param name="AParams"> Array of arguments to be passed to the 
   /// program or command being called </param>
-  function ShellCommand(const AProgram: string; AParams: TArray<string>): string;
+  /// <param name="AExitCode"> Return the exit code from the executed program. </param>
+  function ShellCommand(const AProgram: string; AParams: TArray<string>; out AExitCode: Integer): string;
 
   /// <summary> Process a raw string and returns an array of strings with the parameters
   /// that were separated by spaces, and consider as single parameter a string between
@@ -108,13 +116,33 @@ type
   /// <param name="AParams"> String parameters separeted by spaces and double quotes. </param>
   function GetParametersFrom(const AParams: string): TArray<string>;
 
+  function CheckIfUserPressedCtrlC(const AFrom: string): Boolean;
+  
 var
   ShellExecute: TShellCommandFunc = @ShellCommand;
 
 implementation
 
 uses
+  {$IF DEFINED(Darwin)}
+  Crt,
+  {$ENDIF}
   StrUtils;
+
+function CheckIfUserPressedCtrlC(const AFrom: string): Boolean;
+begin
+  {$IF DEFINED(Darwin)}
+  if KeyPressed then            //  <--- CRT function to test key press
+    if ReadKey = ^C then        // read the key pressed
+    begin
+      {$IFDEF DEBUG}
+        WriteLn('ˆc: ', AFrom);
+      {$ENDIF}
+      Halt(1);
+    end;
+  {$ENDIF}
+end;
+
 
 constructor TConsoleWatcher.Create(const AProgram: string; AParams: TArray<string>);
 begin
@@ -145,6 +173,7 @@ begin
       RunCommand(FProgram, FParams);
       FExecuted := True;
       Sleep(10);
+      CheckIfUserPressedCtrlC('TConsoleWatcher.Execute');
     except
       on E: Exception do
       begin
@@ -164,11 +193,11 @@ begin
   begin
     try
       if FProcess.Running then
-    FProcess.Terminate(0);
+        FProcess.Terminate(0);
     finally
-    FreeAndNil(FProcess);
+      FreeAndNil(FProcess);
+    end;
   end;
-end;
 end;
 
 procedure TConsoleWatcher.ReadData(const ABytesRead: LongInt; ABuffer: TConsoleBuffer);
@@ -203,6 +232,7 @@ begin
     begin
       FProcess := TProcess.Create(nil);
       FProcess.Executable := AProgram;
+      FExitCode := 0;
 
       for LParam in AParams do
         FProcess.Parameters.Add(LParam);
@@ -214,16 +244,17 @@ begin
     repeat
       LBytesRead := FProcess.Output.Read(LBuffer, MAX_BUFFER);
       ReadData(LBytesRead, LBuffer);
-      Sleep(0);
+      Sleep(5);
+      CheckIfUserPressedCtrlC('TConsoleWatcher.RunCommand');
     until LBytesRead = 0;
-
     FIsRunning := False;
-
+    FExitCode := FProcess.ExitCode;
   except
     on E: Exception do
     begin
       FIsRunning := False;
       FExecuted := True;
+      FExitCode := EC_EXCEPTION_RUN_COMMAND;
       SetMessage(
         'Error when executing: "' + AProgram + 
         '" Message: "' + E.Message + '". ' +
@@ -255,7 +286,7 @@ begin
   end;
 end;
 
-function ShellCommand(const AProgram: string; AParams: TArray<string>): string;
+function ShellCommand(const AProgram: string; AParams: TArray<string>; out AExitCode: Integer): string;
 var
   LConsoleWatcher: TConsoleWatcher = nil;
   LResult: string;
@@ -282,6 +313,7 @@ begin
     begin
       GetOutput(LConsoleWatcher, LResult);
       Sleep(10);
+      CheckIfUserPressedCtrlC('ShellCommand');
     end;
 
     GetOutput(LConsoleWatcher, LResult);
@@ -290,6 +322,7 @@ begin
     LConsoleWatcher.Stop;
     LConsoleWatcher.WaitFor;
   finally
+    AExitCode := LConsoleWatcher.ExitCode;
     LConsoleWatcher.Free;
   end;
 end;

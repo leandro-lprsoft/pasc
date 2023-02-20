@@ -20,7 +20,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <RevisionNr Value="15"/>
+      <MinorVersionNr Value="1"/>
+      <RevisionNr Value="0"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Debug" Default="True"/>

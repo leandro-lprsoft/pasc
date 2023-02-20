@@ -52,6 +52,7 @@ begin
   Command.Test.Registry(FBuilder);
   FWorkingFolder := ConcatPaths([GetTempDir, '.' + ChangeFileExt(FExeName, '')]);
   SetCurrentDir(FWorkingFolder);
+  FWorkingFolder := GetCurrentDir;
 end;
 
 procedure TTestCommandTest.TearDown;
@@ -93,6 +94,10 @@ procedure TTestCommandTest.TestGetTestExecutable;
 var
   LExpected, LActual: string;
 begin
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.lpr']), 'TTestPascRunner = class(TTestRunner)');
+  SaveFileContent(ConcatPaths([FWorkingFolder, FExecutable]), 'just for test');
+  SaveFileContent(ConcatPaths([FWorkingFolder, 'test_for_watch.xml']), '<xml></xml>');
+
   LExpected := ConcatPaths([FWorkingFolder, FExecutable]);
   LActual := GetTestExecutable(FBuilder);
   AssertEquals(LExpected, LActual);

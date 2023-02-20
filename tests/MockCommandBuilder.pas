@@ -18,13 +18,14 @@ uses
   function MockInputLn: string;
   procedure MockOutput(const AMessage: string);
   procedure MockOutputColor(const AMessage: string; const AColor: byte);
-  function MockShell(const AProgram: string; AParams: TArray<string>): string;
+  function MockShell(const AProgram: string; AParams: TArray<string>; out AExitCode: Integer): string;
   function MockWatchExecute(const AContent: string; const AEvent: TWatcherEvent): Boolean;
 
 var
   MockCommandCapture, MockInputLnResult, MockOutputCaptured, MockShellCapture, 
   MockCaptureWatchExecute: string;
   MockStart, MockTimeout: QWord;
+  MockShellExitCodeCapture: Integer;
 
 implementation
 
@@ -66,10 +67,11 @@ begin
   MockOutputCaptured := MockOutputCaptured + AMessage;
 end;
 
-function MockShell(const AProgram: string; AParams: TArray<string>): string;
+function MockShell(const AProgram: string; AParams: TArray<string>; out AExitCode: Integer): string;
 var
   LParam: string;
 begin
+  MockShellExitCodeCapture := AExitCode;
   MockShellCapture := IfThen(MockShellCapture <> '', MockShellCapture + #13#10, '') + AProgram;
   for LParam in AParams do
     MockShellCapture := MockShellCapture + ' ' + LParam;

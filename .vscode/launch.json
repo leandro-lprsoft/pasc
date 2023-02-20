@@ -21,10 +21,18 @@
       "request": "launch",
       "name": "Debug Test",
       "program": "${workspaceFolder}/tests/TestPasc${command:executableExtension}",
-      "parameters": ["--suite=TTestCommandNew"],
+      "parameters": ["--suite=TTestUtilsShell"],
       "fpdserver": {
         "executable": "${extensionInstallFolder:cnoc.fpdebug}/bin/fpdserver"
       },
+      "preLaunchTask": "pasc: tests build"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug Test (LLDB)",
+      "program": "${workspaceFolder}/tests/TestPasc",
+      "args": ["--suite=TTestCommandTest"],
       "preLaunchTask": "pasc: tests build"
     }
   ]

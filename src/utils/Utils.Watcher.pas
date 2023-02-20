@@ -133,6 +133,7 @@ type
 implementation
 
 uses
+  Utils.Shell,
   StrUtils;
 
 constructor TPathWatcher.Create;
@@ -348,6 +349,7 @@ begin
     FWatcherRun('', weNoChange);
 
     Sleep(75);
+    CheckIfUserPressedCtrlC('TPathWatcher.Start');
   end;
   
   Result := Self;

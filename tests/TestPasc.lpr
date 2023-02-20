@@ -3,7 +3,7 @@ program TestPasc;
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
   Classes, 

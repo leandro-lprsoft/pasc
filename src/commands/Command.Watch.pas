@@ -173,6 +173,7 @@ begin
 
   if IsTest then
   begin
+    IsRun := False;
     OutputWatcherInfo('Watcher', 'test started'#13#10);
     
     if TestCaseSuite <> '' then

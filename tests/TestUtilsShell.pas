@@ -36,18 +36,34 @@ end;
 procedure TTestUtilsShell.TestShellCommand;
 var
   LActual, LExpected: string;
+  LExitCode: Integer = 0;
+
+  function PreparePathToCompare(const APath: string): string;
+  begin
+    Result := DelChars(APath, '/');
+    Result := DelChars(Result, '\');
+    Result := DelChars(Result, ':');
+  end;
+
 begin
-  LActual := StringReplace(ShellCommand('pwd', []), #13#10, '', [rfReplaceAll]);
-  LExpected := GetCurrentDir;
-  AssertEquals(GetCurrentDir, LActual);
+  LActual := PreparePathToCompare(StringReplace(ShellCommand('pwd', [], LExitCode), #13#10, '', [rfReplaceAll]));
+  LExpected := PreparePathToCompare(GetCurrentDir);
+  AssertEquals(LExpected, LActual);
 end;
 
 procedure TTestUtilsShell.TestShellCommandNotExists;
 var
   LActual: string;
+  LExitCode: Integer = 0;
 begin
-  LActual := StringReplace(ShellCommand('not_exists_command', []), #13#10, '', [rfReplaceAll]);
+  LActual := StringReplace(ShellCommand('not_exists_command', [], LExitCode), #13#10, '', [rfReplaceAll]);
   AssertTrue('Should return an error message: "Error when executing', ContainsText(LActual, 'Error when executing'));
+  AssertTrue(
+    #13#10 +
+    'Exit code should be different of 0'#13#10 +
+    'Output from ShellCommand: '#13#10 +
+    LActual, 
+    0 <> LExitCode);
 end;
 
 procedure TTestUtilsShell.TestGetParametersFromDoubleQuotes;

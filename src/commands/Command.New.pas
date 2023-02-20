@@ -129,9 +129,12 @@ end;
 procedure InitializeGit(ABuilder: ICommandBuilder; const AProjectDir: string);
 var
   LGitOutput: string;
+  LExitCode: Integer = 0;
 begin
   SetCurrentDir(AProjectDir);
-  LGitOutput := ShellCommand('git', ['init']);
+  LGitOutput := ShellCommand('git', ['init'], LExitCode);
+  if LExitCode <> 0 then
+    raise Exception.Create(LGitOutput);
   GuardShellCommand(ABuilder, 'git', LGitOutput, True);
   SaveFileContent(ConcatPaths([AProjectDir, '.gitignore']), GetResource('gitignore'));
 end;
@@ -153,10 +156,13 @@ end;
 procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
 var
   LOutput: string;
+  LExitCode: Integer = 0;
 begin
   SetCurrentDir(AProjectDir);
   OutputInfo(ABuilder, 'boss', 'Initializing boss dependency manager');
-  LOutput := ShellCommand('boss', ['init', '--quiet']);  
+  LOutput := ShellCommand('boss', ['init', '--quiet'], LExitCode);  
+  if LExitCode <> 0 then
+    raise Exception.Create(LOutput);
   GuardShellCommand(ABuilder, 'boss', LOutput, True);
   ChangeBossFileSourcePath(ABuilder, AProjectDir);
 end;
