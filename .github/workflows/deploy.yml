@@ -4,7 +4,7 @@ name: "generate-release"
 on: 
   push:
     tags:
-    - 'ignore'
+    - '*'
 
 jobs:
   cross-build-self-hosted:

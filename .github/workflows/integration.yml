@@ -5,6 +5,7 @@ on:
     paths-ignore:
     - "README.md"
     - "docs/**"
+    - ".github/workflows/deploy.yml"
     branches:
     - "main"
 
