@@ -6,7 +6,7 @@ on:
     - "README.md"
     - "docs/**"
     branches:
-    - "ignore"
+    - "main"
 
 jobs:
   cross-build-self-hosted:
