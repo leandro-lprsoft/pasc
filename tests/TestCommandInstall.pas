@@ -69,10 +69,12 @@ begin
 end;
 
 function TTestCommandInstall.GetPathVariable: string;
+var
+  LExitCode: Integer = 0;
 begin
   {$IFDEF WINDOWS}
   SaveFileContent(ConcatPaths([GetTempDir, 'get-path.ps1']), GetTestResource('get-path-ps1'));
-  Result := ShellCommand('powershell', [ConcatPaths([GetTempDir, 'get-path.ps1'])]);
+  Result := ShellCommand('powershell', [ConcatPaths([GetTempDir, 'get-path.ps1'])], LExitCode);
   {$ENDIF}
   {$IFDEF LINUX}
   Result := GetFileContent(ConcatPaths([GetUserDir, '.profile']));
