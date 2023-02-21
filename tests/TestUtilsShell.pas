@@ -43,6 +43,7 @@ var
     Result := DelChars(APath, '/');
     Result := DelChars(Result, '\');
     Result := DelChars(Result, ':');
+    Result := LowerCase(Result);
   end;
 
 begin
