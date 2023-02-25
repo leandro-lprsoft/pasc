@@ -135,14 +135,18 @@ end;
 
 procedure TTestCommandNew.TestInitializeBoss;
 var
-  LProjectFolder, LExpected: string;
+  LProjectFolder, LExpected, LOutput: string;
 begin
   CreateProjectFolders(FBuilder, 'sample_test', LProjectFolder);
-  InitializeBoss(FBuilder, LProjectFolder);
+
+  //AssertTrue('Project Folder: ' + LProjectFolder, false);
+
+  LOutput := InitializeBoss(FBuilder, LProjectFolder);
   
   LExpected := ConcatPaths([LProjectFolder, 'boss.json']);
   AssertTrue(
-    'Boss file "' + LExpected + '" does not exists', 
+    'Boss file "' + LExpected + '" does not exists'#13#10 +
+    'Output: '#13#10 + LOutput, 
     FileExists(LExpected));
 end;
 

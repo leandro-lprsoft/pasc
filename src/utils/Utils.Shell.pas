@@ -124,14 +124,14 @@ var
 implementation
 
 uses
-  {$IF DEFINED(Darwin)}
+  {$IF DEFINED(UNIX)}
   Crt,
   {$ENDIF}
   StrUtils;
 
 function CheckIfUserPressedCtrlC(const AFrom: string): Boolean;
 begin
-  {$IF DEFINED(Darwin)}
+  {$IF DEFINED(UNIX)}
   if KeyPressed then            //  <--- CRT function to test key press
     if ReadKey = ^C then        // read the key pressed
     begin

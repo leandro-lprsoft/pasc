@@ -46,11 +46,11 @@ uses
   procedure CreateProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
 
   /// <summary> Configures the boss dependency manager to facilitate the installation of 
-  /// new project dependencies.</summary>
+  /// new project dependencies. Returns the output of internal commands. </summary>
   /// <param name="ABuilder"> Command builder of the main application that will be used to
   /// output user instructions about the execution state of this command. </param>
   /// <param name="AProjectDir">Project source path. </param>
-  procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
+  function InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string): string;
 
   /// <summary> Adjust boss files, just change the source parameter to subfolder ./src.
   /// </summary>
@@ -100,8 +100,10 @@ begin
   end;
 
   if ACommandIsOptional then
+  begin
     if AOutput <> '' then
       OutputInfo(ABuilder, 'Warning', AOutput)
+  end
   else
     raise Exception.Create(AOutput);
 end;
@@ -153,18 +155,23 @@ begin
   end;
 end;
 
-procedure InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string);
+function InitializeBoss(ABuilder: ICommandBuilder; const AProjectDir: string): string;
 var
   LOutput: string;
   LExitCode: Integer = 0;
 begin
   SetCurrentDir(AProjectDir);
   OutputInfo(ABuilder, 'boss', 'Initializing boss dependency manager');
-  LOutput := ShellCommand('boss', ['init', '--quiet'], LExitCode);  
+  {$IF DEFINED(LINUX)}
+  LOutput := ShellCommand('/bin/sh', ['-c', 'boss init --quiet'], LExitCode);
+  {$ELSE}
+  LOutput := ShellCommand('boss', ['init', '--quiet'], LExitCode);
+  {$ENDIF}
   if LExitCode <> 0 then
-    raise Exception.Create(LOutput);
+    LOutput := LOutput + #13#10'Warning: boss exit code: ' + LExitCode.ToString + #13#10;
   GuardShellCommand(ABuilder, 'boss', LOutput, True);
   ChangeBossFileSourcePath(ABuilder, AProjectDir);
+  Result := LOutput;
 end;
 
 procedure CreateProjectFiles(ABuilder: ICommandBuilder; const AProjectName, AProjectDir: string);
