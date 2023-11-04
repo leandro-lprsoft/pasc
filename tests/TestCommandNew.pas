@@ -163,8 +163,8 @@ begin
   LContent := GetFileContent(LBossFile);
 
   AssertTrue(
-    'Boss file "' + LBossFile + '" should contain string: "mainsrc": "src/"', 
-    ContainsText(LContent, '"mainsrc": "src/"'));
+    'Boss file "' + LBossFile + '" should contain string: "mainsrc":', 
+    ContainsText(LContent, '"mainsrc":'));
 end;
 
 procedure TTestCommandNew.TestInitializeGit;

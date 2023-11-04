@@ -1,60 +1,81 @@
 ---
-name: "generate-release"
-
-on: 
-  push:
-    tags:
-    - '*'
-
-jobs:
-  cross-build-self-hosted:
-    runs-on: self-hosted
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: BOSS Update packages
-      run: boss update
-
-    - name: Creating output folders
-      run: |
-        mkdir assets
-                
-    - name: Building (Linux)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release
-        zip ./assets/pasc-linux-amd64.zip ./pasc
-        
-    - name: Building (Windows)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
-        zip ./assets/pasc-windows-amd64.zip ./pasc.exe
-
-    - name: Building (MacOs)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
-        zip ./assets/pasc-macos-amd64.zip ./pasc
-        
-    - uses: actions/upload-artifact@v3
-      with:
-        name: assets
-        path: assets/
-
-  generate-release:
-    name: "Generate release"
-    runs-on: "ubuntu-latest"
-    needs: cross-build-self-hosted
-    permissions:
-      contents: write
-      
-    steps:
-      - uses: actions/download-artifact@v3
+  name: "generate-release"
+  
+  on: 
+    push:
+      tags:
+      - '*'
+  
+  jobs:
+    build:
+      runs-on: ${{ matrix.operating-system }}
+      strategy:
+        matrix:
+          operating-system: [ubuntu-latest,windows-latest]
+          lazarus-versions: [stable]
+      steps:
+      - uses: actions/checkout@v3
+  
+      - name: Install Lazarus
+        uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: ${{ matrix.lazarus-versions }}
+          with-cache: true
+  
+      - name: Download and extract BOSS (Linux)
+        if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+        run: |
+          curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.10/boss-linux-amd64.zip
+          unzip boss-linux-amd64.zip
+          chmod +x ./linux-amd64/boss
+          echo "$GITHUB_WORKSPACE/linux-amd64" >> $GITHUB_PATH
+  
+      - name: Download and extract BOSS (Windows)
+        if: ${{ matrix.operating-system == 'windows-latest' }}
+        run: |
+          curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.10/boss-windows-amd64.zip
+          unzip boss-windows-amd64.zip
+          echo (Join-Path $env:GITHUB_WORKSPACE "windows-amd64") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+  
+      - name: BOSS Update packages
+        run: boss update
+  
+      - name: Creating output folders
+        run: |
+          mkdir assets
+                  
+      - name: Building (Linux)
+        if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+        run: |
+          echo "building main application..."
+          lazbuild "pasc.lpi" -B --build-mode=Release
+          zip ./assets/pasc-linux-amd64.zip ./pasc
+          
+      - name: Building (Windows)
+        if: ${{ matrix.operating-system == 'windows-latest' }}
+        run: |
+          echo "building main application..."
+          lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
+          Compress-Archive ./pasc.exe ./assets/pasc-windows-amd64.zip
+          
+      - uses: actions/upload-artifact@v3
         with:
           name: assets
           path: assets/
-
-      - uses: ncipollo/release-action@v1
-        with:
-          artifacts: "assets/*.zip"
+  
+    generate-release:
+      name: "Generate release"
+      runs-on: "ubuntu-latest"
+      needs: build
+      permissions:
+        contents: write
+        
+      steps:
+        - uses: actions/download-artifact@v3
+          with:
+            name: assets
+            path: assets/
+  
+        - uses: ncipollo/release-action@v1
+          with:
+            artifacts: "assets/*.zip"

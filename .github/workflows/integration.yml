@@ -10,80 +10,25 @@ on:
     - "main"
 
 jobs:
-  cross-build-self-hosted:
-    runs-on: self-hosted
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest,windows-latest]
+        lazarus-versions: [stable]
     steps:
     - uses: actions/checkout@v3
 
-    - name: BOSS Update packages
-      run: boss update
-
-    - name: Creating output folders
-      run: |
-        mkdir bin
-        mkdir bin/linux
-        mkdir bin/linux/tests
-        mkdir bin/windows
-        mkdir bin/windows/tests
-        mkdir bin/macos
-        mkdir bin/macos/tests
-        mkdir assets
-        
-    - name: Building & testing (Linux)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release
-        cp ./pasc ./bin/linux/pasc
-        zip ./assets/pasc-linux-amd64.zip ./pasc
-        echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B 
-        cp ./tests/TestPasc ./bin/linux/tests/TestPasc
-        echo "running tests"
-        ./tests/TestPasc "--all" "--format=plain"
-
-    - name: Building (Windows)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=Win64 --cpu=x86_64
-        cp ./pasc.exe ./bin/windows/pasc.exe
-        zip ./assets/pasc-windows-amd64.zip ./pasc.exe
-        echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=Win64 --cpu=x86_64
-        cp ./tests/TestPasc.exe ./bin/windows/tests/TestPasc.exe
-
-    - name: Building (MacOs)
-      run: |
-        echo "building main application..."
-        ~/laz-222/lazarus/lazbuild "pasc.lpi" -B --build-mode=Release --os=darwin --widgetset=cocoa
-        cp ./pasc ./bin/macos/pasc
-        zip ./assets/pasc-macos-amd64.zip ./pasc
-        echo "building tests"
-        ~/laz-222/lazarus/lazbuild "tests/TestPasc.lpi" -B --os=darwin --widgetset=cocoa
-        cp ./tests/TestPasc ./bin/macos/tests/TestPasc
-
-    - uses: actions/upload-artifact@v3
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@v3
       with:
-        name: binarios
-        path: bin/
-        
-    - uses: actions/upload-artifact@v3
-      with:
-        name: assets
-        path: assets/
-  
-  testing:
-    runs-on: ${{ matrix.operating-system }}
-    needs: cross-build-self-hosted
-    strategy:
-      matrix:
-        operating-system: [ubuntu-latest, windows-latest]
-    steps:
-    - uses: actions/checkout@v2
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        with-cache: true
 
     - name: Download and extract BOSS (Linux)
       if: ${{ matrix.operating-system == 'ubuntu-latest' }}
       run: |
-        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-linux-amd64.zip
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.10/boss-linux-amd64.zip
         unzip boss-linux-amd64.zip
         chmod +x ./linux-amd64/boss
         echo "$GITHUB_WORKSPACE/linux-amd64" >> $GITHUB_PATH
@@ -91,25 +36,24 @@ jobs:
     - name: Download and extract BOSS (Windows)
       if: ${{ matrix.operating-system == 'windows-latest' }}
       run: |
-        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.9/boss-windows-amd64.zip
+        curl -LOk https://github.com/HashLoad/boss/releases/download/v3.0.10/boss-windows-amd64.zip
         unzip boss-windows-amd64.zip
         echo (Join-Path $env:GITHUB_WORKSPACE "windows-amd64") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - uses: actions/download-artifact@v3
-      with:
-        name: binarios
-        path: bin/
-
-    - if: ${{ matrix.operating-system == 'ubuntu-latest' }}
-      name: Running tests (linux)
+    - name: BOSS Update packages
+      run: boss update
+        
+    - name: Building main application
       run: |
-        cp ./bin/linux/tests/TestPasc ./tests/TestPasc
-        echo "running tests"
-        ./tests/TestPasc "--all" "--format=plain"
+        echo "building main application..."
+        lazbuild "pasc.lpi" -B --build-mode=Release
 
-    - if: ${{ matrix.operating-system == 'windows-latest' }}
-      name: Running tests (windows)
+    - name: Building unit test application
       run: |
-        cp ./bin/windows/tests/TestPasc.exe ./tests/TestPasc.exe
-        echo "running tests"
-        ./tests/TestPasc "--all" "--format=plain"
+        echo "building main application..."
+        lazbuild "tests/TestPasc.lpi" -B
+
+    - name: Run the unit test application
+      run: |
+        echo "running unit tests..."
+        tests/TestPasc "--all" "--format=plain"

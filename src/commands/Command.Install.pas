@@ -205,7 +205,13 @@ begin
   OutputInfo(ABuilder, 'script', 'running shell script file: ' + LName);
   ShellCommand('powershell', [ConcatPaths([AFolder, LName]), AFolder], LExitCode);
   if LExitCode <> 0 then
+  begin
     OutputError(ABuilder, 'error', 'failed to update path environment variable: exit code ' + IntToStr(LExitCode));
+    OutputError(ABuilder, '', 'this could be caused by the lack of administration privileges while running the script');
+    OutputError(ABuilder, '', 'or the lack of execution policy to run powershell scripts. To fix this, run the following command:');
+    OutputError(ABuilder, '', 'Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser');
+    OutputError(ABuilder, '', 'execute the command to install pasc again after that');
+  end;
 
   OutputInfo(ABuilder, 'info', 'please restart your terminal app to path variable take effect');
 end;
